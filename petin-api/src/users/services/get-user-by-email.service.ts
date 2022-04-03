@@ -15,7 +15,10 @@ export class GetUserByEmailService {
   async execute(email: string): Promise<User> {
     this.logger.log(`Getting User by its email`);
 
-    const user = await this.usersRepository.findOne({ where: { email } });
+    const user = await this.usersRepository.findOne({
+      where: { email },
+      relations: { profile: true },
+    });
 
     if (!user) {
       this.logger.log(`User was not found`);

@@ -1,4 +1,5 @@
 import { User } from '../entities/user.entity';
+import { ProfileDto } from './profile.dto';
 
 export class UserDto {
   id: string;
@@ -7,6 +8,7 @@ export class UserDto {
   birthday: string;
   cpf: string;
   email: string;
+  profile: ProfileDto;
   createdAt: string;
 
   static fromUserEntity(entity: User): UserDto {
@@ -17,6 +19,9 @@ export class UserDto {
     dto.role = entity.role;
     dto.birthday = entity.birthday;
     dto.cpf = entity.cpf;
+    if (entity.profile) {
+      dto.profile = ProfileDto.fromProfileEntity(entity.profile);
+    }
     dto.createdAt = entity.createdAt;
     return dto;
   }

@@ -7,15 +7,18 @@ import { RegisterUserService } from './services/register-user.service';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { GetUserByIdService } from './services/get-user-by-id.service';
+import { UpdateProfileService } from './services/update-profile.service';
+import { Profile } from './entities/profile.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [TypeOrmModule.forFeature([Profile, User])],
   providers: [
     PasswordService,
     UsersService,
     RegisterUserService,
     GetUserByEmailService,
     GetUserByIdService,
+    UpdateProfileService,
   ],
   exports: [
     PasswordService,
@@ -23,6 +26,7 @@ import { GetUserByIdService } from './services/get-user-by-id.service';
     RegisterUserService,
     GetUserByEmailService,
     GetUserByIdService,
+    UpdateProfileService,
   ],
   controllers: [UsersController],
 })

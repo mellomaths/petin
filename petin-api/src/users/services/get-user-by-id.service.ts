@@ -15,7 +15,10 @@ export class GetUserByIdService {
   async execute(id: string): Promise<User> {
     this.logger.log(`Getting User by its ID. (id=${id}).`);
 
-    const user = await this.usersRepository.findOne({ where: { uuid: id } });
+    const user = await this.usersRepository.findOne({
+      where: { uuid: id },
+      relations: { profile: true },
+    });
 
     if (!user) {
       this.logger.log(`User was not found`);

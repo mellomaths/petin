@@ -3,9 +3,12 @@ import {
   Column,
   Entity,
   Generated,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { RegisterUserDto } from '../dto/register-user.dto';
+import { Profile } from './profile.entity';
 
 export enum UserRole {
   USER = 'USER',
@@ -35,6 +38,10 @@ export class User extends BaseEntity {
   @Column({ unique: true })
   cpf: string;
 
+  @OneToOne(() => Profile, { cascade: true })
+  @JoinColumn()
+  profile: Profile;
+
   @Column()
   password: string;
 
@@ -48,6 +55,10 @@ export class User extends BaseEntity {
     user.role = dto.role;
     user.birthday = dto.birthday;
     user.cpf = dto.cpf;
+    user.profile = new Profile();
+    user.profile.bio = null;
+    user.profile.gender = null;
+    user.profile.photo = null;
     user.password = dto.password;
     user.createdAt = new Date().toISOString();
     return user;
