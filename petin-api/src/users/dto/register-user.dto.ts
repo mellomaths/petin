@@ -1,14 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsDefined,
   IsEmail,
   IsEnum,
-  IsISO8601,
   IsNotEmpty,
+  IsObject,
   IsString,
+  MaxLength,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
 import { IsEqualTo } from '../../utils/validator/is-equal.validator';
 import { UserRole } from '../entities/user.entity';
+import { ProfileDto } from './profile.dto';
 
 export class RegisterUserDto {
   @IsString()
@@ -30,14 +34,15 @@ export class RegisterUserDto {
 
   @IsString()
   @IsNotEmpty()
+  @MaxLength(11)
   @ApiProperty({ required: true, maxLength: 11 })
   cpf: string;
 
-  @IsISO8601()
-  @IsString()
-  @IsNotEmpty()
+  @IsDefined()
+  @IsObject()
+  @ValidateNested()
   @ApiProperty({ required: true })
-  birthday: string;
+  profile: ProfileDto;
 
   @IsString()
   @IsNotEmpty()

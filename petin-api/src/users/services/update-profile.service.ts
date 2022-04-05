@@ -17,10 +17,13 @@ export class UpdateProfileService {
   ) {}
 
   async execute(userId: string, profileDto: ProfileDto): Promise<User> {
+    this.logger.log(`Updating profile of an user (userId=${userId})`);
     const user = await this.getUserByIdService.execute(userId);
+    user.profile.birthday = profileDto.birthday;
     user.profile.bio = profileDto.bio;
     user.profile.gender = profileDto.gender;
     user.profile.photo = profileDto.photo;
+    user.profile.intention = profileDto.intention;
 
     await this.profilesRepository.save(user.profile);
 

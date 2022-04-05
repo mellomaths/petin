@@ -5,17 +5,14 @@ import {
   HttpCode,
   HttpStatus,
   Logger,
-  Param,
   Post,
   Put,
+  Request,
   UseGuards,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ApiResponseDto } from 'src/infrastructure/api/api-response.dto';
-import { IdParam } from 'src/utils/dto/id.param';
 import { ProfileDto } from './dto/profile.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { UserDto } from './dto/user.dto';
@@ -34,12 +31,11 @@ export class UsersController {
     description: 'User successfully created',
     type: ApiResponseDto,
   })
-  @UsePipes(ValidationPipe)
   async registerUser(@Body() user: RegisterUserDto) {
     return await this.usersService.registerUser(user);
   }
 
-  @Get(':id')
+  @Get('account')
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
     status: HttpStatus.OK,
@@ -51,16 +47,15 @@ export class UsersController {
     description: 'User not found',
     type: ApiResponseDto,
   })
-  @UsePipes(ValidationPipe)
   @UseGuards(JwtAuthGuard)
-  async getUser(@Param() params: IdParam) {
-    return await this.usersService.getUserById(params.id);
+  async getUser(@Request() request) {
+    return await this.usersService.getUserById(request.user.id);
   }
 
-  @Put(':id/profile')
-  @HttpCode(HttpStatus.CREATED)
+  @Put('account/profile')
+  @HttpCode(HttpStatus.OK)
   @ApiResponse({
-    status: HttpStatus.CREATED,
+    status: HttpStatus.OK,
     description: 'Profile updated',
     type: UserDto,
   })
@@ -69,9 +64,8 @@ export class UsersController {
     description: 'User not found',
     type: ApiResponseDto,
   })
-  @UsePipes(ValidationPipe)
   @UseGuards(JwtAuthGuard)
-  async updateProfile(@Param() params: IdParam, @Body() profile: ProfileDto) {
-    return await this.usersService.updateProfile(params.id, profile);
+  async updateProfile(@Request() request, @Body() profile: ProfileDto) {
+    return await this.usersService.updateProfile(request.user.id, profile);
   }
 }

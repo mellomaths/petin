@@ -21,7 +21,7 @@ export class GetUserByEmailService {
     });
 
     if (!user) {
-      this.logger.log(`User was not found`);
+      this.logger.error(`User was not found`);
       throw new NotFoundException({
         success: false,
         messages: [`User was not found`],

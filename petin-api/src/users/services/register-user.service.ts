@@ -22,7 +22,7 @@ export class RegisterUserService {
     });
 
     if (existingUser) {
-      this.logger.debug(`User with email "${email}" already registered`);
+      this.logger.error(`User with email "${email}" already registered`);
       throw new ConflictException({
         success: false,
         messages: [`User with email = "${email}" is already registered.`],
@@ -32,7 +32,7 @@ export class RegisterUserService {
     let user = User.fromRegisterUserDto(userDto);
     user.password = await this.passwordService.hashPassword(user.password);
     user = await this.usersRepository.save(user);
-    this.logger.debug(
+    this.logger.log(
       `User successfully registered (id=${user.id}) (uuid=${user.uuid})`,
     );
     return user;

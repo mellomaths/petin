@@ -1,9 +1,13 @@
+import { Like } from 'src/pets/entities/like.entity';
+import { Pet } from 'src/pets/entities/pet.entity';
 import {
   BaseEntity,
+  BeforeInsert,
   Column,
   Entity,
   Generated,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -12,6 +16,12 @@ import { Profile } from './profile.entity';
 
 export enum UserRole {
   USER = 'USER',
+}
+
+export enum Intention {
+  ADOPT = 'ADOPT',
+  DONATE = 'DONATE',
+  DONATE_AND_ADOPT = 'DONATE_AND_ADOPT',
 }
 
 @Entity()
@@ -32,9 +42,6 @@ export class User extends BaseEntity {
   @Column()
   role: string;
 
-  @Column()
-  birthday: string;
-
   @Column({ unique: true })
   cpf: string;
 
@@ -42,25 +49,31 @@ export class User extends BaseEntity {
   @JoinColumn()
   profile: Profile;
 
+  @OneToMany(() => Pet, (pet) => pet.user)
+  pets: Pet[];
+
+  @OneToMany(() => Like, (like) => like.user)
+  likes: Like[];
+
   @Column()
   password: string;
 
   @Column()
   createdAt: string;
 
+  @BeforeInsert()
+  setsCreationDate() {
+    this.createdAt = new Date().toISOString();
+  }
+
   static fromRegisterUserDto(dto: RegisterUserDto): User {
     const user = new User();
     user.name = dto.name;
     user.email = dto.email;
     user.role = dto.role;
-    user.birthday = dto.birthday;
     user.cpf = dto.cpf;
-    user.profile = new Profile();
-    user.profile.bio = null;
-    user.profile.gender = null;
-    user.profile.photo = null;
+    user.profile = Profile.fromProfileDto(dto.profile);
     user.password = dto.password;
-    user.createdAt = new Date().toISOString();
     return user;
   }
 }

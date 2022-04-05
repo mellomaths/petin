@@ -23,7 +23,7 @@ export class UsersService {
     const user = await this.registerUserService.execute(userDto);
     return {
       success: true,
-      messages: [`User successfully registered.`],
+      messages: [`User account successfully created.`],
       id: user.uuid,
     };
   }

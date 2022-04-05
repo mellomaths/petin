@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpLoggerMiddleware } from './infrastructure/middleware/http-logger.middleware';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { PetsModule } from './pets/pets.module';
+import { HealthModule } from './health/health.module';
 import jwtConfig from './infrastructure/config/jwt.config';
 
 @Module({
@@ -22,8 +24,11 @@ import jwtConfig from './infrastructure/config/jwt.config';
       logging: true,
       cache: false,
     }),
+    HealthModule,
     AuthModule,
     UsersModule,
+    PetsModule,
+    HealthModule,
   ],
   controllers: [],
   providers: [],
