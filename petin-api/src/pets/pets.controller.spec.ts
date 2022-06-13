@@ -6,6 +6,7 @@ import { mockPetDto } from '../../test/__mocks__/pet.dto.mock';
 import { mockRegisterPetDto } from '../../test/__mocks__/register-pet.dto.mock';
 import { PetsController } from './pets.controller';
 import { PetsService } from './pets.service';
+import { mockRequest } from '../../test/__mocks__/request.mock';
 
 describe('PetsController', () => {
   let controller: PetsController;
@@ -55,11 +56,7 @@ describe('PetsController', () => {
 
   describe('listPets', () => {
     it('should receive request to list Pets', async () => {
-      const request = {
-        user: {
-          id: faker.datatype.uuid(),
-        },
-      } as unknown as Request;
+      const request = mockRequest();
 
       const existingPet = mockPetDto();
       jest.spyOn(petsServiceMock, 'listPets').mockResolvedValue([existingPet]);
@@ -73,11 +70,7 @@ describe('PetsController', () => {
 
   describe('likePet', () => {
     it('should receive request to like Pet', async () => {
-      const request = {
-        user: {
-          id: faker.datatype.uuid(),
-        },
-      } as unknown as Request;
+      const request = mockRequest();
       const params: IdParam = {
         id: faker.datatype.uuid(),
       };
