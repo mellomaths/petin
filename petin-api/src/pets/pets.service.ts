@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ApiResponseDto } from 'src/infrastructure/api/api-response.dto';
+import { ApiResponseDto } from '../infrastructure/api/api-response.dto';
 import { PetDto } from './dto/pet.dto';
 import { RegisterPetDto } from './dto/register-pet.dto';
 import { LikePetService } from './services/like-pet.service';

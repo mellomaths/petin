@@ -41,8 +41,12 @@ export class UsersService {
   async updateProfile(
     userId: string,
     profileDto: ProfileDto,
-  ): Promise<UserDto> {
+  ): Promise<ApiResponseDto> {
     const user = await this.updateProfileService.execute(userId, profileDto);
-    return UserDto.fromUserEntity(user);
+    return {
+      success: true,
+      messages: ['User account successfully updated.'],
+      id: user.uuid,
+    };
   }
 }

@@ -11,8 +11,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { ApiResponseDto } from 'src/infrastructure/api/api-response.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { ApiResponseDto } from '../infrastructure/api/api-response.dto';
 import { ProfileDto } from './dto/profile.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { UserDto } from './dto/user.dto';

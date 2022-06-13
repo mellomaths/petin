@@ -3,7 +3,7 @@ import {
   ValidationArguments,
   ValidationOptions,
 } from 'class-validator';
-import { AgeType } from 'src/pets/entities/pet.entity';
+import { AgeType } from '../../pets/entities/pet.entity';
 
 export function IsValidAge(
   property: string,

@@ -11,9 +11,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { ApiResponseDto } from 'src/infrastructure/api/api-response.dto';
-import { IdParam } from 'src/utils/dto/id.param';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { ApiResponseDto } from '../infrastructure/api/api-response.dto';
+import { IdParam } from '../utils/dto/id.param';
 import { PetDto } from './dto/pet.dto';
 import { RegisterPetDto } from './dto/register-pet.dto';
 import { PetsService } from './pets.service';
@@ -58,7 +58,6 @@ export class PetsController {
   })
   @UseGuards(JwtAuthGuard)
   async likePet(@Request() request, @Param() params: IdParam) {
-    console.log(request.user);
     return await this.petsService.likePet(request.user.id, params.id);
   }
 }

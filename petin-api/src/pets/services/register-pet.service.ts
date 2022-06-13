@@ -4,8 +4,8 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Intention } from 'src/users/entities/user.entity';
-import { GetUserByIdService } from 'src/users/services/get-user-by-id.service';
+import { Intention } from '../../users/entities/user.entity';
+import { GetUserByIdService } from '../../users/services/get-user-by-id.service';
 import { Repository } from 'typeorm';
 import { RegisterPetDto } from '../dto/register-pet.dto';
 import { Pet } from '../entities/pet.entity';
@@ -38,6 +38,7 @@ export class RegisterPetService {
         ],
       });
     }
+
     let pet = Pet.fromRegisterPetDto(petDto);
     pet.user = user;
     pet = await this.petsRepository.save(pet);

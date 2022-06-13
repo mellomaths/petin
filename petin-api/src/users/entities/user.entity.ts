@@ -1,5 +1,5 @@
-import { Like } from 'src/pets/entities/like.entity';
-import { Pet } from 'src/pets/entities/pet.entity';
+import { Like } from '../../pets/entities/like.entity';
+import { Pet } from '../../pets/entities/pet.entity';
 import {
   BaseEntity,
   BeforeInsert,

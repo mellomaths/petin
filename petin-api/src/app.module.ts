@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { PetsModule } from './pets/pets.module';
 import { HealthModule } from './health/health.module';
 import jwtConfig from './infrastructure/config/jwt.config';
+import { DataSource } from 'typeorm';
 
 @Module({
   imports: [
@@ -34,6 +35,8 @@ import jwtConfig from './infrastructure/config/jwt.config';
   providers: [],
 })
 export class AppModule implements NestModule {
+  constructor(private readonly dataSource: DataSource) {}
+
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(HttpLoggerMiddleware).forRoutes('*');
   }
