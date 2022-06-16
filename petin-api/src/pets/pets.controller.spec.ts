@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Request } from 'express';
 import { IdParam } from '../utils/dto/id.param';
 import { mockPetDto } from '../../test/__mocks__/pet.dto.mock';
 import { mockRegisterPetDto } from '../../test/__mocks__/register-pet.dto.mock';
@@ -32,11 +31,7 @@ describe('PetsController', () => {
 
   describe('addPet', () => {
     it('should receive request to add Pet', async () => {
-      const request = {
-        user: {
-          id: faker.datatype.uuid(),
-        },
-      } as unknown as Request;
+      const request = mockRequest();
       const petDto = mockRegisterPetDto();
 
       jest.spyOn(petsServiceMock, 'registerPet').mockResolvedValue({
