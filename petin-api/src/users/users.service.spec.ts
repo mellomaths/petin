@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
+import { mockUserEntity } from '../../test/__mocks__/user.entity.mock';
 import { mockProfileDto } from '../../test/__mocks__/profile.dto.mock';
 import { mockRegisterUserDto } from '../../test/__mocks__/register-user.dto.mock';
 import { Intention, User, UserRole } from './entities/user.entity';
@@ -111,13 +112,9 @@ describe('UsersService', () => {
   describe('updateProfile', () => {
     it('should update users profile', async () => {
       const profileDto = mockProfileDto(Intention.ADOPT);
-      const registerUserDto = mockRegisterUserDto(
-        UserRole.USER,
-        Intention.ADOPT,
-      );
-      const userMocked = User.fromRegisterUserDto(registerUserDto);
+      const userMocked = mockUserEntity(UserRole.USER, Intention.ADOPT);
       jest
-        .spyOn(getUserByIdServiceMock, 'execute')
+        .spyOn(updateProfileServiceMock, 'execute')
         .mockResolvedValue(userMocked);
 
       const userId = faker.datatype.uuid();

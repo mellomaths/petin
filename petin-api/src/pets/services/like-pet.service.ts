@@ -1,6 +1,7 @@
 import {
   Injectable,
   Logger,
+  NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -23,6 +24,14 @@ export class LikePetService {
 
   async execute(userId: string, petId: string) {
     const user = await this.getUserByIdService.execute(userId);
+    if (!user) {
+      this.logger.error(`User id='${userId}' was not found`);
+      throw new NotFoundException({
+        success: false,
+        messages: [`User was not found`],
+      });
+    }
+
     const { intention } = user.profile;
     if (
       intention !== Intention.ADOPT &&
@@ -38,7 +47,16 @@ export class LikePetService {
         ],
       });
     }
+
     const pet = await this.getPetByIdService.execute(petId);
+    if (!pet) {
+      this.logger.error(`Pet id='${petId}' was not found`);
+      throw new NotFoundException({
+        success: false,
+        messages: [`Pet was not found`],
+      });
+    }
+
     if (pet.user.id === user.id) {
       this.logger.error(
         `User liking the Pet is the owner of the Pet. The user can't like their own pet.`,

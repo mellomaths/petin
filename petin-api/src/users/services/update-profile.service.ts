@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProfileDto } from '../dto/profile.dto';
@@ -19,6 +19,14 @@ export class UpdateProfileService {
   async execute(userId: string, profileDto: ProfileDto): Promise<User> {
     this.logger.log(`Updating profile of an user (userId=${userId})`);
     const user = await this.getUserByIdService.execute(userId);
+    if (!user) {
+      this.logger.error(`User id='${userId}' was not found`);
+      throw new NotFoundException({
+        success: false,
+        messages: [`User was not found`],
+      });
+    }
+
     user.profile.birthday = profileDto.birthday;
     user.profile.bio = profileDto.bio;
     user.profile.gender = profileDto.gender;
