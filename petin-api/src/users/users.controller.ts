@@ -10,7 +10,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ApiResponseDto } from '../infrastructure/api/api-response.dto';
 import { ProfileDto } from './dto/profile.dto';
@@ -19,6 +19,7 @@ import { UserDto } from './dto/user.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
+@ApiTags('users')
 export class UsersController {
   private readonly logger = new Logger(UsersController.name);
 

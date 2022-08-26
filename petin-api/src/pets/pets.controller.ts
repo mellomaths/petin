@@ -10,7 +10,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ApiResponseDto } from '../infrastructure/api/api-response.dto';
 import { IdParam } from '../utils/dto/id.param';
@@ -19,6 +19,7 @@ import { RegisterPetDto } from './dto/register-pet.dto';
 import { PetsService } from './pets.service';
 
 @Controller('pets')
+@ApiTags('pets')
 export class PetsController {
   private readonly logger = new Logger(PetsController.name);
 
