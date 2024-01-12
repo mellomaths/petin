@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { PasswordService } from '../users/password.service';
+import { UserJwtDto } from './dto/user-jwt.dto';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +16,7 @@ export class AuthService {
     return this.passwordService.checkLoginAttempt(email, password);
   }
 
-  async login(user: any) {
+  async login(user: UserJwtDto) {
     const payload = {
       sub: user.id,
       id: user.id,

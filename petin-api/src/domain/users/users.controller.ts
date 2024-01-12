@@ -16,6 +16,7 @@ import { ProfileDto } from './dto/profile.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { UserDto } from './dto/user.dto';
 import { UsersService } from './users.service';
+import { UserRequest } from '../auth/dto/user-request.dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -48,7 +49,7 @@ export class UsersController {
     type: UserDto,
   })
   @UseGuards(JwtAuthGuard)
-  async getUser(@Request() request) {
+  async getUser(@Request() request: UserRequest) {
     return await this.usersService.getUserById(request.user.id);
   }
 
@@ -65,7 +66,10 @@ export class UsersController {
     type: UserDto,
   })
   @UseGuards(JwtAuthGuard)
-  async updateProfile(@Request() request, @Body() profile: ProfileDto) {
+  async updateProfile(
+    @Request() request: UserRequest,
+    @Body() profile: ProfileDto,
+  ) {
     return await this.usersService.updateProfile(request.user.id, profile);
   }
 }
