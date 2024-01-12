@@ -1,0 +1,24 @@
+@font-face {
+  font-family: AnandaBlack;
+  src: url("/fonts/ananda-black-font/AnandaBlackPersonalUseRegular-rg9Rx.ttf");
+}
+
+@font-face {
+  font-family: BubbleBobble;
+  src: url("/fonts/bubble-bobble-font/BubbleBobble-rg3rx.ttf");
+}
+
+@font-face {
+  font-family: ChalkMarkDisplay;
+  src: url("/fonts/chalk-mark-display-font/ChalkMarkDisplay-VGxjy.ttf");
+}
+
+@font-face {
+  font-family: DamalsQuelle;
+  src: url("/fonts/damals-quelle-font/DamalsQuelle-eZ7qg.ttf");
+}
+
+@font-face {
+  font-family: Moonbright;
+  src: url("/fonts/moonbright-font/MoonbrightDemo-1GGn2.ttf");
+}

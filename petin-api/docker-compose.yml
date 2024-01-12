@@ -1,6 +1,7 @@
 version: '2'
 services:   
   postgres:
+    user: root
     container_name: postgres
     image: postgres
     ports:
@@ -15,6 +16,7 @@ services:
       - ./.docker/dbdata/postgres:/var/lib/postgresql
 
   pg-admin:
+    user: root
     container_name: pg-admin
     image: dpage/pgadmin4
     ports: 

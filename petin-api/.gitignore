@@ -34,8 +34,11 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# Ignore .env
+# Environment config
 .env
+.env.local
+.env.development
+.env.production
 
-# Ignore Docker volumes
+# Docker volumes
 .docker

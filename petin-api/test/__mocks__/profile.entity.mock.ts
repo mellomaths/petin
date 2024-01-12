@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
-import { Profile } from '../../src/users/entities/profile.entity';
-import { Intention } from '../../src/users/entities/user.entity';
+import { Profile } from '../../src/domain/users/entities/profile.entity';
+import { Intention } from '../../src/domain/users/entities/user.entity';
 import { mockProfileDto } from './profile.dto.mock';
 
 export const mockProfileEntity = (intention: Intention) => {

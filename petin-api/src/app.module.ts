@@ -2,33 +2,47 @@ import { join } from 'path';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { HttpLoggerMiddleware } from './infrastructure/middleware/http-logger.middleware';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { PetsModule } from './pets/pets.module';
-import { HealthModule } from './health/health.module';
-import jwtConfig from './infrastructure/config/jwt.config';
+import { HealthModule } from './domain/health/health.module';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { UsersModule } from './domain/users/users.module';
+import { AuthModule } from './domain/auth/auth.module';
+import sessionConfig from './infrastructure/config/session.config';
+import serverConfig from './infrastructure/config/server.config';
+import authConfig from './infrastructure/config/auth.config';
+import databaseConfig from './infrastructure/config/database.config';
+import { HttpLoggerMiddleware } from './infrastructure/middlewares/http-logger.middleware';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ load: [jwtConfig] }),
+    ConfigModule.forRoot({
+      envFilePath: ['.env.local', '.env.development'],
+      load: [serverConfig, sessionConfig, authConfig, databaseConfig],
+    }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000, // * 60000ms = 60s
+        limit: 10, // * 10 requests max within a minute
+      },
+    ]),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DATABASE_HOST,
-      port: process.env.DATABASE_PORT,
+      port: parseInt(process.env.DATABASE_PORT, 10) | 5432,
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       entities: [join(__dirname, '**', '*.entity.{ts,js}')],
-      synchronize: true,
+      synchronize: process.env.NODE_ENV !== 'production',
+      // ! Setting synchronize: true shouldn't be used in production - otherwise you can lose production data.
       logging: true,
       cache: false,
+      retryAttempts: 3,
+      retryDelay: 3000, // * 3000ms = 3s
+      autoLoadEntities: true,
     }),
     HealthModule,
     AuthModule,
     UsersModule,
-    PetsModule,
-    HealthModule,
   ],
   controllers: [],
   providers: [],
