@@ -11,6 +11,7 @@ import serverConfig from './infrastructure/config/server.config';
 import authConfig from './infrastructure/config/auth.config';
 import databaseConfig from './infrastructure/config/database.config';
 import { HttpLoggerMiddleware } from './infrastructure/middlewares/http-logger.middleware';
+import { PetsModule } from './domain/pets/pets.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { HttpLoggerMiddleware } from './infrastructure/middlewares/http-logger.m
     HealthModule,
     AuthModule,
     UsersModule,
+    PetsModule,
   ],
   controllers: [],
   providers: [],

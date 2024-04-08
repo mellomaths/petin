@@ -5,11 +5,13 @@ import {
   Entity,
   Generated,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { RegisterUserDto } from '../dto/register-user.dto';
 import { Profile } from './profile.entity';
+import { Pet } from 'src/domain/pets/entities/pet.entity';
 
 export enum UserRole {
   USER = 'USER',
@@ -48,6 +50,9 @@ export class User extends BaseEntity {
 
   @Column()
   password: string;
+
+  @OneToMany(() => Pet, (pet) => pet.owner)
+  pets: Pet[];
 
   @Column()
   createdAt: string;
