@@ -32,19 +32,22 @@ export class PetDto {
   static fromPetEntity(entity: Pet): PetDto {
     const dto = new PetDto();
     dto.id = entity.uuid;
-    dto.ownerId = entity.owner.uuid;
     dto.name = entity.name;
     dto.birthday = entity.birthday;
     dto.type = entity.type;
     dto.bio = entity.bio;
     dto.sex = entity.sex;
     dto.photos = [];
+    dto.createdAt = entity.createdAt;
+    if (entity.owner) {
+      dto.ownerId = entity.owner.uuid;
+    }
     if (entity.photos && entity.photos.length > 0) {
       entity.photos.map((photo) => ({
         url: photo.url,
       }));
     }
-    dto.createdAt = entity.createdAt;
+
     return dto;
   }
 }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Logger,
@@ -35,5 +36,18 @@ export class PetsController {
     @Body() pet: RegisterPetDto,
   ) {
     return await this.petsService.registerPet(request.user.id, pet);
+  }
+
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Pets list found',
+    type: PetDto,
+    isArray: true,
+  })
+  @UseGuards(JwtAuthGuard)
+  async getUser(@Request() request: UserRequest) {
+    return await this.petsService.listPets(request.user.id);
   }
 }

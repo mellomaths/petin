@@ -6,10 +6,11 @@ import { PetsService } from './pets.service';
 import { RegisterPetService } from './services/register-pet.service';
 import { PetsController } from './pets.controller';
 import { UsersModule } from '../users/users.module';
+import { ListPetsService } from './services/list-pets.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Pet, Photo]), UsersModule],
-  providers: [RegisterPetService, PetsService],
+  providers: [RegisterPetService, ListPetsService, PetsService],
   exports: [PetsService],
   controllers: [PetsController],
 })
