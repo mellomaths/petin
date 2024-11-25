@@ -1,0 +1,44 @@
+{
+  "name": "backend-petin",
+  "version": "1.0.0",
+  "main": "main.ts",
+  "scripts": {
+    "build": "tsc",
+    "main": "tsc && node ./dist/main.js",
+    "start": "node ./dist/main.js",
+    "dev": "nodemon src/main.ts",
+    "test": "jest",
+    "test:watch": "jest --watchAll",
+    "test:coverage": "jest --coverage",
+    "docker:build": "docker build -t backend-petin .",
+    "docker:stop": "docker stop backend-petin",
+    "docker:start": "docker run -d -p 3000:3000 --name backend-petin backend-petin",
+    "docker:compose": "docker-compose up -d"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "class-transform": "^0.7.0",
+    "class-validator": "^0.14.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "multer": "^1.4.5-lts.1",
+    "pg-promise": "^11.10.2",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^9.2.0",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/jest": "^29.5.14",
+    "@types/multer": "^1.4.12",
+    "dotenv": "^16.4.5",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.7",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}
