@@ -12,7 +12,7 @@ describe("Create Pet", () => {
 
   beforeEach(() => {
     petsRepository = {
-      save: jest.fn(),
+      create: jest.fn(),
     };
     pet = {
       name: "Rex",
@@ -34,8 +34,8 @@ describe("Create Pet", () => {
     expect(result).toBeDefined();
     expect(pet.id).toBeDefined();
     expect(pet.createdAt).toBeDefined();
-    expect(petsRepository.save).toHaveBeenCalledTimes(1);
-    expect(petsRepository.save).toHaveBeenCalledWith({
+    expect(petsRepository.create).toHaveBeenCalledTimes(1);
+    expect(petsRepository.create).toHaveBeenCalledWith({
       ...pet,
       id: pet.id,
       createdAt: expect.any(String),

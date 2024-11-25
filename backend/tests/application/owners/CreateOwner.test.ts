@@ -1,7 +1,7 @@
 import {
   CreateOwner,
+  CreateOwnerPasswordHasher,
   CreateOwnerRepository,
-  PasswordHasher,
 } from "../../../src/application/owner/CreateOwner";
 import { Owner } from "../../../src/application/owner/Owner";
 import { faker } from "@faker-js/faker/.";
@@ -9,7 +9,7 @@ import { ApplicationException } from "../../../src/infra/exception/ApplicationEx
 
 describe("CreateOwner", () => {
   let ownersRepository: CreateOwnerRepository;
-  let passwordHasher: PasswordHasher;
+  let passwordHasher: CreateOwnerPasswordHasher;
   let service: CreateOwner;
   let owner: Owner;
 
@@ -20,7 +20,7 @@ describe("CreateOwner", () => {
     };
     passwordHasher = {
       hash: jest.fn().mockResolvedValue(faker.internet.password()),
-      compare: jest.fn(),
+      // compare: jest.fn(),
     };
     service = new CreateOwner();
     service.ownersRepository = ownersRepository;
@@ -47,8 +47,10 @@ describe("CreateOwner", () => {
   });
 
   it("should create a new owner", async () => {
-    await service.execute(owner);
+    const result = await service.execute(owner);
 
+    expect(result).toBeDefined();
+    expect(result.owner_id).toBeDefined();
     expect(ownersRepository.getByEmail).toHaveBeenCalledWith(owner.email);
     expect(ownersRepository.getByEmail).toHaveBeenCalledTimes(1);
     expect(passwordHasher.hash).toHaveBeenCalledWith("12345678@Ab");

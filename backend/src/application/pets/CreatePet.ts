@@ -13,11 +13,11 @@ export class CreatePet {
     pet.updatedAt = new Date().toISOString();
     pet.birthday = new Date(pet.birthday).toISOString();
 
-    await this.petsRepository.save(pet);
+    await this.petsRepository.create(pet);
     return { pet_id: pet.id };
   }
 }
 
 export interface CreatePetRepository {
-  save(pet: Pet): Promise<void>;
+  create(pet: Pet): Promise<void>;
 }

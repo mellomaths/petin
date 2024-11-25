@@ -8,9 +8,9 @@ export class CreateOwner {
   ownersRepository: CreateOwnerRepository;
 
   @Inject("PasswordHasher")
-  passwordHasher: PasswordHasher;
+  passwordHasher: CreateOwnerPasswordHasher;
 
-  async execute(owner: Owner) {
+  async execute(owner: Owner): Promise<{ owner_id: string }> {
     OwnerValidator.validate(owner);
     if (await this.ownersRepository.getByEmail(owner.email)) {
       throw new ApplicationException(
@@ -24,17 +24,20 @@ export class CreateOwner {
     owner.updatedAt = new Date().toISOString();
     owner.address.ownerId = owner.id;
     owner.address.id = crypto.randomUUID();
+    owner.address.createdAt = new Date().toISOString();
+    owner.address.updatedAt = new Date().toISOString();
     owner.password = await this.passwordHasher.hash(owner.password);
-    return await this.ownersRepository.create(owner);
+    await this.ownersRepository.create(owner);
+    return { owner_id: owner.id };
   }
 }
 
 export interface CreateOwnerRepository {
-  getByEmail(email: string): Promise<Owner>;
+  getByEmail(email: string): Promise<Owner | null>;
   create(owner: Owner): Promise<void>;
 }
 
-export interface PasswordHasher {
+export interface CreateOwnerPasswordHasher {
   hash(password: string): Promise<string>;
-  compare(password: string, hash: string): Promise<boolean>;
+  // compare(password: string, hash: string): Promise<boolean>;
 }
