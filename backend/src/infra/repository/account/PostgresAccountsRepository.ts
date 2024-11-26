@@ -8,7 +8,7 @@ export class PostgresAccountsRepository implements AccountsRepository {
   connection: DatabaseConnection;
 
   async getByEmail(email: string): Promise<Account | null> {
-    const query = "SELECT * FROM accounts WHERE email = $1";
+    const query = "SELECT * FROM petin.account WHERE email = $1";
     const result = await this.connection.query(query, [email]);
     if (!result || result.length === 0) {
       return null;
@@ -22,7 +22,7 @@ export class PostgresAccountsRepository implements AccountsRepository {
   }
   async create(account: Account): Promise<void> {
     const query =
-      "INSERT INTO accounts (account_id, email, password, created_at, updated_at) VALUES ($1, $2, $3, $4, $5)";
+      "INSERT INTO petin.account (account_id, email, password, created_at, updated_at) VALUES ($1, $2, $3, $4, $5)";
     await this.connection.query(query, [
       account.id,
       account.email,
