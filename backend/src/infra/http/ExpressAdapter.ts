@@ -35,7 +35,12 @@ export class ExpressAdapter implements HttpServer {
     const handler = async (req: Request, res: Response) => {
       const settings = new Settings();
       try {
-        const output = await callback(req.params, req.body, req.file);
+        const output = await callback(
+          req.params,
+          req.body,
+          req.file,
+          req.headers
+        );
         if (method === "delete") {
           return res.status(204).json(output);
         }

@@ -15,7 +15,7 @@ export class PostgresAccountsRepository implements AccountsRepository {
     }
     const account = result[0];
     return {
-      id: account.id,
+      id: account.account_id,
       email: account.email,
       password: account.password,
     };
@@ -29,7 +29,7 @@ export class PostgresAccountsRepository implements AccountsRepository {
     }
     const account = result[0];
     return {
-      id: account.id,
+      id: account.account_id,
       email: account.email,
       password: account.password,
     };

@@ -51,9 +51,7 @@ describe("Login", () => {
     expect(tokenGenerator.generate).toHaveBeenCalledWith(
       {
         sub: "1",
-        owner_id: "1",
-        iat: expect.any(Number),
-        exp: expect.any(Number),
+        account_id: "1",
       },
       3600
     );

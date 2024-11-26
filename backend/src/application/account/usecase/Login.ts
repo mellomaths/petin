@@ -1,6 +1,7 @@
 import { Inject } from "../../../infra/di/DependencyInjection";
 import { ApplicationException } from "../../../infra/exception/ApplicationException";
 import { Account } from "../Account";
+import { TokenPayload } from "../TokenPayload";
 
 export class Login {
   @Inject("AccountsRepository")
@@ -40,7 +41,7 @@ export class Login {
     const token = this.tokenGenerator.generate(
       {
         sub: account.id!,
-        owner_id: account.id!,
+        account_id: account.id!,
       },
       this.expirationTimeInSeconds
     );
@@ -57,5 +58,5 @@ export interface LoginPasswordHasher {
 }
 
 export interface LoginAuthTokenGenerator {
-  generate(payload: any, expirationTimeInSeconds: number): string;
+  generate(payload: TokenPayload, expirationTimeInSeconds: number): string;
 }

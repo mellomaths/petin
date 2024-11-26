@@ -1,3 +1,4 @@
+import { Authenticate } from "../../application/account/usecase/Authenticate";
 import { Login } from "../../application/account/usecase/Login";
 import { Signup } from "../../application/account/usecase/Signup";
 import { Inject } from "../di/DependencyInjection";
@@ -12,6 +13,9 @@ export class AccountsController {
 
   @Inject("Login")
   login: Login;
+
+  @Inject("Authenticate")
+  authenticate: Authenticate;
 
   constructor() {
     this.httpServer.register(
@@ -29,6 +33,17 @@ export class AccountsController {
       async (params: any, body: any) => {
         const input = body;
         const output = await this.login.execute(input.email, input.password);
+        return output;
+      }
+    );
+    this.httpServer.register(
+      "post",
+      "/authenticate",
+      async (params: any, body: any, file: any, headers: any) => {
+        const input = body;
+        const bearerToken = headers["authorization"];
+        const token = bearerToken.split(" ")[1];
+        const output = await this.authenticate.execute(token);
         return output;
       }
     );
