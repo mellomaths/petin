@@ -25,7 +25,7 @@ export class PostgresOwnersRepository implements OwnersRepository {
 
   async create(owner: Owner): Promise<void> {
     await this.createAddress(owner);
-    const statement = `INSERT INTO petin.owner (owner_id, fullname, account_id, document_number, birthday, bio, gender, phone_number, address_id, avatar, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`;
+    const statement = `INSERT INTO petin.owner (owner_id, account_id, fullname, document_number, birthday, bio, gender, phone_number, address_id, avatar, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`;
     await this.connection.query(statement, [
       owner.id,
       owner.accountId,

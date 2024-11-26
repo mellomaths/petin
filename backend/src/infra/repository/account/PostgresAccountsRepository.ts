@@ -7,6 +7,20 @@ export class PostgresAccountsRepository implements AccountsRepository {
   @Inject("Database")
   connection: DatabaseConnection;
 
+  async get(accountId: string): Promise<Account | null> {
+    const query = "SELECT * FROM petin.account WHERE account_id = $1";
+    const result = await this.connection.query(query, [accountId]);
+    if (!result || result.length === 0) {
+      return null;
+    }
+    const account = result[0];
+    return {
+      id: account.id,
+      email: account.email,
+      password: account.password,
+    };
+  }
+
   async getByEmail(email: string): Promise<Account | null> {
     const query = "SELECT * FROM petin.account WHERE email = $1";
     const result = await this.connection.query(query, [email]);
