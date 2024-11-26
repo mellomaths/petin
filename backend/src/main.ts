@@ -1,13 +1,17 @@
-import { CreateOwner } from "./application/owner/CreateOwner";
-import { CreatePet } from "./application/pets/CreatePet";
+import { Login } from "./application/account/usecase/Login";
+import { Signup } from "./application/account/usecase/Signup";
+import { CreateOwner } from "./application/owner/usecase/CreateOwner";
+import { CreatePet } from "./application/pet/usecase/CreatePet";
+import { AccountsController } from "./infra/controller/AccountsController";
 import { OwnersController } from "./infra/controller/OwnersController";
 import { PetsController } from "./infra/controller/PetsController";
 import { PostgresAdapter } from "./infra/database/PostgresAdapter";
 import { Registry } from "./infra/di/DependencyInjection";
 import { BCryptAdapter } from "./infra/hash/BCryptAdapter";
 import { ExpressAdapter } from "./infra/http/ExpressAdapter";
-import { PostgresOwnersRepository } from "./infra/repository/owners/PostgresOwnersRepository";
-import { PostgresPetsRepository } from "./infra/repository/pets/PostgresPetsRepository";
+import { PostgresAccountsRepository } from "./infra/repository/account/PostgresAccountsRepository";
+import { PostgresOwnersRepository } from "./infra/repository/owner/PostgresOwnersRepository";
+import { PostgresPetsRepository } from "./infra/repository/pet/PostgresPetsRepository";
 import { Settings } from "./infra/settings/Settings";
 
 const settings = new Settings();
@@ -20,9 +24,16 @@ Registry.getInstance().provide(
   "OwnersRepository",
   new PostgresOwnersRepository()
 );
+Registry.getInstance().provide(
+  "AccountsRepository",
+  new PostgresAccountsRepository()
+);
 Registry.getInstance().provide("PasswordHasher", new BCryptAdapter());
 Registry.getInstance().provide("CreateOwner", new CreateOwner());
 Registry.getInstance().provide("OwnersController", new OwnersController());
 Registry.getInstance().provide("CreatePet", new CreatePet());
 Registry.getInstance().provide("PetsController", new PetsController());
+Registry.getInstance().provide("Signup", new Signup());
+Registry.getInstance().provide("Login", new Login());
+Registry.getInstance().provide("AccountsController", new AccountsController());
 httpServer.listen(settings.port);

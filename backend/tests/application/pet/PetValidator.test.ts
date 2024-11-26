@@ -1,5 +1,5 @@
-import { Pet } from "../../../src/application/pets/Pet";
-import { PetValidator } from "../../../src/application/pets/PetValidator";
+import { Pet } from "../../../src/application/pet/Pet";
+import { PetValidator } from "../../../src/application/pet/validator/PetValidator";
 import { ApplicationException } from "../../../src/infra/exception/ApplicationException";
 
 describe("PetValidator", () => {

@@ -13,6 +13,14 @@ create table petin.pet (
 	updated_at timestamp not null default now()
 );
 
+create table petin.account (
+	account_id uuid primary key,
+	email text not null,
+	password text not null,
+	created_at timestamp not null default now(),
+	updated_at timestamp not null default now()
+);
+
 create table petin.address (
 	address_id uuid primary key,
 	street text not null,
@@ -27,9 +35,8 @@ create table petin.address (
 
 create table petin.owner (
 	owner_id uuid primary key,
+	account_id uuid not null references petin.account(account_id),
 	fullname text not null,
-	email text not null,
-	password text not null,
 	document_number text not null,
 	birthday timestamp not null,
 	bio text not null,

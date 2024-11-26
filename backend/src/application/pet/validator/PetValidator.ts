@@ -1,7 +1,7 @@
-import { isDate, isDateString, isEnum } from "class-validator";
-import { ApplicationException } from "../../infra/exception/ApplicationException";
-import { Animal, Pet, Sex } from "./Pet";
-import { DateStringValidator } from "../core/validator/DateStringValidator";
+import { isEnum } from "class-validator";
+import { ApplicationException } from "../../../infra/exception/ApplicationException";
+import { DateStringValidator } from "../../core/validator/DateStringValidator";
+import { Animal, Pet, Sex } from "../Pet";
 
 export class PetValidator {
   static validate(pet: Pet) {

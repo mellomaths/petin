@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker/.";
 import { Owner } from "../../../src/application/owner/Owner";
-import { OwnerValidator } from "../../../src/application/owner/OwnerValidator";
 import { ApplicationException } from "../../../src/infra/exception/ApplicationException";
+import { OwnerValidator } from "../../../src/application/owner/validator/OwnerValidator";
 
 describe("OwnerValidator", () => {
   let owner: Owner;
@@ -9,9 +9,7 @@ describe("OwnerValidator", () => {
   beforeEach(() => {
     owner = {
       fullname: faker.person.fullName(),
-      email: faker.internet.email(),
-      password: "12345678@Ab",
-      confirmation: "12345678@Ab",
+      accountId: "12345678",
       documentNumber: "111.111.111-11",
       birthday: "1990-01-01",
       bio: faker.lorem.sentence(),

@@ -1,13 +1,13 @@
-import { isEmail, isEnum } from "class-validator";
-import { ApplicationException } from "../../infra/exception/ApplicationException";
-import { Gender, Owner } from "./Owner";
-import { DateStringValidator } from "../core/validator/DateStringValidator";
-import { DocumentNumberValidator } from "../core/validator/DocumentNumberValidator";
-import { RequiredFieldValidator } from "../core/validator/RequiredFieldValidator";
-import { PasswordValidator } from "../core/validator/PasswordValidator";
-import { AddressValidator } from "../core/validator/AddressValidator";
-import { PhoneNumberValidator } from "../core/validator/PhoneNumberValidator";
-import { EmailValidator } from "../core/validator/EmailValidator";
+import { isEnum } from "class-validator";
+import { ApplicationException } from "../../../infra/exception/ApplicationException";
+import { DateStringValidator } from "../../core/validator/DateStringValidator";
+import { DocumentNumberValidator } from "../../core/validator/DocumentNumberValidator";
+import { EmailValidator } from "../../core/validator/EmailValidator";
+import { PasswordValidator } from "../../core/validator/PasswordValidator";
+import { RequiredFieldValidator } from "../../core/validator/RequiredFieldValidator";
+import { Gender, Owner } from "../Owner";
+import { PhoneNumberValidator } from "../../core/validator/PhoneNumberValidator";
+import { AddressValidator } from "../../core/validator/AddressValidator";
 
 export class OwnerValidator {
   static validateFullname(fullname: string) {
@@ -91,8 +91,6 @@ export class OwnerValidator {
 
   static validate(owner: Owner) {
     this.validateFullname(owner.fullname);
-    this.validateEmail(owner.email);
-    this.validatePassword(owner.password, owner.confirmation);
     this.validateDocumentNumber(
       owner.documentNumber,
       owner.address.countryCode

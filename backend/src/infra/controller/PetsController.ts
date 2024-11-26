@@ -1,4 +1,4 @@
-import { CreatePet } from "../../application/pets/CreatePet";
+import { CreatePet } from "../../application/pet/usecase/CreatePet";
 import { Inject } from "../di/DependencyInjection";
 import { HttpServer } from "../http/HttpServer";
 

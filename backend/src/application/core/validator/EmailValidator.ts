@@ -1,6 +1,5 @@
 import { isEmail } from "class-validator";
 import { ApplicationException } from "../../../infra/exception/ApplicationException";
-import { RequiredFieldValidator } from "./RequiredFieldValidator";
 
 export class EmailValidator {
   static validate(email: string) {

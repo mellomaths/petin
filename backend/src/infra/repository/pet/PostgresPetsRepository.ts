@@ -1,4 +1,4 @@
-import { Pet } from "../../../application/pets/Pet";
+import { Pet } from "../../../application/pet/Pet";
 import { DatabaseConnection } from "../../database/DatabaseConnection";
 import { Inject } from "../../di/DependencyInjection";
 import { PetsRepository } from "./PetsRepository";

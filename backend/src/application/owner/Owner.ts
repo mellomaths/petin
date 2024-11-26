@@ -1,9 +1,7 @@
 export type Owner = {
   id?: string;
+  accountId: string;
   fullname: string;
-  email: string;
-  password: string;
-  confirmation: string;
   documentNumber: string;
   birthday: string;
   bio: string;

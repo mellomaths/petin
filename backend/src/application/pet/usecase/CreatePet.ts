@@ -1,6 +1,6 @@
-import { Pet } from "./Pet";
-import { Inject } from "../../infra/di/DependencyInjection";
-import { PetValidator } from "./PetValidator";
+import { Inject } from "../../../infra/di/DependencyInjection";
+import { Pet } from "../Pet";
+import { PetValidator } from "../validator/PetValidator";
 
 export class CreatePet {
   @Inject("PetsRepository")

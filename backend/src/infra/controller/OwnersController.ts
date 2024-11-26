@@ -1,4 +1,4 @@
-import { CreateOwner } from "../../application/owner/CreateOwner";
+import { CreateOwner } from "../../application/owner/usecase/CreateOwner";
 import { Inject } from "../di/DependencyInjection";
 import { HttpServer } from "../http/HttpServer";
 

@@ -25,12 +25,11 @@ export class PostgresOwnersRepository implements OwnersRepository {
 
   async create(owner: Owner): Promise<void> {
     await this.createAddress(owner);
-    const statement = `INSERT INTO petin.owner (owner_id, fullname, email, password, document_number, birthday, bio, gender, phone_number, address_id, avatar, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`;
+    const statement = `INSERT INTO petin.owner (owner_id, fullname, account_id, document_number, birthday, bio, gender, phone_number, address_id, avatar, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`;
     await this.connection.query(statement, [
       owner.id,
+      owner.accountId,
       owner.fullname,
-      owner.email,
-      owner.password,
       owner.documentNumber,
       owner.birthday,
       owner.bio,
@@ -46,16 +45,14 @@ export class PostgresOwnersRepository implements OwnersRepository {
   async getByEmail(email: string): Promise<Owner | null> {
     const statement = `SELECT * FROM petin.owner WHERE email = $1`;
     const result = await this.connection.query(statement, [email]);
-    console.log(result);
     if (!result || result.length === 0) {
       return null;
     }
     const owner = result[0];
     return {
       id: owner.owner_id,
+      accountId: owner.account_id,
       fullname: owner.fullname,
-      email: owner.email,
-      password: owner.password,
       documentNumber: owner.document_number,
       birthday: owner.birthday,
       bio: owner.bio,

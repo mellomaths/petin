@@ -1,9 +1,8 @@
+import { Pet } from "../../../src/application/pet/Pet";
 import {
   CreatePet,
   CreatePetRepository,
-} from "../../../src/application/pets/CreatePet";
-import { Pet } from "../../../src/application/pets/Pet";
-import { ApplicationException } from "../../../src/infra/exception/ApplicationException";
+} from "../../../src/application/pet/usecase/CreatePet";
 
 describe("Create Pet", () => {
   let petsRepository: CreatePetRepository;
