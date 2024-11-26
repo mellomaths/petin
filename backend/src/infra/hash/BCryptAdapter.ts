@@ -9,6 +9,6 @@ export class BCryptAdapter implements PasswordHasher {
   }
 
   async compare(password: string, hash: string): Promise<boolean> {
-    return password === hash;
+    return bcrypt.compare(password, hash);
   }
 }

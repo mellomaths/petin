@@ -9,6 +9,7 @@ export class Settings {
     accessKey: string;
     secretKey: string;
   };
+  readonly jwtSecret: string;
 
   constructor() {
     this.port = parseInt(process.env.PORT as string);
@@ -24,6 +25,7 @@ export class Settings {
       secretKey: process.env.OBJECT_STORAGE_SECRET_KEY as string,
     };
     this.environment = process.env.ENV as string;
+    this.jwtSecret = process.env.AUTH_TOKEN_SECRET as string;
   }
 
   isProduction(): boolean {

@@ -2,6 +2,7 @@ import { Login } from "./application/account/usecase/Login";
 import { Signup } from "./application/account/usecase/Signup";
 import { CreateOwner } from "./application/owner/usecase/CreateOwner";
 import { CreatePet } from "./application/pet/usecase/CreatePet";
+import { JwtGenerator } from "./infra/auth/JwtGenerator";
 import { AccountsController } from "./infra/controller/AccountsController";
 import { OwnersController } from "./infra/controller/OwnersController";
 import { PetsController } from "./infra/controller/PetsController";
@@ -29,6 +30,7 @@ Registry.getInstance().provide(
   new PostgresAccountsRepository()
 );
 Registry.getInstance().provide("PasswordHasher", new BCryptAdapter());
+Registry.getInstance().provide("TokenGenerator", new JwtGenerator());
 Registry.getInstance().provide("CreateOwner", new CreateOwner());
 Registry.getInstance().provide("OwnersController", new OwnersController());
 Registry.getInstance().provide("CreatePet", new CreatePet());

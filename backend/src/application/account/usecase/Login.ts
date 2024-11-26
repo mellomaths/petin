@@ -9,10 +9,15 @@ export class Login {
   @Inject("PasswordHasher")
   passwordHasher: LoginPasswordHasher;
 
-  @Inject("JwtService")
-  jwtService: LoginJwtService;
+  @Inject("TokenGenerator")
+  tokenGenerator: LoginAuthTokenGenerator;
 
-  async execute(email: string, password: string) {
+  private readonly expirationTimeInSeconds = 3600;
+
+  async execute(
+    email: string,
+    password: string
+  ): Promise<{ token: string; expiresIn: number }> {
     const account = await this.accountsRepository.getByEmail(email);
     if (!account) {
       throw new ApplicationException(
@@ -32,17 +37,14 @@ export class Login {
         "Invalid password"
       );
     }
-    const expirationTimeInSeconds = 3600;
-    const token = this.jwtService.generate(
+    const token = this.tokenGenerator.generate(
       {
         sub: account.id!,
         owner_id: account.id!,
-        iat: Math.floor(Date.now() / 1000),
-        exp: Math.floor(Date.now() / 1000) + expirationTimeInSeconds,
       },
-      expirationTimeInSeconds
+      this.expirationTimeInSeconds
     );
-    return token;
+    return { token, expiresIn: this.expirationTimeInSeconds };
   }
 }
 
@@ -54,6 +56,6 @@ export interface LoginPasswordHasher {
   compare(password: string, hash: string): Promise<boolean>;
 }
 
-export interface LoginJwtService {
+export interface LoginAuthTokenGenerator {
   generate(payload: any, expirationTimeInSeconds: number): string;
 }
