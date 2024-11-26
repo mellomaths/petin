@@ -1,7 +1,7 @@
-import { faker } from "@faker-js/faker/.";
 import axios from "axios";
 import { Account } from "../../src/application/account/Account";
 import { Owner } from "../../src/application/owner/Owner";
+import { faker } from "@faker-js/faker/.";
 
 axios.defaults.validateStatus = function () {
   return true;
@@ -23,13 +23,18 @@ describe("CreateOwnerE2E", () => {
     const owner: Owner = {
       accountId,
       fullname: faker.person.fullName(),
-      documentNumber: "111.111.111-11",
-      birthday: "1990-01-01",
-      bio: faker.lorem.sentence(),
+      documentNumber: faker.helpers.fromRegExp(
+        /[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}/
+      ),
+      birthday: faker.date
+        .between({ from: "1900-01-01", to: "2006-01-01" })
+        .toISOString()
+        .split("T")[0],
+      bio: faker.person.bio(),
       gender: "MALE",
-      phoneNumber: "+5521996923202",
+      phoneNumber: faker.helpers.fromRegExp(/55[1-9]{2}9[0-9]{4}[0-9]{4}/),
       address: {
-        street: faker.location.streetAddress(),
+        street: faker.location.street(),
         streetNumber: faker.location.buildingNumber(),
         city: faker.location.city(),
         state: faker.location.state({ abbreviated: true }),
