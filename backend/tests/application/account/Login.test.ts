@@ -51,7 +51,7 @@ describe("Login", () => {
     expect(tokenGenerator.generate).toHaveBeenCalledWith(
       {
         sub: "1",
-        account_id: "1",
+        accountId: "1",
       },
       3600
     );

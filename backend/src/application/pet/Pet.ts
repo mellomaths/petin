@@ -1,5 +1,6 @@
 export type Pet = {
   id?: string;
+  owner_id?: string;
   name: string;
   birthday: string;
   bio: string;

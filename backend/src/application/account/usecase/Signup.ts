@@ -10,7 +10,7 @@ export class Signup {
   @Inject("PasswordHasher")
   passwordHasher: SignupPasswordHasher;
 
-  async execute(account: Account): Promise<{ account_id: string }> {
+  async execute(account: Account): Promise<{ accountId: string }> {
     AccountValidator.validate(account);
     const existingAccount = await this.accountsRepository.getByEmail(
       account.email
@@ -28,7 +28,7 @@ export class Signup {
     const hashedPassword = await this.passwordHasher.hash(account.password);
     account.password = hashedPassword;
     await this.accountsRepository.create(account);
-    return { account_id: account.id };
+    return { accountId: account.id };
   }
 }
 

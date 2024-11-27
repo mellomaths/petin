@@ -63,7 +63,7 @@ describe("CreateOwner", () => {
     const result = await service.execute(owner);
 
     expect(result).toBeDefined();
-    expect(result.owner_id).toBeDefined();
+    expect(result.ownerId).toBeDefined();
     expect(accountsRepository.get).toHaveBeenCalledWith(owner.accountId);
     expect(accountsRepository.get).toHaveBeenCalledTimes(1);
     expect(ownersRepository.create).toHaveBeenCalledWith(owner);

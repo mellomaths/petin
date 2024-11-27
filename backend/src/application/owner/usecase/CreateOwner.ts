@@ -14,7 +14,7 @@ export class CreateOwner {
   @Inject("PasswordHasher")
   passwordHasher: CreateOwnerPasswordHasher;
 
-  async execute(owner: Owner): Promise<{ owner_id: string }> {
+  async execute(owner: Owner): Promise<{ ownerId: string }> {
     OwnerValidator.validate(owner);
     const account = await this.accountsRepository.get(owner.accountId);
     if (!account) {
@@ -32,7 +32,7 @@ export class CreateOwner {
     owner.address.createdAt = new Date().toISOString();
     owner.address.updatedAt = new Date().toISOString();
     await this.ownersRepository.create(owner);
-    return { owner_id: owner.id };
+    return { ownerId: owner.id };
   }
 }
 

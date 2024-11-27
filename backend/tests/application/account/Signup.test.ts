@@ -36,7 +36,7 @@ describe("Signup", () => {
 
     const result = await service.execute(account);
     expect(result).toBeDefined();
-    expect(result).toEqual({ account_id: expect.any(String) });
+    expect(result).toEqual({ accountId: expect.any(String) });
     expect(accountsRepository.getByEmail).toHaveBeenCalledTimes(1);
     expect(accountsRepository.getByEmail).toHaveBeenCalledWith(account.email);
     expect(passwordHasher.hash).toHaveBeenCalledTimes(1);

@@ -6,4 +6,5 @@ export interface HttpServer {
     isUpload?: boolean
   ): void;
   listen(port: number): void;
+  getAuthToken(headers: any): string;
 }

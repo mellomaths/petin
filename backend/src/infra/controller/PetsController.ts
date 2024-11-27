@@ -13,9 +13,10 @@ export class PetsController {
     this.httpServer.register(
       "post",
       "/pets",
-      async (params: any, body: any) => {
+      async (params: any, body: any, file: any, headers: any) => {
         const input = body;
-        const output = await this.createPet.execute(input);
+        const token = this.httpServer.getAuthToken(headers);
+        const output = await this.createPet.execute(token, input);
         return output;
       }
     );

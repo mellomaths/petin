@@ -41,8 +41,7 @@ export class AccountsController {
       "/authenticate",
       async (params: any, body: any, file: any, headers: any) => {
         const input = body;
-        const bearerToken = headers["authorization"];
-        const token = bearerToken.split(" ")[1];
+        const token = this.httpServer.getAuthToken(headers);
         const output = await this.authenticate.execute(token);
         return output;
       }

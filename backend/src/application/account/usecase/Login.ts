@@ -41,7 +41,7 @@ export class Login {
     const token = this.tokenGenerator.generate(
       {
         sub: account.id!,
-        account_id: account.id!,
+        accountId: account.id!,
       },
       this.expirationTimeInSeconds
     );

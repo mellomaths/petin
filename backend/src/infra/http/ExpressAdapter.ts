@@ -26,6 +26,18 @@ export class ExpressAdapter implements HttpServer {
     this.upload = multer({ storage });
   }
 
+  getAuthToken(headers: any): string {
+    const authorization = headers.authorization;
+    if (!authorization) {
+      throw new ApplicationException(
+        401,
+        { message: "Unauthorized" },
+        "Unauthorized"
+      );
+    }
+    return authorization.replace("Bearer ", "");
+  }
+
   register(
     method: string,
     url: string,

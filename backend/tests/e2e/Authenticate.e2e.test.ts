@@ -1,38 +1,20 @@
-import { faker } from "@faker-js/faker/.";
-import { Account } from "../../src/application/account/Account";
 import axios from "axios";
+import { setupDatabase } from "../helpers/Fake";
 
 axios.defaults.validateStatus = function () {
   return true;
 };
 
 describe("AuthenticateE2E", () => {
+  let fakeAccount: { token: string; accountId: string; ownerId: string };
+
+  beforeAll(async () => {
+    fakeAccount = await setupDatabase();
+  });
+
   it("should authenticate an account", async () => {
-    const password = faker.internet.password({
-      length: 8,
-      prefix: "1Abc@",
-    });
-    const account: Account = {
-      email: faker.internet.email(),
-      password: password,
-      confirmPassword: password,
-    };
-    let response = await axios.post("http://localhost:3000/signup", account);
-    expect(response.status).toBe(201);
-    expect(response.data).toEqual({ account_id: expect.any(String) });
-
-    response = await axios.post("http://localhost:3000/login", {
-      email: account.email,
-      password: account.password,
-    });
-    expect(response.status).toBe(201);
-    expect(response.data).toEqual({
-      token: expect.any(String),
-      expiresIn: 3600,
-    });
-
-    const token = response.data.token;
-    response = await axios.post(
+    const token = fakeAccount.token;
+    const response = await axios.post(
       "http://localhost:3000/authenticate",
       {},
       {
@@ -41,9 +23,21 @@ describe("AuthenticateE2E", () => {
     );
     expect(response.status).toBe(201);
     expect(response.data).toEqual({
-      id: expect.any(String),
-      email: account.email,
+      id: fakeAccount.accountId,
+      email: expect.any(String),
       password: "",
+      owner: {
+        id: fakeAccount.ownerId,
+        accountId: fakeAccount.accountId,
+        fullname: expect.any(String),
+        documentNumber: expect.any(String),
+        birthday: expect.any(String),
+        bio: expect.any(String),
+        gender: expect.any(String),
+        phoneNumber: expect.any(String),
+        addressId: expect.any(String),
+        address: {},
+      },
     });
   });
 });

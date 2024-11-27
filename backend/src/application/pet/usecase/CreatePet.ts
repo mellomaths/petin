@@ -1,4 +1,5 @@
 import { Inject } from "../../../infra/di/DependencyInjection";
+import { Authenticate } from "../../account/usecase/Authenticate";
 import { Pet } from "../Pet";
 import { PetValidator } from "../validator/PetValidator";
 
@@ -6,7 +7,12 @@ export class CreatePet {
   @Inject("PetsRepository")
   petsRepository: CreatePetRepository;
 
-  async execute(pet: Pet): Promise<{ pet_id: string }> {
+  @Inject("Authenticate")
+  authenticate: Authenticate;
+
+  async execute(token: string, pet: Pet): Promise<{ pet_id: string }> {
+    const account = await this.authenticate.execute(token);
+    pet.owner_id = account.owner!.id;
     PetValidator.validate(pet);
     pet.id = crypto.randomUUID();
     pet.createdAt = new Date().toISOString();

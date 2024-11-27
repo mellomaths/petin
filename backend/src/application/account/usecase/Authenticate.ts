@@ -26,12 +26,19 @@ export class Authenticate {
         "Unauthorized"
       );
     }
-    const account = await this.accountsRepository.get(decoded.account_id);
+    const account = await this.accountsRepository.get(decoded.accountId);
     if (!account) {
       throw new ApplicationException(
         401,
         { message: "Unauthorized" },
         "Unauthorized"
+      );
+    }
+    if (!account.owner) {
+      throw new ApplicationException(
+        403,
+        { message: "Forbidden" },
+        "Forbidden"
       );
     }
     account.password = "";

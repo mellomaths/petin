@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker/.";
 import axios from "axios";
 import { Account } from "../../src/application/account/Account";
+import { generateFakeAccount } from "../helpers/Fake";
 
 axios.defaults.validateStatus = function () {
   return true;
@@ -8,17 +9,9 @@ axios.defaults.validateStatus = function () {
 
 describe("SignupE2E", () => {
   it("should create an account", async () => {
-    const password = faker.internet.password({
-      length: 8,
-      prefix: "1Abc@",
-    });
-    const account: Account = {
-      email: faker.internet.email(),
-      password: password,
-      confirmPassword: password,
-    };
+    const account: Account = generateFakeAccount();
     const response = await axios.post("http://localhost:3000/signup", account);
     expect(response.status).toBe(201);
-    expect(response.data).toEqual({ account_id: expect.any(String) });
+    expect(response.data).toEqual({ accountId: expect.any(String) });
   });
 });

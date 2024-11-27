@@ -7,6 +7,7 @@ export type Owner = {
   bio: string;
   gender: string;
   phoneNumber: string;
+  addressId?: string;
   address: Address;
   avatar?: string;
   createdAt?: string;

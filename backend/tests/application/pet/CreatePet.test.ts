@@ -1,3 +1,4 @@
+import { Authenticate } from "../../../src/application/account/usecase/Authenticate";
 import { Pet } from "../../../src/application/pet/Pet";
 import {
   CreatePet,
@@ -8,6 +9,7 @@ describe("Create Pet", () => {
   let petsRepository: CreatePetRepository;
   let service: CreatePet;
   let pet: Pet;
+  let authenticateService: Authenticate;
 
   beforeEach(() => {
     petsRepository = {
@@ -20,8 +22,18 @@ describe("Create Pet", () => {
       sex: "MALE",
       type: "DOG",
     };
+    authenticateService = {
+      accountsRepository: {
+        get: jest.fn(),
+      },
+      tokenGenerator: {
+        verify: jest.fn(),
+      },
+      execute: jest.fn().mockResolvedValue({ owner: { id: "owner_id" } }),
+    };
     service = new CreatePet();
     service.petsRepository = petsRepository;
+    service.authenticate = authenticateService;
   });
 
   afterEach(() => {
@@ -29,7 +41,7 @@ describe("Create Pet", () => {
   });
 
   it("should create a pet", async () => {
-    const result = await service.execute(pet);
+    const result = await service.execute("token", pet);
     expect(result).toBeDefined();
     expect(pet.id).toBeDefined();
     expect(pet.createdAt).toBeDefined();
