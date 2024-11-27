@@ -1,0 +1,24 @@
+services:
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment: 
+      POSTGRES_DB: "petin"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_USER: "postgres"
+    volumes:
+      - ./.docker/postgres:/var/lib/postgresql
+      
+  pg-admin:
+    image: dpage/pgadmin4
+    ports: 
+      - "8081:80"
+    depends_on: 
+      - postgres
+    volumes:
+      - ./.docker/pgadmin:/var/lib/pgadmin
+    environment: 
+      PGADMIN_DEFAULT_EMAIL: postgres@postgres.com
+      PGADMIN_DEFAULT_PASSWORD: postgres
+    
