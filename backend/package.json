@@ -4,8 +4,8 @@
   "main": "main.ts",
   "scripts": {
     "build": "tsc",
-    "main": "tsc && node ./dist/main.js",
-    "start": "node ./dist/main.js",
+    "main": "tsc && node ./dist/src/main.js",
+    "start": "node ./dist/src/main.js",
     "dev": "nodemon src/main.ts",
     "test": "jest",
     "test:watch": "jest --watchAll",

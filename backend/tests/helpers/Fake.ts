@@ -3,6 +3,7 @@ import axios from "axios";
 import { Account } from "../../src/application/account/Account";
 import { Owner } from "../../src/application/owner/Owner";
 import { Pet } from "../../src/application/pet/Pet";
+import { url } from "../config/config";
 
 axios.defaults.validateStatus = function () {
   return true;
@@ -65,20 +66,20 @@ export async function setupDatabase(): Promise<{
   ownerId: string;
 }> {
   const account: Account = generateFakeAccount();
-  let response = await axios.post("http://localhost:3000/signup", account);
+  let response = await axios.post(`${url}/signup`, account);
   if (response.status !== 201) {
     console.log(response.status, response.data);
     throw new Error("Account not created");
   }
   const accountId = response.data.accountId;
   const owner: Owner = generateFakeOwner(accountId);
-  response = await axios.post("http://localhost:3000/owners", owner);
+  response = await axios.post(`${url}/owners`, owner);
   if (response.status !== 201) {
     console.log(response.status, response.data);
     throw new Error("Owner not created");
   }
   const ownerId = response.data.ownerId;
-  response = await axios.post("http://localhost:3000/login", {
+  response = await axios.post(`${url}/login`, {
     email: account.email,
     password: account.password,
   });

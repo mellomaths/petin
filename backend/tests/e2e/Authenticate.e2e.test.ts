@@ -1,5 +1,6 @@
 import axios from "axios";
 import { setupDatabase } from "../helpers/Fake";
+import { url } from "../config/config";
 
 axios.defaults.validateStatus = function () {
   return true;
@@ -15,7 +16,7 @@ describe("AuthenticateE2E", () => {
   it("should authenticate an account", async () => {
     const token = fakeAccount.token;
     const response = await axios.post(
-      "http://localhost:3000/authenticate",
+      `${url}/authenticate`,
       {},
       {
         headers: { Authorization: `Bearer ${token}` },

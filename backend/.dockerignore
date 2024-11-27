@@ -1,0 +1,5 @@
+# docker volumes
+.docker/
+
+# node_modules
+node_modules/

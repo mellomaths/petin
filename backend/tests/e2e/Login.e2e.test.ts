@@ -1,7 +1,7 @@
-import { faker } from "@faker-js/faker/.";
 import { Account } from "../../src/application/account/Account";
 import axios from "axios";
 import { generateFakeAccount } from "../helpers/Fake";
+import { url } from "../config/config";
 
 axios.defaults.validateStatus = function () {
   return true;
@@ -10,10 +10,10 @@ axios.defaults.validateStatus = function () {
 describe("LoginE2E", () => {
   it("should return a token when the account exists and the password is correct", async () => {
     const account: Account = generateFakeAccount();
-    let response = await axios.post("http://localhost:3000/signup", account);
+    let response = await axios.post(`${url}/signup`, account);
     expect(response.status).toBe(201);
     expect(response.data).toEqual({ accountId: expect.any(String) });
-    response = await axios.post("http://localhost:3000/login", {
+    response = await axios.post(`${url}/login`, {
       email: account.email,
       password: account.password,
     });
