@@ -1,0 +1,40 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+      - stage
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Start docker containers
+        run: docker compose --profile ci up -d
+
+      - name: Backend - Run tests
+        working-directory: ./backend
+        run: |
+          yarn install
+          yarn build
+          yarn test
+
+      - name: Post PR Comment
+        run: npx github-actions-ctrf ctrf-report.json --pr-comment
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish Test Summary Results
+        run: npx github-actions-ctrf ctrf/ctrf-report.json

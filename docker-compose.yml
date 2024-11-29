@@ -1,5 +1,6 @@
 services:
   backend:
+    profiles: [ci, backend, dev]
     build:
       context: ./backend
       dockerfile: ./Dockerfile
@@ -14,6 +15,7 @@ services:
       - postgres
 
   postgres:
+    profiles: [ci, backend, dev]
     image: postgres
     ports:
       - "5432:5432"
@@ -23,8 +25,10 @@ services:
       POSTGRES_USER: "postgres"
     volumes:
       - ./.docker/postgres:/var/lib/postgresql
+      - ./backend/scripts/create_petin.sql:/docker-entrypoint-initdb.d/init.sql
       
   pg-admin:
+    profiles: [dev]
     image: dpage/pgadmin4
     ports: 
       - "8081:80"
