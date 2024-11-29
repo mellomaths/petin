@@ -23,6 +23,7 @@ services:
       POSTGRES_USER: "postgres"
     volumes:
       - ./.docker/postgres:/var/lib/postgresql
+      - ./backend/scripts/create_petin.sql:/docker-entrypoint-initdb.d/init.sql
       
   pg-admin:
     image: dpage/pgadmin4
