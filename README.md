@@ -10,11 +10,21 @@ Our main goal is to fight against abandonment and violence against domestic anim
 
 Obviously, no wild animal can be registered in the Petin app.
 
-We need your help! If you want and are able to help in any way, please get in touch.
+**We need your help! If you want and are able to help in any way, please get in touch.**
 
-: Matheus Lima <mellomatheuslima@gmail.com>
+* Matheus Lima <mellomatheuslima@gmail.com>
 
-Read more:
+## Contributing
+
+Contributions are always welcome!
+
+See the [Contributing](docs/contributing.md) page for ways to get started.
+
+Please adhere to this project's `code of conduct`.
+
+## Appendix
+
+Read more about the project!
 
 * [About Petin](/docs/about.md)
 * [Marketing Campaigns](/docs/campaign.md)
