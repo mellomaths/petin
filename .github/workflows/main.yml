@@ -1,4 +1,4 @@
-name: Run Tests
+name: CI
 
 on:
   pull_request:
@@ -8,23 +8,27 @@ on:
       - stage
 
 jobs:
-  test:
+  tests:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      - name: Install dependencies
-        run: yarn install
+      - name: Start docker containers
+        run: docker-compose -f docker-compose.yml up -d
 
-      - name: Run Jest tests
-        run: yarn test
+      - name: Backend - Run tests
+        working-directory: ./backend
+        run: |
+          yarn install
+          yarn build
+          yarn test
 
       - name: Post PR Comment
         run: npx github-actions-ctrf ctrf-report.json --pr-comment
