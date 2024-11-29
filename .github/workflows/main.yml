@@ -21,7 +21,7 @@ jobs:
           node-version: '22'
 
       - name: Start docker containers
-        run: docker-compose -f docker-compose.yml up -d
+        run: docker compose -f docker-compose.yml up -d
 
       - name: Backend - Run tests
         working-directory: ./backend
