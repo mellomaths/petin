@@ -22,6 +22,9 @@ export class ListPets {
       return [];
     }
 
+    // TODO: Implement the logic to filter pets by location and radius
+    // * For now, we are just returning all pets
+
     return pets;
   }
 }

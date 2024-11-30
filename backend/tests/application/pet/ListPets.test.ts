@@ -34,6 +34,7 @@ describe("ListPets", () => {
     const longitude = 1.0;
     const radius = 1.0;
     const pets = await service.execute("token", latitude, longitude, radius);
+    // TODO: Implement tests for the filtering logic
     expect(pets.length).toEqual(3);
   });
 
