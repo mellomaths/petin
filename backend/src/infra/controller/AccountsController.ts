@@ -1,4 +1,5 @@
 import { Authenticate } from "../../application/account/usecase/Authenticate";
+import { CreateProfile } from "../../application/account/usecase/CreateProfile";
 import { Login } from "../../application/account/usecase/Login";
 import { Signup } from "../../application/account/usecase/Signup";
 import { Inject } from "../di/DependencyInjection";
@@ -16,6 +17,9 @@ export class AccountsController {
 
   @Inject("Authenticate")
   authenticate: Authenticate;
+
+  @Inject("CreateProfile")
+  createProfile: CreateProfile;
 
   constructor() {
     this.httpServer.register(
@@ -43,6 +47,15 @@ export class AccountsController {
         const input = body;
         const token = this.httpServer.getAuthToken(headers);
         const output = await this.authenticate.execute(token);
+        return output;
+      }
+    );
+    this.httpServer.register(
+      "post",
+      "/accounts/profiles",
+      async (params: any, body: any, file: any, headers: any) => {
+        const token = this.httpServer.getAuthToken(headers);
+        const output = await this.createProfile.execute(token, body);
         return output;
       }
     );

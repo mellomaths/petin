@@ -17,20 +17,7 @@ export class ListPets {
     limit: number = 10
   ): Promise<Pet[]> {
     await this.authenticate.execute(token);
-    // account.preferences.radius
-    // (
-    //   ST_DISTANCE (
-    //     ST_GEOGPOINT(longitude, latitude),
-    //     ST_GEOGPOINT(${longitude}, ${latitude})
-    //   ) <= ${radius} * 1000
-    // )
-
-    // ST_Distance_Sphere(ST_MakePoint(lng1, lat1),ST_MakePoint(lng2, lat2));
-    const pets = await this.petsRepository.searchWithinRadius(
-      latitude,
-      longitude,
-      radius
-    );
+    const pets = await this.petsRepository.all();
     if (!pets || pets.length === 0) {
       return [];
     }
@@ -40,9 +27,5 @@ export class ListPets {
 }
 
 export interface ListPetsRepository {
-  searchWithinRadius(
-    latitude: number,
-    longitude: number,
-    radius: number
-  ): Promise<Pet[]>;
+  all(): Promise<Pet[]>;
 }

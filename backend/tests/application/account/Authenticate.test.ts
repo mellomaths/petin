@@ -43,16 +43,6 @@ describe("Authenticate", () => {
     );
   });
 
-  it("should throw an error if account does not have profile", async () => {
-    tokenGenerator.verify = jest.fn().mockReturnValue({ account_id: "id" });
-    accountsRepository.get = jest
-      .fn()
-      .mockResolvedValue({ id: "id", password: "password" });
-    await expect(service.execute("token")).rejects.toThrow(
-      new ApplicationException(403, { message: "Forbidden" }, "Forbidden")
-    );
-  });
-
   it("should return the account", async () => {
     tokenGenerator.verify = jest.fn().mockReturnValue({ account_id: "id" });
     accountsRepository.get = jest.fn().mockResolvedValue({

@@ -29,7 +29,7 @@ describe("Create Pet", () => {
       tokenGenerator: {
         verify: jest.fn(),
       },
-      execute: jest.fn().mockResolvedValue({ owner: { id: "owner_id" } }),
+      execute: jest.fn().mockResolvedValue({ id: "account_id" }),
     };
     service = new CreatePet();
     service.petsRepository = petsRepository;

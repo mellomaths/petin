@@ -7,7 +7,7 @@ axios.defaults.validateStatus = function () {
 };
 
 describe("ListPetsE2E", () => {
-  let fakeAccount: { token: string; accountId: string; ownerId: string };
+  let fakeAccount: { token: string; accountId: string };
 
   beforeAll(async () => {
     fakeAccount = await setupDatabase();
@@ -21,10 +21,12 @@ describe("ListPetsE2E", () => {
 
   it("should list pets", async () => {
     const token = fakeAccount.token;
-    const response = await axios.get(`${url}/pets`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    console.log(response.status, response.data);
+    const response = await axios.get(
+      `${url}/pets?latitude=&longitude=&radius=`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     expect(response.status).toBe(200);
     expect(response.data.length).toEqual(2);
   });

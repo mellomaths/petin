@@ -12,7 +12,7 @@ export class CreatePet {
 
   async execute(token: string, pet: Pet): Promise<{ pet_id: string }> {
     const account = await this.authenticate.execute(token);
-    pet.owner_id = account.owner!.id;
+    pet.ownerAccountId = account.id;
     PetValidator.validate(pet);
     pet.id = crypto.randomUUID();
     pet.createdAt = new Date().toISOString();

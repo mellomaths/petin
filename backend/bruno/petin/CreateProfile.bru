@@ -1,0 +1,36 @@
+meta {
+  name: CreateProfile
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3000/accounts/profiles
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwZDg4NzNhNi0zYjg4LTRiZGEtYTYzZi1jYTVlOWM5ZWU1Y2IiLCJhY2NvdW50SWQiOiIwZDg4NzNhNi0zYjg4LTRiZGEtYTYzZi1jYTVlOWM5ZWU1Y2IiLCJpYXQiOjE3MzI5NTQ4NzMsImV4cCI6MTczMjk1ODQ3M30.M-OBNcRjv3n7rdL8UkEnPCLNkaZsWev4chP8QTpq5r8
+}
+
+body:json {
+  {
+    "fullname": "John Doe",
+    "documentNumber": "111.111.111-11",
+    "birthdate": "1990-01-01",
+    "bio": "This is my profile",
+    "gender": "MALE",
+    "phoneNumber": "+5521996923202",
+    "address": {
+      "street": "Street A",
+      "streetNumber": "1233",
+      "city": "Rio de Janeiro",
+      "state": "RJ",
+      "countryCode": "BR",
+      "zipCode": "21230-366",
+      "latitude": -22.974259752491736,
+      "longitude": -43.187352076770736
+    }
+  }
+}

@@ -5,11 +5,11 @@ import { DocumentNumberValidator } from "../../core/validator/DocumentNumberVali
 import { EmailValidator } from "../../core/validator/EmailValidator";
 import { PasswordValidator } from "../../core/validator/PasswordValidator";
 import { RequiredFieldValidator } from "../../core/validator/RequiredFieldValidator";
-import { Gender, Owner } from "../Owner";
 import { PhoneNumberValidator } from "../../core/validator/PhoneNumberValidator";
 import { AddressValidator } from "../../core/validator/AddressValidator";
+import { Gender, Profile } from "../Profile";
 
-export class OwnerValidator {
+export class ProfileValidator {
   static validateFullname(fullname: string) {
     RequiredFieldValidator.validate(fullname, "Fullname");
     if (fullname.length < 3) {
@@ -37,27 +37,27 @@ export class OwnerValidator {
     DocumentNumberValidator.validate(documentNumber, countryCode);
   }
 
-  static validateBirthday(birthday: string) {
-    RequiredFieldValidator.validate(birthday, "Birthday");
-    if (!DateStringValidator.isValid(birthday)) {
+  static validateBirthdate(birthdate: string) {
+    RequiredFieldValidator.validate(birthdate, "Birthdate");
+    if (!DateStringValidator.isValid(birthdate)) {
       throw new ApplicationException(
         400,
-        { message: "Birthday is required" },
-        "Birthday is required"
+        { message: "Birthdate is required" },
+        "Birthdate is required"
       );
     }
-    if (!DateStringValidator.isValidPast(birthday)) {
+    if (!DateStringValidator.isValidPast(birthdate)) {
       throw new ApplicationException(
         400,
-        { message: "Birthday must be in the past" },
-        "Birthday must be in the past"
+        { message: "Birthdate must be in the past" },
+        "Birthdate must be in the past"
       );
     }
-    if (!DateStringValidator.isValidAdult(birthday)) {
+    if (!DateStringValidator.isValidAdult(birthdate)) {
       throw new ApplicationException(
         400,
-        { message: "Owner must be at least 18 years old" },
-        "Owner must be at least 18 years old"
+        { message: "Profile must be at least 18 years old" },
+        "Profile must be at least 18 years old"
       );
     }
   }
@@ -89,16 +89,16 @@ export class OwnerValidator {
     PhoneNumberValidator.validate(phoneNumber, countryCode);
   }
 
-  static validate(owner: Owner) {
-    this.validateFullname(owner.fullname);
+  static validate(profile: Profile) {
+    this.validateFullname(profile.fullname);
     this.validateDocumentNumber(
-      owner.documentNumber,
-      owner.address.countryCode
+      profile.documentNumber,
+      profile.address.countryCode
     );
-    this.validateBirthday(owner.birthday);
-    this.validateBio(owner.bio);
-    this.validateGender(owner.gender);
-    this.validatePhoneNumber(owner.phoneNumber, owner.address.countryCode);
-    AddressValidator.validate(owner.address);
+    this.validateBirthdate(profile.birthdate);
+    this.validateBio(profile.bio);
+    this.validateGender(profile.gender);
+    this.validatePhoneNumber(profile.phoneNumber, profile.address.countryCode);
+    AddressValidator.validate(profile.address);
   }
 }

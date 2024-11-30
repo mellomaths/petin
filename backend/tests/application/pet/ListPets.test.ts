@@ -8,7 +8,7 @@ describe("ListPets", () => {
   beforeEach(() => {
     service = new ListPets();
     service.petsRepository = {
-      searchWithinRadius: jest.fn(),
+      all: jest.fn(),
     };
     service.authenticate = {
       accountsRepository: {
@@ -22,7 +22,7 @@ describe("ListPets", () => {
   });
 
   it("should list pets", async () => {
-    service.petsRepository.searchWithinRadius = jest
+    service.petsRepository.all = jest
       .fn()
       .mockResolvedValue([
         generateFakePet("DOG"),
@@ -38,7 +38,7 @@ describe("ListPets", () => {
   });
 
   it("should return empty list when no pets are found", async () => {
-    service.petsRepository.searchWithinRadius = jest.fn().mockResolvedValue([]);
+    service.petsRepository.all = jest.fn().mockResolvedValue([]);
 
     const latitude = 1.0;
     const longitude = 1.0;
