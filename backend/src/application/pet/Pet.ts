@@ -6,6 +6,9 @@ export type Pet = {
   bio: string;
   sex: string;
   type: string;
+  // donation: boolean;
+  // adopted: boolean;
+  // archived: boolean;
   createdAt?: string;
   updatedAt?: string;
 };

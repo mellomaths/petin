@@ -5,9 +5,13 @@ meta {
 }
 
 post {
-  url: http://localhost:3000/pets
+  url: http://localhost:3100/pets
   body: json
   auth: none
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmYWE1YjQwYi1iMDY0LTQ0MTctOGRlZC0zOTZmYTliODlkMTIiLCJhY2NvdW50SWQiOiJmYWE1YjQwYi1iMDY0LTQ0MTctOGRlZC0zOTZmYTliODlkMTIiLCJpYXQiOjE3MzI4ODEzMjIsImV4cCI6MTczMjg4NDkyMn0.8waGvvF2gfPREzCnWR_wvT8NLABMEf6U2PXX8-uGX5E
 }
 
 body:json {

@@ -23,6 +23,8 @@ export type Address = {
   state: string;
   countryCode: string;
   zipCode: string;
+  // latitude: string;
+  // longitude: string;
 
   createdAt?: string;
   updatedAt?: string;
