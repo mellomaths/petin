@@ -47,6 +47,9 @@ create table petin.pet (
 	bio text not null,
 	sex text not null,
 	type text not null,
+	donation boolean not null,
+	adopted boolean not null,
+	archived boolean not null,
 	created_at timestamp not null default now(),
 	updated_at timestamp not null default now()
 );

@@ -48,8 +48,8 @@ export function generateFakeProfile(): Profile {
       state: faker.location.state({ abbreviated: true }),
       countryCode: "BR",
       zipCode: "21230-366",
-      latitude: faker.location.latitude(),
-      longitude: faker.location.longitude(),
+      latitude: faker.location.latitude({ min: 0 }),
+      longitude: faker.location.longitude({ min: 0 }),
     },
   };
   return profile;
@@ -64,6 +64,9 @@ export function generateFakePet(type: string): Pet {
     bio: faker.person.bio(),
     sex: faker.person.sex().toUpperCase(),
     type,
+    donation: true,
+    adopted: false,
+    archived: false,
     ownerAccountProfile: generateFakeProfile(),
   };
   return pet;

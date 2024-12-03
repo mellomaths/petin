@@ -30,6 +30,10 @@ export class ListPets {
     });
   }
 
+  private isPetAvailableForAdoption(pet: Pet): boolean {
+    return pet.donation && !pet.adopted && !pet.archived;
+  }
+
   async execute(
     token: string,
     latitude: number,
@@ -43,21 +47,18 @@ export class ListPets {
         "Invalid location"
       );
     }
-
     await this.authenticate.execute(token);
     const pets = await this.petsRepository.all();
     if (!pets || pets.length === 0) {
       return [];
     }
-
-    const filteredPets = this.filterPetsByLocation(
+    const petsInRadius = this.filterPetsByLocation(
       pets,
       latitude,
       longitude,
       radius
     );
-
-    return filteredPets;
+    return petsInRadius.filter((pet) => this.isPetAvailableForAdoption(pet));
   }
 }
 

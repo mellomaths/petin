@@ -21,6 +21,9 @@ describe("Create Pet", () => {
       bio: "A cute dog",
       sex: "MALE",
       type: "DOG",
+      donation: true,
+      adopted: false,
+      archived: false,
     };
     authenticateService = {
       accountsRepository: {

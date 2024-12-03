@@ -17,6 +17,9 @@ export class PostgresPetsRepository implements PetsRepository {
       bio: result.bio,
       sex: result.sex,
       type: result.type,
+      donation: result.donation,
+      adopted: result.adopted,
+      archived: result.archived,
       createdAt: result.created_at,
       updatedAt: result.updated_at,
       ownerAccountProfile: {
@@ -52,7 +55,21 @@ export class PostgresPetsRepository implements PetsRepository {
   }
 
   async create(pet: Pet): Promise<void> {
-    const statement = `INSERT INTO petin.pet (pet_id, owner_account_id, name, birthday, bio, sex, type, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`;
+    const statement = `
+      INSERT INTO petin.pet (
+        pet_id, 
+        owner_account_id, 
+        name, 
+        birthday, 
+        bio, 
+        sex, 
+        type, 
+        donation,
+        adopted,
+        archived,
+        created_at,
+        updated_at
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);`;
     this.connection.query(statement, [
       pet.id,
       pet.ownerAccountId,
@@ -61,6 +78,9 @@ export class PostgresPetsRepository implements PetsRepository {
       pet.bio,
       pet.sex,
       pet.type,
+      pet.donation,
+      pet.adopted,
+      pet.archived,
       pet.createdAt,
       pet.updatedAt,
     ]);
