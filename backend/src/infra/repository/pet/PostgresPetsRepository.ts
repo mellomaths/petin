@@ -1,3 +1,4 @@
+import { Address } from "../../../application/account/Profile";
 import { Pet } from "../../../application/pet/Pet";
 import { DatabaseConnection } from "../../database/DatabaseConnection";
 import { Inject } from "../../di/DependencyInjection";
@@ -10,7 +11,7 @@ export class PostgresPetsRepository implements PetsRepository {
   private mapPet(result: any): Pet {
     const pet: Pet = {
       id: result.pet_id,
-      ownerAccountId: result.owner_id,
+      ownerAccountId: result.owner_account_id,
       name: result.name,
       birthday: result.birthday,
       bio: result.bio,
@@ -18,6 +19,34 @@ export class PostgresPetsRepository implements PetsRepository {
       type: result.type,
       createdAt: result.created_at,
       updatedAt: result.updated_at,
+      ownerAccountProfile: {
+        id: result.profile_id,
+        accountId: result.account_id,
+        addressId: result.address_id,
+        fullname: result.fullname,
+        documentNumber: result.document,
+        birthdate: result.birthdate,
+        bio: result.bio,
+        gender: result.gender,
+        phoneNumber: result.phone_number,
+        avatar: result.avatar,
+        createdAt: result.created_at,
+        updatedAt: result.updated_at,
+        address: {
+          id: result.address_id,
+          profileId: result.profile_id,
+          street: result.street,
+          streetNumber: result.street_number,
+          city: result.city,
+          state: result.state,
+          countryCode: result.country_code,
+          zipCode: result.zip_code,
+          latitude: result.latitude,
+          longitude: result.longitude,
+          createdAt: result.created_at,
+          updatedAt: result.updated_at,
+        },
+      },
     };
     return pet;
   }
@@ -38,7 +67,11 @@ export class PostgresPetsRepository implements PetsRepository {
   }
 
   async all(): Promise<Pet[]> {
-    const statement = `SELECT * FROM petin.pet`;
+    const statement = `
+      SELECT *
+      FROM petin.pet as pet 
+      JOIN petin.profile prfl ON prfl.account_id = pet.owner_account_id
+      JOIN petin.address as addr ON prfl.address_id = addr.address_id;`;
     const result = await this.connection.query(statement, []);
     if (!result || result.length === 0) {
       return [];

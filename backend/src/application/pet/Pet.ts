@@ -1,7 +1,9 @@
+import { Profile } from "../account/Profile";
+
 export type Pet = {
   id?: string;
   ownerAccountId?: string;
-  ownerAccount?: string;
+  ownerAccountProfile?: Profile;
   name: string;
   birthday: string;
   bio: string;

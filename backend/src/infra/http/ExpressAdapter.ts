@@ -48,7 +48,7 @@ export class ExpressAdapter implements HttpServer {
       const settings = new Settings();
       try {
         const output = await callback(
-          req.params,
+          req.query,
           req.body,
           req.file,
           req.headers
