@@ -1,0 +1,15 @@
+meta {
+  name: Authenticate
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{base_url}}/authenticate
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
