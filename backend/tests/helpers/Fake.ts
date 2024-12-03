@@ -56,12 +56,15 @@ export function generateFakeProfile(): Profile {
 }
 
 export function generateFakePet(type: string): Pet {
-  const pet = {
+  const pet: Pet = {
+    id: faker.string.uuid(),
+    ownerAccountId: faker.string.uuid(),
     name: faker.animal.dog(),
     birthday: faker.date.recent().toISOString().split("T")[0],
     bio: faker.person.bio(),
     sex: faker.person.sex().toUpperCase(),
     type,
+    ownerAccountProfile: generateFakeProfile(),
   };
   return pet;
 }

@@ -22,7 +22,7 @@ describe("ListPetsE2E", () => {
   it("should list pets", async () => {
     const token = fakeAccount.token;
     const response = await axios.get(
-      `${url}/pets?latitude=&longitude=&radius=`,
+      `${url}/pets?latitude=-43.185958894369314&longitude=-22.97270030567671&radius=3`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }

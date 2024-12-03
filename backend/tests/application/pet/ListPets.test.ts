@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker/.";
 import { ListPets } from "../../../src/application/pet/usecase/ListPets";
 import { generateFakePet } from "../../helpers/Fake";
 
