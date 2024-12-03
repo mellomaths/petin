@@ -7,7 +7,7 @@ axios.defaults.validateStatus = function () {
 };
 
 describe("CreatePetE2E", () => {
-  let fakeAccount: { token: string; accountId: string; ownerId: string };
+  let fakeAccount: { token: string; accountId: string };
 
   beforeAll(async () => {
     fakeAccount = await setupDatabase();

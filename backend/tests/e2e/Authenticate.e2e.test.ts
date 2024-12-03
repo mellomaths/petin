@@ -7,7 +7,7 @@ axios.defaults.validateStatus = function () {
 };
 
 describe("AuthenticateE2E", () => {
-  let fakeAccount: { token: string; accountId: string; ownerId: string };
+  let fakeAccount: { token: string; accountId: string };
 
   beforeAll(async () => {
     fakeAccount = await setupDatabase();
@@ -27,18 +27,6 @@ describe("AuthenticateE2E", () => {
       id: fakeAccount.accountId,
       email: expect.any(String),
       password: "",
-      owner: {
-        id: fakeAccount.ownerId,
-        accountId: fakeAccount.accountId,
-        fullname: expect.any(String),
-        documentNumber: expect.any(String),
-        birthday: expect.any(String),
-        bio: expect.any(String),
-        gender: expect.any(String),
-        phoneNumber: expect.any(String),
-        addressId: expect.any(String),
-        address: {},
-      },
     });
   });
 });

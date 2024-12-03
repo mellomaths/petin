@@ -1,5 +1,4 @@
 import { Account } from "../../../application/account/Account";
-import { Address } from "../../../application/owner/Owner";
 import { DatabaseConnection } from "../../database/DatabaseConnection";
 import { Inject } from "../../di/DependencyInjection";
 import { AccountsRepository } from "./AccountsRepository";
@@ -14,26 +13,11 @@ export class PostgresAccountsRepository implements AccountsRepository {
       email: result.email,
       password: result.password,
     };
-    if (result.owner_id) {
-      account.owner = {
-        id: result.owner_id,
-        accountId: result.account_id,
-        fullname: result.fullname,
-        documentNumber: result.document_number,
-        birthday: result.birthday,
-        bio: result.bio,
-        gender: result.gender,
-        phoneNumber: result.phone_number,
-        addressId: result.address_id,
-        address: {} as Address,
-      };
-    }
     return account;
   }
 
   async get(accountId: string): Promise<Account | null> {
-    const query =
-      "SELECT acct.account_id, acct.email, acct.password, acct.created_at, acct.updated_at, ow.owner_id, ow.fullname, ow.document_number, ow.birthday, ow.bio, ow.gender, ow.phone_number, ow.address_id, ow.avatar FROM petin.account as acct LEFT JOIN petin.owner as ow ON acct.account_id = ow.account_id WHERE acct.account_id = $1";
+    const query = "SELECT * FROM petin.account WHERE account_id = $1";
     let result = await this.connection.query(query, [accountId]);
     if (!result || result.length === 0) {
       return null;
@@ -42,8 +26,7 @@ export class PostgresAccountsRepository implements AccountsRepository {
   }
 
   async getByEmail(email: string): Promise<Account | null> {
-    const query =
-      "SELECT acct.account_id, acct.email, acct.password, acct.created_at, acct.updated_at, ow.owner_id, ow.fullname, ow.document_number, ow.birthday, ow.bio, ow.gender, ow.phone_number, ow.address_id, ow.avatar FROM petin.account as acct LEFT JOIN petin.owner as ow ON acct.account_id = ow.account_id WHERE acct.email = $1";
+    const query = "SELECT * FROM petin.account WHERE email = $1";
     let result = await this.connection.query(query, [email]);
     if (!result || result.length === 0) {
       return null;

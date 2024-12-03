@@ -1,6 +1,6 @@
 import { isPhoneNumber } from "class-validator";
 import { ApplicationException } from "../../../infra/exception/ApplicationException";
-import { CountryCode } from "../../owner/Owner";
+import { CountryCode } from "../../account/Profile";
 
 export class PhoneNumberValidator {
   static validate(phone: string, countryCode: string) {

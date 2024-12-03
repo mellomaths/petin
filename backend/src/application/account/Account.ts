@@ -1,11 +1,11 @@
-import { Owner } from "../owner/Owner";
+import { Profile } from "./Profile";
 
 export type Account = {
   id?: string;
   email: string;
   password: string;
   confirmPassword?: string;
-  owner?: Owner;
+  profile?: Profile;
   createdAt?: string;
   updatedAt?: string;
 };

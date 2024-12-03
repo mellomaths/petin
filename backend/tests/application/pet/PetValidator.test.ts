@@ -12,6 +12,9 @@ describe("PetValidator", () => {
       bio: "A cute dog",
       sex: "MALE",
       type: "DOG",
+      donation: true,
+      adopted: false,
+      archived: false,
     };
   });
 
@@ -85,6 +88,72 @@ describe("PetValidator", () => {
     pet.sex = "invalid-sex";
     expect(() => PetValidator.validate(pet)).toThrow(
       new ApplicationException(400, { message: "Invalid sex" }, "Invalid sex")
+    );
+  });
+
+  it("should throw an error if donation is missing", () => {
+    pet.donation = undefined as any;
+    expect(() => PetValidator.validate(pet)).toThrow(
+      new ApplicationException(
+        400,
+        { message: "Donation must be a boolean" },
+        "Donation must be a boolean"
+      )
+    );
+  });
+
+  it("should throw an error if donation is not a boolean", () => {
+    pet.donation = "true" as any;
+    expect(() => PetValidator.validate(pet)).toThrow(
+      new ApplicationException(
+        400,
+        { message: "Donation must be a boolean" },
+        "Donation must be a boolean"
+      )
+    );
+  });
+
+  it("should throw an error if adopted is missing", () => {
+    pet.adopted = undefined as any;
+    expect(() => PetValidator.validate(pet)).toThrow(
+      new ApplicationException(
+        400,
+        { message: "Adopted must be a boolean" },
+        "Adopted must be a boolean"
+      )
+    );
+  });
+
+  it("should throw an error if adopted is not a boolean", () => {
+    pet.adopted = "true" as any;
+    expect(() => PetValidator.validate(pet)).toThrow(
+      new ApplicationException(
+        400,
+        { message: "Adopted must be a boolean" },
+        "Adopted must be a boolean"
+      )
+    );
+  });
+
+  it("should throw an error if archived is missing", () => {
+    pet.archived = undefined as any;
+    expect(() => PetValidator.validate(pet)).toThrow(
+      new ApplicationException(
+        400,
+        { message: "Archived must be a boolean" },
+        "Archived must be a boolean"
+      )
+    );
+  });
+
+  it("should throw an error if archived is not a boolean", () => {
+    pet.archived = "true" as any;
+    expect(() => PetValidator.validate(pet)).toThrow(
+      new ApplicationException(
+        400,
+        { message: "Archived must be a boolean" },
+        "Archived must be a boolean"
+      )
     );
   });
 });

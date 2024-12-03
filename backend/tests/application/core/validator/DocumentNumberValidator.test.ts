@@ -1,5 +1,5 @@
+import { CountryCode } from "../../../../src/application/account/Profile";
 import { DocumentNumberValidator } from "../../../../src/application/core/validator/DocumentNumberValidator";
-import { CountryCode } from "../../../../src/application/owner/Owner";
 import { ApplicationException } from "../../../../src/infra/exception/ApplicationException";
 
 describe("DocumentNumberValidator", () => {

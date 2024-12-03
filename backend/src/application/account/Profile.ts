@@ -1,9 +1,9 @@
-export type Owner = {
+export type Profile = {
   id?: string;
-  accountId: string;
+  accountId?: string;
   fullname: string;
   documentNumber: string;
-  birthday: string;
+  birthdate: string;
   bio: string;
   gender: string;
   phoneNumber: string;
@@ -16,21 +16,22 @@ export type Owner = {
 
 export type Address = {
   id?: string;
-  ownerId?: string;
+  profileId?: string;
   street: string;
   streetNumber: string;
   city: string;
   state: string;
   countryCode: string;
   zipCode: string;
-
+  latitude: number;
+  longitude: number;
   createdAt?: string;
   updatedAt?: string;
 };
 
 export enum Gender {
-  MALE = "MALE",
-  FEMALE = "FEMALE",
+  MAN = "MAN",
+  WOMAN = "WOMAN",
   PREFER_NOT_TO_SAY = "PREFER_NOT_TO_SAY",
 }
 

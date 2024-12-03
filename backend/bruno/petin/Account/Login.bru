@@ -1,11 +1,11 @@
 meta {
   name: Login
   type: http
-  seq: 5
+  seq: 2
 }
 
 post {
-  url: http://localhost:3000/login
+  url: {{base_url}}/login
   body: json
   auth: none
 }
@@ -15,4 +15,8 @@ body:json {
     "email": "john.doe@google.com",
     "password": "1234567@Abc"
   }
+}
+
+vars:post-response {
+  token: res.body.token
 }

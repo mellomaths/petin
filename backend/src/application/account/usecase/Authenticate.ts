@@ -34,13 +34,6 @@ export class Authenticate {
         "Unauthorized"
       );
     }
-    if (!account.owner) {
-      throw new ApplicationException(
-        403,
-        { message: "Forbidden" },
-        "Forbidden"
-      );
-    }
     account.password = "";
     return account;
   }

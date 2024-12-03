@@ -1,5 +1,5 @@
 import { ApplicationException } from "../../../infra/exception/ApplicationException";
-import { CountryCode } from "../../owner/Owner";
+import { CountryCode } from "../../account/Profile";
 
 export class DocumentNumberValidator {
   static isValidBrazilDocumentNumber(documentNumber: string) {

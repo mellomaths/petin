@@ -21,6 +21,9 @@ describe("Create Pet", () => {
       bio: "A cute dog",
       sex: "MALE",
       type: "DOG",
+      donation: true,
+      adopted: false,
+      archived: false,
     };
     authenticateService = {
       accountsRepository: {
@@ -29,7 +32,7 @@ describe("Create Pet", () => {
       tokenGenerator: {
         verify: jest.fn(),
       },
-      execute: jest.fn().mockResolvedValue({ owner: { id: "owner_id" } }),
+      execute: jest.fn().mockResolvedValue({ id: "account_id" }),
     };
     service = new CreatePet();
     service.petsRepository = petsRepository;

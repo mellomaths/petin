@@ -48,7 +48,7 @@ export class ExpressAdapter implements HttpServer {
       const settings = new Settings();
       try {
         const output = await callback(
-          req.params,
+          req.query,
           req.body,
           req.file,
           req.headers
@@ -66,9 +66,13 @@ export class ExpressAdapter implements HttpServer {
         }
 
         // logger.error(error);
-        let output = { message: "Internal server error", error: null };
+        let output = {
+          message: "Internal server error",
+          error: undefined,
+          stack: undefined,
+        };
         if (!settings.isProduction()) {
-          output = { ...output, error: error.message };
+          output = { ...output, error: error.message, stack: error.stack };
         }
         res.status(500).json(output);
       }
