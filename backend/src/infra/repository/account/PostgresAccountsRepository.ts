@@ -1,5 +1,4 @@
 import { Account } from "../../../application/account/Account";
-import { Address } from "../../../application/owner/Owner";
 import { DatabaseConnection } from "../../database/DatabaseConnection";
 import { Inject } from "../../di/DependencyInjection";
 import { AccountsRepository } from "./AccountsRepository";

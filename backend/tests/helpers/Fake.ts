@@ -1,7 +1,6 @@
 import { faker } from "@faker-js/faker/.";
 import axios from "axios";
 import { Account } from "../../src/application/account/Account";
-import { Owner } from "../../src/application/owner/Owner";
 import { Pet } from "../../src/application/pet/Pet";
 import { url } from "../config/config";
 import { Profile } from "../../src/application/account/Profile";

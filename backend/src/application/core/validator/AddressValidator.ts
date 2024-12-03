@@ -1,8 +1,8 @@
 import { isEnum } from "class-validator";
 import { ApplicationException } from "../../../infra/exception/ApplicationException";
-import { Address, CountryCode } from "../../owner/Owner";
 import { RequiredFieldValidator } from "./RequiredFieldValidator";
 import { ZipCodeValidator } from "./ZipCodeValidator";
+import { Address, CountryCode } from "../../account/Profile";
 
 export class AddressValidator {
   static validateStreet(street: string) {

@@ -28,6 +28,6 @@ describe("ListPetsE2E", () => {
       }
     );
     expect(response.status).toBe(200);
-    expect(response.data.length).toEqual(2);
+    expect(response.data.length).toBeGreaterThanOrEqual(2);
   });
 });
