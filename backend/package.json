@@ -4,10 +4,10 @@
   "main": "main.ts",
   "scripts": {
     "build": "tsc",
-    "main": "tsc && node ./dist/src/main.js",
-    "start": "node ./dist/src/main.js",
+    "main": "tsc && node ./dist/main.js",
+    "start": "node ./dist/main.js",
     "dev": "nodemon src/main.ts",
-    "test": "jest --runInBand",
+    "test": "jest",
     "test:watch": "jest --watchAll",
     "test:coverage": "jest --coverage",
     "docker:build": "docker build -t backend-petin .",

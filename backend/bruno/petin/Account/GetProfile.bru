@@ -5,7 +5,15 @@ meta {
 }
 
 get {
-  url: {base_url}/accounts/profiles
+  url: {{base_url}}/accounts/profiles?expands=pets
   body: none
   auth: none
+}
+
+params:query {
+  expands: pets
+}
+
+headers {
+  Authorization: Bearer {{token}}
 }
