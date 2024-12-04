@@ -46,7 +46,7 @@ describe("Create Pet", () => {
   it("should create a pet", async () => {
     const result = await service.execute("token", pet);
     expect(result).toBeDefined();
-    expect(pet.id).toBeDefined();
+    expect(result.petId).toBeDefined();
     expect(pet.createdAt).toBeDefined();
     expect(petsRepository.create).toHaveBeenCalledTimes(1);
     expect(petsRepository.create).toHaveBeenCalledWith({

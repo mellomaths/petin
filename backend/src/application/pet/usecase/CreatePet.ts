@@ -10,7 +10,7 @@ export class CreatePet {
   @Inject("Authenticate")
   authenticate: Authenticate;
 
-  async execute(token: string, pet: Pet): Promise<{ pet_id: string }> {
+  async execute(token: string, pet: Pet): Promise<{ petId: string }> {
     const account = await this.authenticate.execute(token);
     pet.ownerAccountId = account.id;
 
@@ -22,7 +22,7 @@ export class CreatePet {
     pet.birthday = new Date(pet.birthday).toISOString();
 
     await this.petsRepository.create(pet);
-    return { pet_id: pet.id };
+    return { petId: pet.id };
   }
 }
 

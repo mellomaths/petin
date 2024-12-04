@@ -1,4 +1,4 @@
-import { Address } from "../../../application/account/Profile";
+import { Address, Profile } from "../../../application/account/Profile";
 import { Pet } from "../../../application/pet/Pet";
 import { DatabaseConnection } from "../../database/DatabaseConnection";
 import { Inject } from "../../di/DependencyInjection";
@@ -22,7 +22,11 @@ export class PostgresPetsRepository implements PetsRepository {
       archived: result.archived,
       createdAt: result.created_at,
       updatedAt: result.updated_at,
-      ownerAccountProfile: {
+      ownerAccountProfile: {} as Profile,
+    };
+
+    if (result.profile_id) {
+      pet.ownerAccountProfile = {
         id: result.profile_id,
         accountId: result.account_id,
         addressId: result.address_id,
@@ -49,8 +53,8 @@ export class PostgresPetsRepository implements PetsRepository {
           createdAt: result.created_at,
           updatedAt: result.updated_at,
         },
-      },
-    };
+      };
+    }
     return pet;
   }
 
@@ -96,7 +100,18 @@ export class PostgresPetsRepository implements PetsRepository {
     if (!result || result.length === 0) {
       return [];
     }
+    return result.map((row: any) => this.mapPet(row));
+  }
 
+  async listByAccountId(accountId: string): Promise<Pet[]> {
+    const statement = `
+      SELECT *
+      FROM petin.pet as pet 
+      WHERE pet.owner_account_id = $1;`;
+    const result = await this.connection.query(statement, [accountId]);
+    if (!result || result.length === 0) {
+      return [];
+    }
     return result.map((row: any) => this.mapPet(row));
   }
 }
