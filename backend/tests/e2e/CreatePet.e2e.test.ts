@@ -20,7 +20,7 @@ describe("CreatePetE2E", () => {
       headers: { Authorization: `Bearer ${token}` },
     });
     expect(response.status).toBe(201);
-    expect(response.data).toEqual({ pet_id: expect.any(String) });
+    expect(response.data).toEqual({ petId: expect.any(String) });
   });
 
   it("should create a cat", async () => {
@@ -30,6 +30,6 @@ describe("CreatePetE2E", () => {
       headers: { Authorization: `Bearer ${token}` },
     });
     expect(response.status).toBe(201);
-    expect(response.data).toEqual({ pet_id: expect.any(String) });
+    expect(response.data).toEqual({ petId: expect.any(String) });
   });
 });

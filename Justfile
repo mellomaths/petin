@@ -1,6 +1,11 @@
 # default: install lint build test
 
 # run project
+build:
+    docker compose rm -f
+    docker compose pull
+    docker compose build backend --no-cache
+
 start:
     docker compose --profile ci up -d
 
@@ -17,7 +22,7 @@ frontend:
 
 # run backend
 backend:
-    docker compose --profile backend up -d
+    docker compose --force-recreate --profile backend up -d
 
 stop:
     docker compose down

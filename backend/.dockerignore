@@ -6,3 +6,6 @@ node_modules/
 
 # .env files
 .env
+
+# dist folder
+dist/
