@@ -30,9 +30,7 @@ export function generateFakeAccount(profile: boolean = true): Account {
 export function generateFakeProfile(): Profile {
   const profile: Profile = {
     fullname: faker.person.fullName(),
-    documentNumber: faker.helpers.fromRegExp(
-      /[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}/
-    ),
+    documentNumber: "784.131.810-38",
     birthdate: faker.date
       .between({ from: "1900-01-01", to: "2006-01-01" })
       .toISOString()
