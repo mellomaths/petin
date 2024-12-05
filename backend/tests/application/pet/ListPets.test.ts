@@ -17,6 +17,7 @@ describe("ListPets", () => {
       },
       tokenGenerator: {
         verify: jest.fn(),
+        decode: jest.fn(),
       },
       execute: jest.fn().mockResolvedValue({ owner: { id: "owner_id" } }),
     };

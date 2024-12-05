@@ -17,4 +17,8 @@ export class JwtGenerator implements AuthTokenGenerator {
   verify(token: string): TokenPayload {
     return jwt.verify(token, this.settings.jwtSecret) as TokenPayload;
   }
+
+  decode(token: string): TokenPayload {
+    return jwt.decode(token) as TokenPayload;
+  }
 }
