@@ -12,6 +12,7 @@ describe("GetProfile", () => {
       },
       tokenGenerator: {
         verify: jest.fn(),
+        decode: jest.fn(),
       },
     };
     service.profilesRepository = {

@@ -19,6 +19,7 @@ describe("CreateProfile", () => {
       },
       tokenGenerator: {
         verify: jest.fn(),
+        decode: jest.fn(),
       },
     };
     profile = {

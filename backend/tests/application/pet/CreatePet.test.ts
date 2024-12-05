@@ -31,6 +31,7 @@ describe("Create Pet", () => {
       },
       tokenGenerator: {
         verify: jest.fn(),
+        decode: jest.fn(),
       },
       execute: jest.fn().mockResolvedValue({ id: "account_id" }),
     };

@@ -1,4 +1,4 @@
-import { faker } from "@faker-js/faker/.";
+import { faker } from "@faker-js/faker";
 import { ApplicationException } from "../../../src/infra/exception/ApplicationException";
 import { Profile } from "../../../src/application/account/Profile";
 import { ProfileValidator } from "../../../src/application/account/validator/ProfileValidator";

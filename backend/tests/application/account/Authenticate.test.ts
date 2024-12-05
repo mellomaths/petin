@@ -16,6 +16,7 @@ describe("Authenticate", () => {
     };
     tokenGenerator = {
       verify: jest.fn(),
+      decode: jest.fn(),
     };
     service = new Authenticate();
     service.accountsRepository = accountsRepository;
@@ -43,7 +44,28 @@ describe("Authenticate", () => {
     );
   });
 
+  it("should throw unable to read decoded token", async () => {
+    tokenGenerator.verify = jest.fn().mockReturnValue({ account_id: "id" });
+    tokenGenerator.decode = jest.fn().mockReturnValue(null);
+    await expect(service.execute("token")).rejects.toThrow(
+      new ApplicationException(401, { message: "Unauthorized" }, "Unauthorized")
+    );
+  });
+
+  it("should throw an error if token is expired", async () => {
+    tokenGenerator.verify = jest
+      .fn()
+      .mockReturnValue({ account_id: "id", exp: 1733359996 });
+    accountsRepository.get = jest.fn().mockResolvedValue({ id: "id" });
+    await expect(service.execute("token")).rejects.toThrow(
+      new ApplicationException(401, { message: "Unauthorized" }, "Unauthorized")
+    );
+  });
+
   it("should return the account", async () => {
+    tokenGenerator.decode = jest
+      .fn()
+      .mockReturnValue({ account_id: "id", exp: Date.now() / 1000 + 3600 });
     tokenGenerator.verify = jest.fn().mockReturnValue({ account_id: "id" });
     accountsRepository.get = jest.fn().mockResolvedValue({
       id: "id",

@@ -1,4 +1,4 @@
-import { faker } from "@faker-js/faker/.";
+import { faker } from "@faker-js/faker";
 import axios from "axios";
 import { Account } from "../../src/application/account/Account";
 import { Pet } from "../../src/application/pet/Pet";
