@@ -137,3 +137,6 @@ dist/
 
 # uploaded images
 uploads/
+
+# vscode settings
+.vscode/

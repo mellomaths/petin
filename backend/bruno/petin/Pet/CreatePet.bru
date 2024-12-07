@@ -1,0 +1,28 @@
+meta {
+  name: CreatePet
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/pets
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {
+    "name": "Rex",
+    "birthday": "2020-01-01",
+    "bio": "A cute dog",
+    "sex": "MALE",
+    "type": "DOG",
+    "donation": true,
+    "adopted": false,
+    "archived": false
+  }
+}

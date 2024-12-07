@@ -1,3 +1,4 @@
+import { Address } from "../../../../src/application/account/Profile";
 import { AddressValidator } from "../../../../src/application/core/validator/AddressValidator";
 import { ApplicationException } from "../../../../src/infra/exception/ApplicationException";
 
@@ -130,13 +131,15 @@ describe("AddressValidator", () => {
   });
 
   it("should validate address", () => {
-    const address = {
+    const address: Address = {
       street: "Rua dos Bobos",
       streetNumber: "0",
       city: "São Paulo",
       state: "SP",
       countryCode: "BR",
       zipCode: "00000-000",
+      latitude: 0,
+      longitude: 0,
     };
     expect(() => AddressValidator.validate(address)).not.toThrow();
   });

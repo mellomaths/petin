@@ -1,0 +1,36 @@
+meta {
+  name: CreateProfile
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/accounts/profiles
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {
+    "fullname": "John Doe",
+    "documentNumber": "111.111.111-11",
+    "birthdate": "1990-01-01",
+    "bio": "This is my profile",
+    "gender": "MALE",
+    "phoneNumber": "+5521996923202",
+    "address": {
+      "street": "Street A",
+      "streetNumber": "1233",
+      "city": "Rio de Janeiro",
+      "state": "RJ",
+      "countryCode": "BR",
+      "zipCode": "21230-366",
+      "latitude": -22.974259752491736,
+      "longitude": -43.187352076770736
+    }
+  }
+}

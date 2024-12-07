@@ -1,9 +1,20 @@
 import { ApplicationException } from "../../../infra/exception/ApplicationException";
-import { CountryCode } from "../../owner/Owner";
+import { CountryCode } from "../../account/Profile";
+import { BrCnpjValidator } from "./br/BrCnpjValidator";
+import { BrCpfValidator } from "./br/BrCpfValidator";
 
 export class DocumentNumberValidator {
   static isValidBrazilDocumentNumber(documentNumber: string) {
-    return /^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(documentNumber);
+    const document = documentNumber.replace(/\D/g, "");
+    if (document.length !== 11 && document.length !== 14) {
+      return false;
+    }
+
+    if (document.length === 11) {
+      return BrCpfValidator.isValidCpf(document);
+    }
+
+    return BrCnpjValidator.isValidCnpj(document);
   }
 
   static validate(documentNumber: string, country: string) {

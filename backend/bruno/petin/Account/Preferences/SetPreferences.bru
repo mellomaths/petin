@@ -1,0 +1,28 @@
+meta {
+  name: SetPreferences
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{base_url}}/accounts/preferences
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  [
+    {
+      "key": "RadiusSearch",
+      "value": "10"
+    },
+    {
+      "key": "Visible",
+      "value": "false"
+    }
+  ]
+}

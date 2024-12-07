@@ -1,0 +1,19 @@
+meta {
+  name: Signup
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/signup
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "john.doe@google.com",
+    "password": "1234567@Abc",
+    "confirmPassword": "1234567@Abc"
+  }
+}
