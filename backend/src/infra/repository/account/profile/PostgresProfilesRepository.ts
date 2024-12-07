@@ -1,6 +1,6 @@
-import { Address, Profile } from "../../../application/account/Profile";
-import { DatabaseConnection } from "../../database/DatabaseConnection";
-import { Inject } from "../../di/DependencyInjection";
+import { Address, Profile } from "../../../../application/account/Profile";
+import { DatabaseConnection } from "../../../database/DatabaseConnection";
+import { Inject } from "../../../di/DependencyInjection";
 import { ProfilesRepository } from "./ProfilesRepository";
 
 export class PostgresProfilesRepository implements ProfilesRepository {
