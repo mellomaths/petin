@@ -24,6 +24,9 @@ jobs:
         run: docker compose --profile ci up -d
 
       - name: Backend - Run tests
+        env:
+          NODE_ENV: test
+          API_PORT: 3100
         working-directory: ./backend
         run: |
           yarn install

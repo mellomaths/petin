@@ -18,6 +18,21 @@ export class Authenticate {
         "Unauthorized"
       );
     }
+    const payload = this.tokenGenerator.decode(token);
+    if (!payload) {
+      throw new ApplicationException(
+        401,
+        { message: "Unauthorized" },
+        "Unauthorized"
+      );
+    }
+    if (payload.exp && payload.exp < Date.now() / 1000) {
+      throw new ApplicationException(
+        401,
+        { message: "Unauthorized" },
+        "Unauthorized"
+      );
+    }
     const decoded = this.tokenGenerator.verify(token);
     if (!decoded) {
       throw new ApplicationException(
@@ -34,13 +49,6 @@ export class Authenticate {
         "Unauthorized"
       );
     }
-    if (!account.owner) {
-      throw new ApplicationException(
-        403,
-        { message: "Forbidden" },
-        "Forbidden"
-      );
-    }
     account.password = "";
     return account;
   }
@@ -52,4 +60,5 @@ export interface AuthenticateRepository {
 
 export interface AuthenticateTokenGenerator {
   verify(token: string): TokenPayload;
+  decode(token: string): TokenPayload;
 }

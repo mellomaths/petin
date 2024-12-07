@@ -1,22 +1,30 @@
 # default: install lint build test
 
 # run project
-petin:
+build:
+    docker compose rm -f
+    docker compose pull
+    docker compose build backend --no-cache
+
+start:
     docker compose --profile ci up -d
 
+database:
+    docker compose --profile db up -d
+
 # run project dev environment
-petin-dev:
+dev:
     docker compose --profile dev up -d
 
 # run frontend
-petin-frontend:
+frontend:
     docker compose --profile frontend up -d
 
 # run backend
-petin-backend:
-    docker compose --profile backend up -d
+backend:
+    docker compose --force-recreate --profile backend up -d
 
-docker-down:
+stop:
     docker compose down
 
 # run tests

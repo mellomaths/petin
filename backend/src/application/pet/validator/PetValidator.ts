@@ -1,4 +1,4 @@
-import { isEnum } from "class-validator";
+import { isBoolean, isDefined, isEnum } from "class-validator";
 import { ApplicationException } from "../../../infra/exception/ApplicationException";
 import { DateStringValidator } from "../../core/validator/DateStringValidator";
 import { Animal, Pet, Sex } from "../Pet";
@@ -52,6 +52,27 @@ export class PetValidator {
         400,
         { message: "Invalid sex" },
         "Invalid sex"
+      );
+    }
+    if (!isDefined(pet.donation) || !isBoolean(pet.donation)) {
+      throw new ApplicationException(
+        400,
+        { message: "Donation must be a boolean" },
+        "Donation must be a boolean"
+      );
+    }
+    if (!isDefined(pet.adopted) || !isBoolean(pet.adopted)) {
+      throw new ApplicationException(
+        400,
+        { message: "Adopted must be a boolean" },
+        "Adopted must be a boolean"
+      );
+    }
+    if (!isDefined(pet.archived) || !isBoolean(pet.archived)) {
+      throw new ApplicationException(
+        400,
+        { message: "Archived must be a boolean" },
+        "Archived must be a boolean"
       );
     }
   }

@@ -1,39 +1,31 @@
-import { Authenticate } from "../../../src/application/account/usecase/Authenticate";
 import { Pet } from "../../../src/application/pet/Pet";
-import {
-  CreatePet,
-  CreatePetRepository,
-} from "../../../src/application/pet/usecase/CreatePet";
+import { CreatePet } from "../../../src/application/pet/usecase/CreatePet";
+import { ApplicationException } from "../../../src/infra/exception/ApplicationException";
+import { mockAuthenticate } from "../../helpers/Mock";
 
 describe("Create Pet", () => {
-  let petsRepository: CreatePetRepository;
   let service: CreatePet;
   let pet: Pet;
-  let authenticateService: Authenticate;
 
   beforeEach(() => {
-    petsRepository = {
-      create: jest.fn(),
-    };
     pet = {
       name: "Rex",
       birthday: "2020-01-01",
       bio: "A cute dog",
       sex: "MALE",
       type: "DOG",
-    };
-    authenticateService = {
-      accountsRepository: {
-        get: jest.fn(),
-      },
-      tokenGenerator: {
-        verify: jest.fn(),
-      },
-      execute: jest.fn().mockResolvedValue({ owner: { id: "owner_id" } }),
+      donation: true,
+      adopted: false,
+      archived: false,
     };
     service = new CreatePet();
-    service.petsRepository = petsRepository;
-    service.authenticate = authenticateService;
+    service.petsRepository = {
+      create: jest.fn(),
+    };
+    service.authenticate = mockAuthenticate();
+    service.profilesRepository = {
+      getByAccountId: jest.fn(),
+    };
   });
 
   afterEach(() => {
@@ -41,17 +33,33 @@ describe("Create Pet", () => {
   });
 
   it("should create a pet", async () => {
+    service.profilesRepository.getByAccountId = jest.fn().mockResolvedValue({
+      id: "profile_id",
+    });
     const result = await service.execute("token", pet);
     expect(result).toBeDefined();
-    expect(pet.id).toBeDefined();
+    expect(result.petId).toBeDefined();
     expect(pet.createdAt).toBeDefined();
-    expect(petsRepository.create).toHaveBeenCalledTimes(1);
-    expect(petsRepository.create).toHaveBeenCalledWith({
+    expect(service.petsRepository.create).toHaveBeenCalledTimes(1);
+    expect(service.petsRepository.create).toHaveBeenCalledWith({
       ...pet,
       id: pet.id,
       createdAt: expect.any(String),
       updatedAt: expect.any(String),
       birthday: expect.any(String),
     });
+  });
+
+  it("should throw an error if the profile is not found", async () => {
+    service.profilesRepository.getByAccountId = jest
+      .fn()
+      .mockResolvedValue(null);
+    await expect(service.execute("token", pet)).rejects.toThrow(
+      new ApplicationException(
+        404,
+        { message: "Profile not registered" },
+        "Profile not registered"
+      )
+    );
   });
 });

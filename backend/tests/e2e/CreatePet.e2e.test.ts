@@ -1,5 +1,9 @@
 import axios from "axios";
-import { generateFakePet, setupDatabase } from "../helpers/Fake";
+import {
+  generateFakePet,
+  generateFakeProfile,
+  setupDatabase,
+} from "../helpers/Fake";
 import { url } from "../config/config";
 
 axios.defaults.validateStatus = function () {
@@ -7,10 +11,15 @@ axios.defaults.validateStatus = function () {
 };
 
 describe("CreatePetE2E", () => {
-  let fakeAccount: { token: string; accountId: string; ownerId: string };
+  let fakeAccount: { token: string; accountId: string };
 
   beforeAll(async () => {
     fakeAccount = await setupDatabase();
+    const profile = generateFakeProfile();
+    profile.accountId = fakeAccount.accountId;
+    await axios.post(`${url}/accounts/profiles`, profile, {
+      headers: { Authorization: `Bearer ${fakeAccount.token}` },
+    });
   });
 
   it("should create a dog", async () => {
@@ -20,7 +29,7 @@ describe("CreatePetE2E", () => {
       headers: { Authorization: `Bearer ${token}` },
     });
     expect(response.status).toBe(201);
-    expect(response.data).toEqual({ pet_id: expect.any(String) });
+    expect(response.data).toEqual({ petId: expect.any(String) });
   });
 
   it("should create a cat", async () => {
@@ -30,6 +39,6 @@ describe("CreatePetE2E", () => {
       headers: { Authorization: `Bearer ${token}` },
     });
     expect(response.status).toBe(201);
-    expect(response.data).toEqual({ pet_id: expect.any(String) });
+    expect(response.data).toEqual({ petId: expect.any(String) });
   });
 });

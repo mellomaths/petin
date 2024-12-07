@@ -1,0 +1,21 @@
+meta {
+  name: ListPets
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base_url}}/pets?latitude=-43.185958894369314&longitude=-22.97270030567671&radius=3
+  body: none
+  auth: none
+}
+
+params:query {
+  latitude: -43.185958894369314
+  longitude: -22.97270030567671
+  radius: 3
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
