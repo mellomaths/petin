@@ -53,8 +53,8 @@ export class ExpressAdapter implements HttpServer {
           req.file,
           req.headers
         );
-        if (method === "delete") {
-          return res.status(204).json(output);
+        if (method === "delete" || method === "patch" || method === "put") {
+          return res.status(204).send();
         }
         if (method === "post") {
           return res.status(201).json(output);

@@ -39,6 +39,15 @@ create table petin.profile (
 	updated_at timestamp not null default now()
 );
 
+create table petin.account_preferences (
+	preferences_id uuid primary key,
+	account_id uuid not null references petin.account(account_id),
+	key text not null,
+	value text not null,
+	created_at timestamp not null default now(),
+	updated_at timestamp not null default now()
+);
+
 create table petin.pet (
 	pet_id uuid primary key,
 	owner_account_id uuid not null references petin.account(account_id),

@@ -2,6 +2,7 @@ import { Authenticate } from "./application/account/usecase/Authenticate";
 import { CreateProfile } from "./application/account/usecase/CreateProfile";
 import { GetProfile } from "./application/account/usecase/GetProfile";
 import { Login } from "./application/account/usecase/Login";
+import { SetPreferences } from "./application/account/usecase/SetPreferences";
 import { Signup } from "./application/account/usecase/Signup";
 import { CreatePet } from "./application/pet/usecase/CreatePet";
 import { ListPets } from "./application/pet/usecase/ListPets";
@@ -13,7 +14,8 @@ import { Registry } from "./infra/di/DependencyInjection";
 import { BCryptAdapter } from "./infra/hash/BCryptAdapter";
 import { ExpressAdapter } from "./infra/http/ExpressAdapter";
 import { PostgresAccountsRepository } from "./infra/repository/account/PostgresAccountsRepository";
-import { PostgresProfilesRepository } from "./infra/repository/account/PostgresProfilesRepository";
+import { PostgresPreferencesRepository } from "./infra/repository/account/preferences/PostgresPreferencesRepository";
+import { PostgresProfilesRepository } from "./infra/repository/account/profile/PostgresProfilesRepository";
 import { PostgresPetsRepository } from "./infra/repository/pet/PostgresPetsRepository";
 import { Settings } from "./infra/settings/Settings";
 
@@ -28,6 +30,10 @@ Registry.getInstance().provide(
   new PostgresProfilesRepository()
 );
 Registry.getInstance().provide(
+  "PreferencesRepository",
+  new PostgresPreferencesRepository()
+);
+Registry.getInstance().provide(
   "AccountsRepository",
   new PostgresAccountsRepository()
 );
@@ -40,6 +46,7 @@ Registry.getInstance().provide("Signup", new Signup());
 Registry.getInstance().provide("Login", new Login());
 Registry.getInstance().provide("Authenticate", new Authenticate());
 Registry.getInstance().provide("GetProfile", new GetProfile());
+Registry.getInstance().provide("SetPreferences", new SetPreferences());
 Registry.getInstance().provide("PetsController", new PetsController());
 Registry.getInstance().provide("AccountsController", new AccountsController());
 
