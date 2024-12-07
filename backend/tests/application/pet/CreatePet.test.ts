@@ -1,6 +1,7 @@
 import { Pet } from "../../../src/application/pet/Pet";
 import { CreatePet } from "../../../src/application/pet/usecase/CreatePet";
 import { ApplicationException } from "../../../src/infra/exception/ApplicationException";
+import { mockAuthenticate } from "../../helpers/Mock";
 
 describe("Create Pet", () => {
   let service: CreatePet;
@@ -21,16 +22,7 @@ describe("Create Pet", () => {
     service.petsRepository = {
       create: jest.fn(),
     };
-    service.authenticate = {
-      accountsRepository: {
-        get: jest.fn(),
-      },
-      tokenGenerator: {
-        verify: jest.fn(),
-        decode: jest.fn(),
-      },
-      execute: jest.fn().mockResolvedValue({ id: "account_id" }),
-    };
+    service.authenticate = mockAuthenticate();
     service.profilesRepository = {
       getByAccountId: jest.fn(),
     };

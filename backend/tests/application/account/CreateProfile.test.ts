@@ -1,6 +1,7 @@
 import { Profile } from "../../../src/application/account/Profile";
 import { CreateProfile } from "../../../src/application/account/usecase/CreateProfile";
 import { ApplicationException } from "../../../src/infra/exception/ApplicationException";
+import { mockAuthenticate } from "../../helpers/Mock";
 
 describe("CreateProfile", () => {
   let service: CreateProfile;
@@ -12,16 +13,7 @@ describe("CreateProfile", () => {
       getByAccountId: jest.fn(),
       create: jest.fn(),
     };
-    service.authenticate = {
-      execute: jest.fn(),
-      accountsRepository: {
-        get: jest.fn(),
-      },
-      tokenGenerator: {
-        verify: jest.fn(),
-        decode: jest.fn(),
-      },
-    };
+    service.authenticate = mockAuthenticate();
     profile = {
       accountId: "12345678",
       fullname: "John Doe",
