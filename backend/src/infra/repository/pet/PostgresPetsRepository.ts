@@ -58,6 +58,18 @@ export class PostgresPetsRepository implements PetsRepository {
     return pet;
   }
 
+  async get(petId: string): Promise<Pet | null> {
+    const statement = `
+      SELECT *
+      FROM petin.pet as pet 
+      WHERE pet.pet_id = $1;`;
+    const result = await this.connection.query(statement, [petId]);
+    if (!result || result.length === 0) {
+      return null;
+    }
+    return this.mapPet(result[0]);
+  }
+
   async create(pet: Pet): Promise<void> {
     const statement = `
       INSERT INTO petin.pet (

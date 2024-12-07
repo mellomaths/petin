@@ -1,0 +1,24 @@
+meta {
+  name: CreateReport
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/reports
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {
+    "againstAccountId": "5ecf68cf-9a4d-4232-8950-617282787250",
+    "petId": "5ecf68cf-9a4d-4232-8950-617282787250",
+    "reason": "FAKE_ACCOUNT",
+    "explanation": "Fake account"
+  }
+}
