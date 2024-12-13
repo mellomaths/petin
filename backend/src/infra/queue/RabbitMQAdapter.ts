@@ -2,6 +2,7 @@ import { Channel, connect, Connection } from "amqplib";
 import { Inject } from "../di/DependencyInjection";
 import { Settings } from "../settings/Settings";
 import { BrokerConnection } from "./BrokerConnection";
+import { Event } from "../../application/event/Event";
 
 export class RabbitMQAdapter implements BrokerConnection {
   @Inject("Settings")
@@ -21,13 +22,13 @@ export class RabbitMQAdapter implements BrokerConnection {
     this.channel = await this.connection.createChannel();
   }
 
-  async send(queue: string, message: string): Promise<void> {
+  async send(queue: string, message: Event<any>): Promise<void> {
     if (!this.connected) {
       await this.connect();
     }
 
     await this.channel.assertQueue(queue);
-    this.channel.sendToQueue(queue, Buffer.from(message));
+    this.channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)));
   }
 
   async close(): Promise<void> {
