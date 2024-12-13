@@ -12,6 +12,9 @@ start:
 database:
     docker compose --profile db up -d
 
+mq:
+    docker compose --profile mq up -d
+
 # run project dev environment
 dev:
     docker compose --profile dev up -d
