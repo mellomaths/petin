@@ -2,12 +2,14 @@ import { faker } from "@faker-js/faker";
 import axios from "axios";
 import { Account } from "../../src/application/account/Account";
 import { Pet } from "../../src/application/pet/Pet";
-import { url } from "../config/config";
 import { Profile } from "../../src/application/account/Profile";
+import { setupEnvironmentVariables } from "../config/config";
 
 axios.defaults.validateStatus = function () {
   return true;
 };
+
+const env = setupEnvironmentVariables();
 
 export function generateFakeAccount(profile: boolean = true): Account {
   const password = faker.internet.password({
@@ -75,13 +77,13 @@ export async function setupDatabase(): Promise<{
   accountId: string;
 }> {
   const account: Account = generateFakeAccount(false);
-  let response = await axios.post(`${url}/signup`, account);
+  let response = await axios.post(`${env.url}/signup`, account);
   if (response.status !== 201) {
     console.log(response.status, response.data);
     throw new Error("Account not created");
   }
   const accountId = response.data.accountId;
-  response = await axios.post(`${url}/login`, {
+  response = await axios.post(`${env.url}/login`, {
     email: account.email,
     password: account.password,
   });

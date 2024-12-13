@@ -4,20 +4,22 @@ import {
   generateFakeProfile,
   setupDatabase,
 } from "../helpers/Fake";
-import { url } from "../config/config";
+import { setupEnvironmentVariables, TestEnvironment } from "../config/config";
 
 axios.defaults.validateStatus = function () {
   return true;
 };
 
 describe("CreatePetE2E", () => {
+  let env: TestEnvironment;
   let fakeAccount: { token: string; accountId: string };
 
   beforeAll(async () => {
+    env = setupEnvironmentVariables();
     fakeAccount = await setupDatabase();
     const profile = generateFakeProfile();
     profile.accountId = fakeAccount.accountId;
-    await axios.post(`${url}/accounts/profiles`, profile, {
+    await axios.post(`${env.url}/accounts/profiles`, profile, {
       headers: { Authorization: `Bearer ${fakeAccount.token}` },
     });
   });
@@ -25,7 +27,7 @@ describe("CreatePetE2E", () => {
   it("should create a dog", async () => {
     const token = fakeAccount.token;
     const pet = generateFakePet("DOG");
-    const response = await axios.post(`${url}/pets`, pet, {
+    const response = await axios.post(`${env.url}/pets`, pet, {
       headers: { Authorization: `Bearer ${token}` },
     });
     expect(response.status).toBe(201);
@@ -35,7 +37,7 @@ describe("CreatePetE2E", () => {
   it("should create a cat", async () => {
     const token = fakeAccount.token;
     const pet = generateFakePet("CAT");
-    const response = await axios.post(`${url}/pets`, pet, {
+    const response = await axios.post(`${env.url}/pets`, pet, {
       headers: { Authorization: `Bearer ${token}` },
     });
     expect(response.status).toBe(201);

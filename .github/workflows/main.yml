@@ -26,6 +26,7 @@ jobs:
       - name: Backend - Run tests
         env:
           NODE_ENV: test
+          API_HOST: localhost
           API_PORT: 3100
         working-directory: ./backend
         run: |

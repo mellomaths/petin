@@ -1,22 +1,24 @@
 import axios from "axios";
 import { setupDatabase } from "../helpers/Fake";
-import { url } from "../config/config";
+import { setupEnvironmentVariables, TestEnvironment } from "../config/config";
 
 axios.defaults.validateStatus = function () {
   return true;
 };
 
 describe("AuthenticateE2E", () => {
+  let env: TestEnvironment;
   let fakeAccount: { token: string; accountId: string };
 
   beforeAll(async () => {
+    env = setupEnvironmentVariables();
     fakeAccount = await setupDatabase();
   });
 
   it("should authenticate an account", async () => {
     const token = fakeAccount.token;
     const response = await axios.post(
-      `${url}/authenticate`,
+      `${env.url}/authenticate`,
       {},
       {
         headers: { Authorization: `Bearer ${token}` },
