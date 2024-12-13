@@ -10,6 +10,9 @@ export class Settings {
     secretKey: string;
   };
   readonly jwtSecret: string;
+  readonly messageBroker: {
+    url: string;
+  };
 
   constructor() {
     this.port = parseInt(process.env.PORT as string);
@@ -26,6 +29,9 @@ export class Settings {
     };
     this.environment = process.env.ENV as string;
     this.jwtSecret = process.env.AUTH_TOKEN_SECRET as string;
+    this.messageBroker = {
+      url: process.env.MESSAGE_BROKER_URL as string,
+    };
   }
 
   isProduction(): boolean {

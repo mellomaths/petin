@@ -14,8 +14,8 @@ import { ReportsController } from "./infra/controller/ReportsController";
 import { PostgresAdapter } from "./infra/database/PostgresAdapter";
 import { Registry } from "./infra/di/DependencyInjection";
 import { BCryptAdapter } from "./infra/hash/BCryptAdapter";
-import { ExpressAdapter } from "./infra/http/ExpressAdapter";
 import { FastifyAdapter } from "./infra/http/FastifyAdapter";
+import { RabbitMQAdapter } from "./infra/queue/RabbitMQAdapter";
 import { PostgresAccountsRepository } from "./infra/repository/account/PostgresAccountsRepository";
 import { PostgresPreferencesRepository } from "./infra/repository/account/preferences/PostgresPreferencesRepository";
 import { PostgresProfilesRepository } from "./infra/repository/account/profile/PostgresProfilesRepository";
@@ -28,6 +28,7 @@ const httpServer = new FastifyAdapter();
 Registry.getInstance().provide("Settings", settings);
 Registry.getInstance().provide("HttpServer", httpServer);
 Registry.getInstance().provide("Database", new PostgresAdapter());
+Registry.getInstance().provide("MessageBroker", new RabbitMQAdapter());
 Registry.getInstance().provide("PetsRepository", new PostgresPetsRepository());
 Registry.getInstance().provide(
   "ProfilesRepository",
