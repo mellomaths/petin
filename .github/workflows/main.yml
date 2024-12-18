@@ -21,7 +21,7 @@ jobs:
           node-version: '22'
 
       - name: Start docker containers
-        run: docker compose --profile ci up -d --wait  
+        run: docker compose --profile ci up -d --wait --wait-timeout 60      
 
       - name: Backend - Run tests
         env:
