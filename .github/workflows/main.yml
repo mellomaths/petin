@@ -21,7 +21,10 @@ jobs:
           node-version: '22'
 
       - name: Start docker containers
-        run: docker compose --profile ci up -d --wait --wait-timeout 60      
+        run: docker compose --profile ci up -d --wait --wait-timeout 60 
+      
+      - name: Collect Docker Logs
+        uses: jwalton/gh-docker-logs@v2.2.2
 
       - name: Backend - Run tests
         env:
