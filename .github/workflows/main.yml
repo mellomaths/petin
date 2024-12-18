@@ -20,15 +20,29 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Start docker containers
-        run: docker compose --profile ci up -d  
+      - name: Start Database
+        run: docker compose --profile db up -d
+
+      - name: Start MessageBroker
+        run: docker compose --profile mq up -d
+
+      - name: Sleep for 30 seconds
+        run: sleep 30s
+        shell: bash
+        
+      - name: Backend - Up
+        run: docker compose --profile ci up -d --wait --wait-timeout 60  
       
-      - name: Backend - Health Check 
-        uses: jtalk/url-health-check-action@v4
-        with:
-          url: http://127.0.0.1:3100/health
-          max-attempts: 5
-          retry-delay: 30s
+      - name: Sleep for 30 seconds
+        run: sleep 30s
+        shell: bash
+      
+      # - name: Backend - Health Check 
+      #   uses: jtalk/url-health-check-action@v4
+      #   with:
+      #     url: http://127.0.0.1:3100/health
+      #     max-attempts: 5
+      #     retry-delay: 30s
 
       - name: Backend - Run tests
         env:
