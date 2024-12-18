@@ -23,10 +23,10 @@ jobs:
       - name: Start docker containers
         run: docker compose --profile ci up -d  
       
-      - name: Check the deployed service URL
+      - name: Backend - Health Check 
         uses: jtalk/url-health-check-action@v4
         with:
-          url: https://localhost:3100/health
+          url: http://localhost:3100/health
           max-attempts: 5
           retry-delay: 30s
 
