@@ -21,11 +21,7 @@ jobs:
           node-version: '22'
 
       - name: Start docker containers
-        run: docker compose --profile ci up -d
-
-      - name: Wait for health checks
-        run: timeout 60s sh -c 'until docker ps | grep <CONTAINER_NAME> | grep -q healthy; do echo "Waiting for container to be healthy..."; sleep 2; done'
-      
+        run: docker compose --profile ci up -d --wait  
 
       - name: Backend - Run tests
         env:
