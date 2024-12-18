@@ -57,4 +57,16 @@ export class RabbitMQAdapter implements MessageBroker {
       });
     });
   }
+
+  async healthCheck(): Promise<boolean> {
+    return new Promise((resolve) => {
+      client.connect(this.settings.messageBroker.url, (error, connection) => {
+        if (error) return resolve(false);
+        connection.createChannel((error, channel) => {
+          if (error) return resolve(false);
+          return resolve(true);
+        });
+      });
+    });
+  }
 }

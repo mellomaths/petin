@@ -25,6 +25,15 @@ export class PostgresAdapter implements DatabaseConnection {
     return this.connection?.query(statement, params);
   }
 
+  async healthCheck(): Promise<boolean> {
+    try {
+      await this.connection?.query("SELECT 1");
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   async close(): Promise<void> {
     await this.connection?.$pool.end();
   }

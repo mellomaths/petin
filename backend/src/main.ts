@@ -4,11 +4,13 @@ import { GetProfile } from "./application/account/usecase/GetProfile";
 import { Login } from "./application/account/usecase/Login";
 import { SetPreferences } from "./application/account/usecase/SetPreferences";
 import { Signup } from "./application/account/usecase/Signup";
+import { HealthCheck } from "./application/health/usecase/HealthCheck";
 import { CreatePet } from "./application/pet/usecase/CreatePet";
 import { ListPets } from "./application/pet/usecase/ListPets";
 import { CreateReport } from "./application/report/usecase/CreateReport";
 import { JwtGenerator } from "./infra/auth/JwtGenerator";
 import { AccountsController } from "./infra/controller/AccountsController";
+import { HealthCheckController } from "./infra/controller/HealthCheckController";
 import { PetsController } from "./infra/controller/PetsController";
 import { ReportsController } from "./infra/controller/ReportsController";
 import { PostgresAdapter } from "./infra/database/PostgresAdapter";
@@ -57,8 +59,13 @@ Registry.getInstance().provide("Authenticate", new Authenticate());
 Registry.getInstance().provide("GetProfile", new GetProfile());
 Registry.getInstance().provide("SetPreferences", new SetPreferences());
 Registry.getInstance().provide("CreateReport", new CreateReport());
+Registry.getInstance().provide("HealthCheck", new HealthCheck());
 Registry.getInstance().provide("PetsController", new PetsController());
 Registry.getInstance().provide("AccountsController", new AccountsController());
-Registry.getInstance().provide("Reports", new ReportsController());
+Registry.getInstance().provide("ReportsController", new ReportsController());
+Registry.getInstance().provide(
+  "HealthCheckController",
+  new HealthCheckController()
+);
 
 httpServer.listen(settings.port);

@@ -22,6 +22,7 @@ describe("CreateReport", () => {
       send: jest.fn(),
       connect: jest.fn(),
       close: jest.fn(),
+      healthCheck: jest.fn(),
     };
   });
 

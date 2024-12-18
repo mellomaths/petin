@@ -4,4 +4,5 @@ export interface MessageBroker {
   connect(): Promise<void>;
   send(message: Event<any, any, any>): Promise<void>;
   close(): Promise<void>;
+  healthCheck(): Promise<boolean>;
 }
