@@ -20,6 +20,9 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Build Docker image
+        run: docker compose build backend --no-cache
+
       - name: Start docker containers
         run: docker compose --profile ci up -d
 
