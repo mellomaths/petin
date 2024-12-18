@@ -1,15 +1,15 @@
-import { Channel, connect, Connection } from "amqplib";
+import client, { Channel, Connection } from "amqplib/callback_api";
 import { Inject } from "../di/DependencyInjection";
 import { Settings } from "../settings/Settings";
-import { BrokerConnection } from "./BrokerConnection";
 import { Event } from "../../application/event/Event";
+import { MessageBroker } from "./MessageBroker";
 
-export class RabbitMQAdapter implements BrokerConnection {
+export class RabbitMQAdapter implements MessageBroker {
   @Inject("Settings")
   settings: Settings;
 
-  private connection!: Connection;
-  private channel!: Channel;
+  private connection: Connection;
+  private channel: Channel;
 
   get connected(): boolean {
     return !!this.connection && !!this.channel;
@@ -17,24 +17,44 @@ export class RabbitMQAdapter implements BrokerConnection {
 
   async connect(): Promise<void> {
     if (this.connected) return;
-
-    this.connection = await connect(this.settings.messageBroker.url);
-    this.channel = await this.connection.createChannel();
+    return new Promise((resolve, reject) => {
+      client.connect(this.settings.messageBroker.url, (error, connection) => {
+        if (error) reject(error);
+        connection.createChannel((error, channel) => {
+          if (error) reject(error);
+          resolve();
+        });
+      });
+    });
   }
 
-  async send(queue: string, message: Event<any>): Promise<void> {
-    if (!this.connected) {
-      await this.connect();
-    }
-
-    await this.channel.assertQueue(queue);
-    this.channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)));
+  async send(message: Event<any, any, any>): Promise<void> {
+    const queue = message.queue;
+    return new Promise((resolve, reject) => {
+      client.connect(this.settings.messageBroker.url, (error, connection) => {
+        if (error) reject(error);
+        connection.createChannel((error, channel) => {
+          if (error) reject(error);
+          channel.assertQueue(queue, { durable: false }, (error) => {
+            if (error) reject(error);
+            channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)));
+            resolve();
+          });
+        });
+      });
+    });
   }
 
   async close(): Promise<void> {
     if (!this.connected) return;
-
-    await this.channel.close();
-    await this.connection.close();
+    return new Promise((resolve, reject) => {
+      this.channel.close((error) => {
+        if (error) reject(error);
+        this.connection.close((error) => {
+          if (error) reject(error);
+          resolve();
+        });
+      });
+    });
   }
 }

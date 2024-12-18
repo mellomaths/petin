@@ -53,8 +53,11 @@ services:
       - '25672:25672'
       - '15672:15672'
     environment:
-      - RABBITMQ_SECURE_PASSWORD=yes
+      # - RABBITMQ_SECURE_PASSWORD=yes
       - RABBITMQ_LOGS=-
+      - RABBITMQ_USERNAME=admin
+      - RABBITMQ_PASSWORD=admin
+      - RABBITMQ_MANAGEMENT_ALLOW_WEB_ACCESS=true
     volumes:
       - './.docker/rabbitmq:/bitnami/rabbitmq/mnesia'
     

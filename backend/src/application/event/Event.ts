@@ -1,10 +1,8 @@
-export type Event<T> = {
+export type Event<IType, IQueue, IPayload> = {
   id: string;
-  type: string;
-  queue: string;
+  type: IType;
+  queue: IQueue;
   timestamp: number;
   sentAt: string;
-  payload: T;
+  payload: IPayload;
 };
-
-export enum EventQueue {}
