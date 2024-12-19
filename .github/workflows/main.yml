@@ -34,4 +34,6 @@ jobs:
           API_PORT: 3100
         working-directory: ./backend
         run: |
+          yarn install
+          yarn build
           yarn test
