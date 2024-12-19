@@ -1,5 +1,7 @@
 # Petin
 
+[![Continuous Integration](https://github.com/mellomaths/petin/actions/workflows/main.yml/badge.svg)](https://github.com/mellomaths/petin/actions/workflows/main.yml)
+
 _Find Your Perfect Pet, Right From the Heart_.
 
 🚧 **UNDER DEVELOPMENT** 🚧
