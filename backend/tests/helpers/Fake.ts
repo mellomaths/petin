@@ -11,6 +11,14 @@ axios.defaults.validateStatus = function () {
 
 const env = setupEnvironmentVariables();
 
+export async function healthCheck(): Promise<void> {
+  const response = await axios.get(`${env.url}/health`);
+  console.log(response.status, response.data);
+  if (response.status !== 200) {
+    throw new Error("Health Check failed");
+  }
+}
+
 export function generateFakeAccount(profile: boolean = true): Account {
   const password = faker.internet.password({
     length: 8,
@@ -76,6 +84,7 @@ export async function setupDatabase(): Promise<{
   token: string;
   accountId: string;
 }> {
+  await healthCheck();
   const account: Account = generateFakeAccount(false);
   let response = await axios.post(`${env.url}/signup`, account);
   if (response.status !== 201) {

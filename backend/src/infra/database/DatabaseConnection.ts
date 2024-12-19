@@ -3,4 +3,5 @@ export interface DatabaseConnection {
   getConnection(): any;
   query(statement: string, params: any): Promise<any>;
   close(): Promise<void>;
+  healthCheck(): Promise<boolean>;
 }

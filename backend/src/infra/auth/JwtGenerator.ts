@@ -9,13 +9,13 @@ export class JwtGenerator implements AuthTokenGenerator {
   settings: Settings;
 
   generate(payload: TokenPayload, expirationTimeInSeconds: number): string {
-    return jwt.sign(payload, this.settings.jwtSecret, {
+    return jwt.sign(payload, this.settings.getJwtSecret(), {
       expiresIn: expirationTimeInSeconds,
     });
   }
 
   verify(token: string): TokenPayload {
-    return jwt.verify(token, this.settings.jwtSecret) as TokenPayload;
+    return jwt.verify(token, this.settings.getJwtSecret()) as TokenPayload;
   }
 
   decode(token: string): TokenPayload {
