@@ -1,5 +1,6 @@
 services:
   backend:
+    profiles: [ci]
     build: .
     ports:
       - "3100:3100"
@@ -20,6 +21,7 @@ services:
       - rabbitmq
       
   postgres:
+    profiles: [ci, dev]
     image: postgres:17-alpine
     ports:
       - "5432:5432"
@@ -35,8 +37,22 @@ services:
       start_period: 80s
     volumes:
       - ./scripts/create_petin.sql:/docker-entrypoint-initdb.d/init.sql
+
+  pg-admin:
+    profiles: [dev]
+    image: dpage/pgadmin4
+    ports: 
+      - "8081:80"
+    volumes:
+      - ./.docker/pgadmin:/var/lib/pgadmin
+    environment: 
+      PGADMIN_DEFAULT_EMAIL: postgres@postgres.com
+      PGADMIN_DEFAULT_PASSWORD: postgres
+    links:
+      - postgres
   
   rabbitmq:
+    profiles: [ci, dev]
     image: rabbitmq:4-alpine
     ports:
       - '5672:5672'

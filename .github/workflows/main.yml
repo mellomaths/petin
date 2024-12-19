@@ -25,7 +25,7 @@ jobs:
         shell: bash
 
       - name: Backend - Up
-        run: docker compose -f ./backend/docker-compose.yml up -d
+        run: docker compose -f ./backend/docker-compose.yml --profile ci up -d
 
       - name: Backend - Run tests
         env:
