@@ -68,4 +68,4 @@ Registry.getInstance().provide(
   new HealthCheckController()
 );
 
-httpServer.listen(settings.port);
+httpServer.listen(settings.getPort());

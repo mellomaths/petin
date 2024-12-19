@@ -10,7 +10,7 @@ export class PostgresAdapter implements DatabaseConnection {
   connection: any;
 
   constructor() {
-    this.connection = pgp()(this.settings.database.url);
+    this.connection = pgp()(this.settings.getDatabase().url);
   }
 
   async connect(): Promise<void> {
