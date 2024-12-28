@@ -33,23 +33,23 @@ export class CreateProfile {
         "Profile already exists"
       );
     }
-    const isValidDocumentNumber = await this.checkDocumentNumber.execute(
-      profile.documentNumber,
-      profile.documentNumberType,
-      profile.address.countryCode
-    );
-    if (!isValidDocumentNumber) {
+    const documentNumberValidation = await this.checkDocumentNumber.execute({
+      documentNumber: profile.documentNumber,
+      documentNumberType: profile.documentNumberType,
+      countryCode: profile.address.countryCode,
+    });
+    if (!documentNumberValidation.valid) {
       throw new ApplicationException(
         400,
         { message: "Invalid document number" },
         "Invalid document number"
       );
     }
-    const isValidZipCode = await this.checkZipCode.execute({
+    const zipCodeValidation = await this.checkZipCode.execute({
       zipCode: profile.address.zipCode,
       countryCode: profile.address.countryCode,
     });
-    if (!isValidZipCode) {
+    if (!zipCodeValidation.valid) {
       throw new ApplicationException(
         400,
         { message: "Invalid zip code" },

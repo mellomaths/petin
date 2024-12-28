@@ -18,6 +18,7 @@ import { AccountsController } from "./infra/controller/AccountsController";
 import { HealthCheckController } from "./infra/controller/HealthCheckController";
 import { PetsController } from "./infra/controller/PetsController";
 import { ReportsController } from "./infra/controller/ReportsController";
+import { ValidatorController } from "./infra/controller/ValidatorController";
 import { PostgresAdapter } from "./infra/database/PostgresAdapter";
 import { Registry } from "./infra/di/DependencyInjection";
 import { BCryptAdapter } from "./infra/hash/BCryptAdapter";
@@ -82,6 +83,10 @@ Registry.getInstance().provide("ReportsController", new ReportsController());
 Registry.getInstance().provide(
   "HealthCheckController",
   new HealthCheckController()
+);
+Registry.getInstance().provide(
+  "ValidatorController",
+  new ValidatorController()
 );
 
 httpServer.listen(settings.getPort());

@@ -16,15 +16,15 @@ describe("CreateProfile", () => {
     service.authenticate = mockAuthenticate();
     service.checkDocumentNumber = {
       brDocumentNumberApi: {
-        validate: jest.fn().mockResolvedValue(true),
+        validate: jest.fn().mockResolvedValue({ valid: true }),
       },
-      execute: jest.fn().mockResolvedValue(true),
+      execute: jest.fn().mockResolvedValue({ valid: true }),
     };
     service.checkZipCode = {
       brZipCodeApi: {
-        validate: jest.fn().mockResolvedValue(true),
+        validate: jest.fn().mockResolvedValue({ valid: true }),
       },
-      execute: jest.fn().mockResolvedValue(true),
+      execute: jest.fn().mockResolvedValue({ valid: true }),
     };
     profile = {
       accountId: "12345678",
@@ -105,7 +105,9 @@ describe("CreateProfile", () => {
     service.profilesRepository.getByAccountId = jest
       .fn()
       .mockResolvedValue(null);
-    service.checkDocumentNumber.execute = jest.fn().mockResolvedValue(false);
+    service.checkDocumentNumber.execute = jest
+      .fn()
+      .mockResolvedValue({ valid: false });
     profile.accountId = account.id;
     await expect(service.execute("token", profile)).rejects.toThrow(
       new ApplicationException(
@@ -132,7 +134,9 @@ describe("CreateProfile", () => {
     service.profilesRepository.getByAccountId = jest
       .fn()
       .mockResolvedValue(null);
-    service.checkZipCode.execute = jest.fn().mockResolvedValue(false);
+    service.checkZipCode.execute = jest
+      .fn()
+      .mockResolvedValue({ valid: false });
     profile.accountId = account.id;
     await expect(service.execute("token", profile)).rejects.toThrow(
       new ApplicationException(

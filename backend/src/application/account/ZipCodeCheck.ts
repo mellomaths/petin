@@ -5,6 +5,7 @@ export type ZipCodeCheck = {
 
 export type ZipCodeCheckResponse = {
   valid: boolean;
+  zipCode: string;
   state?: string;
   city?: string;
   neighborhood?: string;

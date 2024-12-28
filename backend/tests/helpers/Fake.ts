@@ -40,7 +40,7 @@ export function generateFakeAccount(profile: boolean = true): Account {
 export function generateFakeProfile(): Profile {
   const profile: Profile = {
     fullname: faker.person.fullName(),
-    documentNumber: "784.131.810-38",
+    documentNumber: "636.201.327-12",
     documentNumberType: "CPF",
     birthdate: faker.date
       .between({ from: "1900-01-01", to: "2006-01-01" })

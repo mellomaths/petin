@@ -19,9 +19,23 @@ export class BrasilApi {
     const url = `${this.getBaseUrl()}/cep/v2/${cep}`;
     const response = await axios.get(url);
     if (response.status !== 200) {
-      return { valid: false };
+      return { valid: false, zipCode: cep };
     }
 
-    return response.data as ZipCodeCheckResponse;
+    const data: ZipCodeCheckResponse = {
+      valid: true,
+      zipCode: response.data.cep,
+      state: response.data.state,
+      city: response.data.city,
+      neighborhood: response.data.neighborhood,
+      street: response.data.street,
+      service: `BrasilApi::${response.data.service}`,
+      location: {
+        latitude: response.data.latitude,
+        longitude: response.data.longitude,
+      },
+    };
+
+    return data;
   }
 }

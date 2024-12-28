@@ -1,18 +1,26 @@
 import { Inject } from "../../../infra/di/DependencyInjection";
 import { ApplicationException } from "../../../infra/exception/ApplicationException";
+import { DocumentNumberValidator } from "../../core/validator/DocumentNumberValidator";
+import {
+  DocumentNumberCheck,
+  DocumentNumberCheckResponse,
+} from "../DocumentNumberCheck";
 import { CountryCode } from "../Profile";
+import { DocumentNumberCheckValidator } from "../validator/DocumentNumberCheckValidator";
 
 export class CheckDocumentNumber {
   @Inject("BrDocumentNumberApi")
   brDocumentNumberApi: DocumentNumberApi;
 
   async execute(
-    documentNumber: string,
-    type: string,
-    country: string
-  ): Promise<boolean> {
-    if (country === CountryCode.BRAZIL.toString()) {
-      return this.brDocumentNumberApi.validate(documentNumber, type);
+    payload: DocumentNumberCheck
+  ): Promise<DocumentNumberCheckResponse> {
+    DocumentNumberCheckValidator.validate(payload);
+    payload.documentNumber = DocumentNumberValidator.clean(
+      payload.documentNumber
+    );
+    if (payload.countryCode === CountryCode.BRAZIL.toString()) {
+      return this.brDocumentNumberApi.validate(payload);
     }
     throw new ApplicationException(
       400,
@@ -23,5 +31,5 @@ export class CheckDocumentNumber {
 }
 
 export interface DocumentNumberApi {
-  validate(documentNumber: string, type: string): Promise<boolean>;
+  validate(payload: DocumentNumberCheck): Promise<DocumentNumberCheckResponse>;
 }

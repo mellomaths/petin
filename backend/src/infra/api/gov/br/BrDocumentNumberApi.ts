@@ -1,8 +1,14 @@
+import {
+  DocumentNumberCheck,
+  DocumentNumberCheckResponse,
+} from "../../../../application/account/DocumentNumberCheck";
 import { DocumentNumberApi } from "../../../../application/account/usecase/CheckDocumentNumber";
 
 export class BrDocumentNumberApi implements DocumentNumberApi {
-  async validate(documentNumber: string, type: string): Promise<boolean> {
+  async validate(
+    payload: DocumentNumberCheck
+  ): Promise<DocumentNumberCheckResponse> {
     // TODO: Implement validation for Brazilian document number
-    return true;
+    return { valid: true };
   }
 }

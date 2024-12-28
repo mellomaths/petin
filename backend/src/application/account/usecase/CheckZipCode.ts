@@ -1,5 +1,6 @@
 import { Inject } from "../../../infra/di/DependencyInjection";
 import { ApplicationException } from "../../../infra/exception/ApplicationException";
+import { CountryCode } from "../Profile";
 import { ZipCodeCheckValidator } from "../validator/ZipCodeCheckValidator";
 import { ZipCodeCheck, ZipCodeCheckResponse } from "../ZipCodeCheck";
 
@@ -10,7 +11,7 @@ export class CheckZipCode {
   async execute(payload: ZipCodeCheck): Promise<ZipCodeCheckResponse> {
     ZipCodeCheckValidator.validate(payload);
     payload.zipCode.replace(/\D/g, "");
-    if (payload.countryCode === "BR") {
+    if (payload.countryCode === CountryCode.BRAZIL.toString()) {
       return this.brZipCodeApi.validate(payload);
     }
 

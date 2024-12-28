@@ -5,6 +5,10 @@ import { BrCnpjValidator } from "./br/BrCnpjValidator";
 import { BrCpfValidator } from "./br/BrCpfValidator";
 
 export class DocumentNumberValidator {
+  static clean(documentNumber: string) {
+    return documentNumber.replace(/\D/g, "");
+  }
+
   static isValidBrazilDocumentNumber(
     documentNumber: string,
     documentNumberType: string
@@ -12,7 +16,7 @@ export class DocumentNumberValidator {
     if (!isEnum(documentNumberType, BrDocumentNumberType)) {
       return false;
     }
-    const document = documentNumber.replace(/\D/g, "");
+    const document = DocumentNumberValidator.clean(documentNumber);
     if (document.length !== 11 && document.length !== 14) {
       return false;
     }
