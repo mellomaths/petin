@@ -49,7 +49,6 @@ describe("GetProfile", () => {
       }
     );
     expect(response.status).toBe(200);
-
     expect(response.data.profile.id).toEqual(profile.id!);
     expect(response.data.profile.accountId).toEqual(profile.accountId);
     expect(

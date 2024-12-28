@@ -23,6 +23,13 @@ export class Settings {
     this.env.messageBroker = {
       url: process.env.MESSAGE_BROKER_URL as string,
     };
+    this.env.api = {
+      government: {
+        br: {
+          brasilApiBaseUrl: process.env.GOV_BR_BRASIL_API_BASE_URL as string,
+        },
+      },
+    };
   }
 
   getPort(): number {
@@ -52,6 +59,10 @@ export class Settings {
     return this.env.messageBroker;
   }
 
+  getGovernmentApis(): GovernmentApis {
+    return this.env.api.government;
+  }
+
   isProduction(): boolean {
     return this.env.environment === "production";
   }
@@ -74,6 +85,12 @@ type MessageBroker = {
   url: string;
 };
 
+type GovernmentApis = {
+  br: {
+    brasilApiBaseUrl: string;
+  };
+};
+
 type EnvironmentVariables = {
   port: number;
   database: Database;
@@ -81,4 +98,7 @@ type EnvironmentVariables = {
   objectStorage: ObjectStorage;
   jwtSecret: string;
   messageBroker: MessageBroker;
+  api: {
+    government: GovernmentApis;
+  };
 };

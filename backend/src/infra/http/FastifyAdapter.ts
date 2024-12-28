@@ -55,6 +55,7 @@ export class FastifyAdapter implements HttpServer {
         if (error instanceof ApplicationException) {
           return reply.status(error.status).send(error.payload);
         }
+        console.log(error);
         return reply.status(500).send({ message: "Internal Server Error" });
       }
     };

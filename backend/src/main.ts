@@ -1,4 +1,6 @@
 import { Authenticate } from "./application/account/usecase/Authenticate";
+import { CheckDocumentNumber } from "./application/account/usecase/CheckDocumentNumber";
+import { CheckZipCode } from "./application/account/usecase/CheckZipCode";
 import { CreateProfile } from "./application/account/usecase/CreateProfile";
 import { GetProfile } from "./application/account/usecase/GetProfile";
 import { Login } from "./application/account/usecase/Login";
@@ -8,11 +10,15 @@ import { HealthCheck } from "./application/health/usecase/HealthCheck";
 import { CreatePet } from "./application/pet/usecase/CreatePet";
 import { ListPets } from "./application/pet/usecase/ListPets";
 import { CreateReport } from "./application/report/usecase/CreateReport";
+import { BrasilApi } from "./infra/api/gov/br/BrasilApi";
+import { BrDocumentNumberApi } from "./infra/api/gov/br/BrDocumentNumberApi";
+import { BrZipCodeApi } from "./infra/api/gov/br/BrZipCodeApi";
 import { JwtGenerator } from "./infra/auth/JwtGenerator";
 import { AccountsController } from "./infra/controller/AccountsController";
 import { HealthCheckController } from "./infra/controller/HealthCheckController";
 import { PetsController } from "./infra/controller/PetsController";
 import { ReportsController } from "./infra/controller/ReportsController";
+import { ValidatorController } from "./infra/controller/ValidatorController";
 import { PostgresAdapter } from "./infra/database/PostgresAdapter";
 import { Registry } from "./infra/di/DependencyInjection";
 import { BCryptAdapter } from "./infra/hash/BCryptAdapter";
@@ -60,12 +66,27 @@ Registry.getInstance().provide("GetProfile", new GetProfile());
 Registry.getInstance().provide("SetPreferences", new SetPreferences());
 Registry.getInstance().provide("CreateReport", new CreateReport());
 Registry.getInstance().provide("HealthCheck", new HealthCheck());
+Registry.getInstance().provide(
+  "CheckDocumentNumber",
+  new CheckDocumentNumber()
+);
+Registry.getInstance().provide(
+  "BrDocumentNumberApi",
+  new BrDocumentNumberApi()
+);
+Registry.getInstance().provide("CheckZipCode", new CheckZipCode());
+Registry.getInstance().provide("BrasilApi", new BrasilApi());
+Registry.getInstance().provide("BrZipCodeApi", new BrZipCodeApi());
 Registry.getInstance().provide("PetsController", new PetsController());
 Registry.getInstance().provide("AccountsController", new AccountsController());
 Registry.getInstance().provide("ReportsController", new ReportsController());
 Registry.getInstance().provide(
   "HealthCheckController",
   new HealthCheckController()
+);
+Registry.getInstance().provide(
+  "ValidatorController",
+  new ValidatorController()
 );
 
 httpServer.listen(settings.getPort());

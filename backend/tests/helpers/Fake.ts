@@ -40,7 +40,8 @@ export function generateFakeAccount(profile: boolean = true): Account {
 export function generateFakeProfile(): Profile {
   const profile: Profile = {
     fullname: faker.person.fullName(),
-    documentNumber: "784.131.810-38",
+    documentNumber: "636.201.327-12",
+    documentNumberType: "CPF",
     birthdate: faker.date
       .between({ from: "1900-01-01", to: "2006-01-01" })
       .toISOString()
@@ -55,7 +56,7 @@ export function generateFakeProfile(): Profile {
       city: faker.location.city(),
       state: faker.location.state({ abbreviated: true }),
       countryCode: "BR",
-      zipCode: "21230-366",
+      zipCode: "23076-220",
       latitude: faker.location.latitude({ min: 0 }),
       longitude: faker.location.longitude({ min: 0 }),
     },

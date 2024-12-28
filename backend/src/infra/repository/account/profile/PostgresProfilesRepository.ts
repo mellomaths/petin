@@ -13,6 +13,7 @@ export class PostgresProfilesRepository implements ProfilesRepository {
       accountId: result.account_id,
       fullname: result.fullname,
       documentNumber: result.document_number,
+      documentNumberType: result.document_type,
       birthdate: result.birthday,
       bio: result.bio,
       gender: result.gender,
@@ -66,12 +67,13 @@ export class PostgresProfilesRepository implements ProfilesRepository {
 
   async create(profile: Profile): Promise<void> {
     await this.createAddress(profile);
-    const statement = `INSERT INTO petin.profile (profile_id, account_id, fullname, document_number, birthdate, bio, gender, phone_number, address_id, avatar, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`;
+    const statement = `INSERT INTO petin.profile (profile_id, account_id, fullname, document_number, document_type, birthdate, bio, gender, phone_number, address_id, avatar, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`;
     await this.connection.query(statement, [
       profile.id,
       profile.accountId,
       profile.fullname,
       profile.documentNumber,
+      profile.documentNumberType,
       profile.birthdate,
       profile.bio,
       profile.gender,
