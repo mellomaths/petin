@@ -14,10 +14,23 @@ describe("CreateProfile", () => {
       create: jest.fn(),
     };
     service.authenticate = mockAuthenticate();
+    service.checkDocumentNumber = {
+      brDocumentNumberApi: {
+        validate: jest.fn().mockResolvedValue(true),
+      },
+      execute: jest.fn().mockResolvedValue(true),
+    };
+    service.checkZipCode = {
+      brZipCodeApi: {
+        validate: jest.fn().mockResolvedValue(true),
+      },
+      execute: jest.fn().mockResolvedValue(true),
+    };
     profile = {
       accountId: "12345678",
       fullname: "John Doe",
       documentNumber: "111.111.111-11",
+      documentNumberType: "CPF",
       birthdate: "1990-01-01",
       bio: "Lorem ipsum dolor",
       gender: "MALE",
@@ -72,6 +85,60 @@ describe("CreateProfile", () => {
         400,
         { message: "Profile already exists" },
         "Profile already exists"
+      )
+    );
+    expect(service.authenticate.execute).toHaveBeenCalledTimes(1);
+    expect(service.authenticate.execute).toHaveBeenCalledWith("token");
+    expect(service.profilesRepository.getByAccountId).toHaveBeenCalledTimes(1);
+    expect(service.profilesRepository.getByAccountId).toHaveBeenCalledWith(
+      account.id
+    );
+    expect(service.profilesRepository.create).not.toHaveBeenCalled();
+  });
+
+  it("should throw an error when document number is invalid", async () => {
+    const account = {
+      id: "12345678",
+      email: "john.doe@test.com",
+    };
+    service.authenticate.execute = jest.fn().mockResolvedValue(account);
+    service.profilesRepository.getByAccountId = jest
+      .fn()
+      .mockResolvedValue(null);
+    service.checkDocumentNumber.execute = jest.fn().mockResolvedValue(false);
+    profile.accountId = account.id;
+    await expect(service.execute("token", profile)).rejects.toThrow(
+      new ApplicationException(
+        400,
+        { message: "Invalid document number" },
+        "Invalid document number"
+      )
+    );
+    expect(service.authenticate.execute).toHaveBeenCalledTimes(1);
+    expect(service.authenticate.execute).toHaveBeenCalledWith("token");
+    expect(service.profilesRepository.getByAccountId).toHaveBeenCalledTimes(1);
+    expect(service.profilesRepository.getByAccountId).toHaveBeenCalledWith(
+      account.id
+    );
+    expect(service.profilesRepository.create).not.toHaveBeenCalled();
+  });
+
+  it("should throw an error when zip code is invalid", async () => {
+    const account = {
+      id: "12345678",
+      email: "john.doe@test.com",
+    };
+    service.authenticate.execute = jest.fn().mockResolvedValue(account);
+    service.profilesRepository.getByAccountId = jest
+      .fn()
+      .mockResolvedValue(null);
+    service.checkZipCode.execute = jest.fn().mockResolvedValue(false);
+    profile.accountId = account.id;
+    await expect(service.execute("token", profile)).rejects.toThrow(
+      new ApplicationException(
+        400,
+        { message: "Invalid zip code" },
+        "Invalid zip code"
       )
     );
     expect(service.authenticate.execute).toHaveBeenCalledTimes(1);

@@ -19,7 +19,7 @@ describe("CreatePetE2E", () => {
     fakeAccount = await setupDatabase();
     const profile = generateFakeProfile();
     profile.accountId = fakeAccount.accountId;
-    await axios.post(`${env.url}/accounts/profiles`, profile, {
+    const response = await axios.post(`${env.url}/accounts/profiles`, profile, {
       headers: { Authorization: `Bearer ${fakeAccount.token}` },
     });
   });

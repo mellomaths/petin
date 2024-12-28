@@ -11,6 +11,7 @@ describe("ProfileValidator", () => {
       fullname: faker.person.fullName(),
       accountId: "12345678",
       documentNumber: "784.131.810-38",
+      documentNumberType: "CPF",
       birthdate: "1990-01-01",
       bio: faker.lorem.sentence(),
       gender: "MAN",

@@ -42,6 +42,7 @@ create table petin.profile (
 	account_id uuid not null references petin.account(account_id),
 	fullname text not null,
 	document_number text not null,
+	document_type text not null,
 	birthdate timestamp not null,
 	bio text not null,
 	gender text not null,
