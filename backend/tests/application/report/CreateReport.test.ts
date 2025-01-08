@@ -18,6 +18,12 @@ describe("CreateReport", () => {
     service.petsRepository = {
       get: jest.fn(),
     };
+    service.messageBroker = {
+      send: jest.fn(),
+      connect: jest.fn(),
+      close: jest.fn(),
+      healthCheck: jest.fn(),
+    };
   });
 
   it("should create a report", async () => {

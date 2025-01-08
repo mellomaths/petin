@@ -2,12 +2,22 @@ import { faker } from "@faker-js/faker";
 import axios from "axios";
 import { Account } from "../../src/application/account/Account";
 import { Pet } from "../../src/application/pet/Pet";
-import { url } from "../config/config";
 import { Profile } from "../../src/application/account/Profile";
+import { setupEnvironmentVariables } from "../config/config";
 
 axios.defaults.validateStatus = function () {
   return true;
 };
+
+const env = setupEnvironmentVariables();
+
+export async function healthCheck(): Promise<void> {
+  const response = await axios.get(`${env.url}/health`);
+  console.log(response.status, response.data);
+  if (response.status !== 200) {
+    throw new Error("Health Check failed");
+  }
+}
 
 export function generateFakeAccount(profile: boolean = true): Account {
   const password = faker.internet.password({
@@ -30,7 +40,8 @@ export function generateFakeAccount(profile: boolean = true): Account {
 export function generateFakeProfile(): Profile {
   const profile: Profile = {
     fullname: faker.person.fullName(),
-    documentNumber: "784.131.810-38",
+    documentNumber: "636.201.327-12",
+    documentNumberType: "CPF",
     birthdate: faker.date
       .between({ from: "1900-01-01", to: "2006-01-01" })
       .toISOString()
@@ -45,7 +56,7 @@ export function generateFakeProfile(): Profile {
       city: faker.location.city(),
       state: faker.location.state({ abbreviated: true }),
       countryCode: "BR",
-      zipCode: "21230-366",
+      zipCode: "23076-220",
       latitude: faker.location.latitude({ min: 0 }),
       longitude: faker.location.longitude({ min: 0 }),
     },
@@ -74,14 +85,15 @@ export async function setupDatabase(): Promise<{
   token: string;
   accountId: string;
 }> {
+  await healthCheck();
   const account: Account = generateFakeAccount(false);
-  let response = await axios.post(`${url}/signup`, account);
+  let response = await axios.post(`${env.url}/signup`, account);
   if (response.status !== 201) {
     console.log(response.status, response.data);
     throw new Error("Account not created");
   }
   const accountId = response.data.accountId;
-  response = await axios.post(`${url}/login`, {
+  response = await axios.post(`${env.url}/login`, {
     email: account.email,
     password: account.password,
   });

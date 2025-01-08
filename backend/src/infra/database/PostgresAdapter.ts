@@ -10,7 +10,7 @@ export class PostgresAdapter implements DatabaseConnection {
   connection: any;
 
   constructor() {
-    this.connection = pgp()(this.settings.database.url);
+    this.connection = pgp()(this.settings.getDatabase().url);
   }
 
   async connect(): Promise<void> {
@@ -23,6 +23,15 @@ export class PostgresAdapter implements DatabaseConnection {
 
   query(statement: string, params: any): Promise<any> {
     return this.connection?.query(statement, params);
+  }
+
+  async healthCheck(): Promise<boolean> {
+    try {
+      await this.connection?.query("SELECT 1");
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   async close(): Promise<void> {

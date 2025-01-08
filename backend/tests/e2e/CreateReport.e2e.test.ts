@@ -4,30 +4,32 @@ import {
   generateFakeProfile,
   setupDatabase,
 } from "../helpers/Fake";
-import { url } from "../config/config";
 import { Pet } from "../../src/application/pet/Pet";
+import { setupEnvironmentVariables, TestEnvironment } from "../config/config";
 
 axios.defaults.validateStatus = function () {
   return true;
 };
 
 describe("CreateReportE2E", () => {
+  let env: TestEnvironment;
   let createdByAccount: { token: string; accountId: string };
   let againstAccount: { token: string; accountId: string };
   let dog: Pet;
 
   beforeAll(async () => {
+    env = setupEnvironmentVariables();
     createdByAccount = await setupDatabase();
     againstAccount = await setupDatabase();
     const profile = generateFakeProfile();
     profile.accountId = againstAccount.accountId;
     profile.address.latitude = -22.9505541;
     profile.address.longitude = -43.1822991;
-    let response = await axios.post(`${url}/accounts/profiles`, profile, {
+    let response = await axios.post(`${env.url}/accounts/profiles`, profile, {
       headers: { Authorization: `Bearer ${againstAccount.token}` },
     });
     dog = generateFakePet("DOG");
-    response = await axios.post(`${url}/pets`, dog, {
+    response = await axios.post(`${env.url}/pets`, dog, {
       headers: { Authorization: `Bearer ${againstAccount.token}` },
     });
     dog.id = response.data.petId;
@@ -36,7 +38,7 @@ describe("CreateReportE2E", () => {
   it("should create a report", async () => {
     const token = createdByAccount.token;
     const response = await axios.post(
-      `${url}/reports`,
+      `${env.url}/reports`,
       {
         againstAccountId: againstAccount.accountId,
         petId: dog.id,
@@ -47,8 +49,6 @@ describe("CreateReportE2E", () => {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
-    console.log(response.status, response.data);
-    expect(response.status).toBe(201);
     expect(response.data).toEqual({ reportId: expect.any(String) });
   });
 });

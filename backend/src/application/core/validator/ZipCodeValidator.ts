@@ -2,6 +2,10 @@ import { ApplicationException } from "../../../infra/exception/ApplicationExcept
 import { CountryCode } from "../../account/Profile";
 
 export class ZipCodeValidator {
+  static clean(zipCode: string) {
+    return zipCode.replace(/\D/g, "");
+  }
+
   static isValidBrazilZipCode(zipCode: string) {
     return /^\d{5}-\d{3}$/.test(zipCode);
   }

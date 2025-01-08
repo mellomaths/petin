@@ -1,8 +1,9 @@
 import { Inject } from "../../../infra/di/DependencyInjection";
 import { ApplicationException } from "../../../infra/exception/ApplicationException";
-import { Account } from "../Account";
 import { Profile } from "../Profile";
 import { Authenticate } from "./Authenticate";
+import { CheckDocumentNumber } from "./CheckDocumentNumber";
+import { CheckZipCode } from "./CheckZipCode";
 
 export class CreateProfile {
   @Inject("ProfilesRepository")
@@ -10,6 +11,12 @@ export class CreateProfile {
 
   @Inject("Authenticate")
   authenticate: Authenticate;
+
+  @Inject("CheckDocumentNumber")
+  checkDocumentNumber: CheckDocumentNumber;
+
+  @Inject("CheckZipCode")
+  checkZipCode: CheckZipCode;
 
   async execute(
     token: string,
@@ -24,6 +31,29 @@ export class CreateProfile {
         400,
         { message: "Profile already exists" },
         "Profile already exists"
+      );
+    }
+    const documentNumberValidation = await this.checkDocumentNumber.execute({
+      documentNumber: profile.documentNumber,
+      documentNumberType: profile.documentNumberType,
+      countryCode: profile.address.countryCode,
+    });
+    if (!documentNumberValidation.valid) {
+      throw new ApplicationException(
+        400,
+        { message: "Invalid document number" },
+        "Invalid document number"
+      );
+    }
+    const zipCodeValidation = await this.checkZipCode.execute({
+      zipCode: profile.address.zipCode,
+      countryCode: profile.address.countryCode,
+    });
+    if (!zipCodeValidation.valid) {
+      throw new ApplicationException(
+        400,
+        { message: "Invalid zip code" },
+        "Invalid zip code"
       );
     }
     profile.id = crypto.randomUUID();
