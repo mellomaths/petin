@@ -32,9 +32,18 @@ export class ProfileValidator {
     PasswordValidator.validate(password, confirmation);
   }
 
-  static validateDocumentNumber(documentNumber: string, countryCode: string) {
+  static validateDocumentNumber(
+    documentNumber: string,
+    documentNumberType: string,
+    countryCode: string
+  ) {
     RequiredFieldValidator.validate(documentNumber, "Document number");
-    DocumentNumberValidator.validate(documentNumber, countryCode);
+    RequiredFieldValidator.validate(documentNumberType, "Document number type");
+    DocumentNumberValidator.validate(
+      documentNumber,
+      documentNumberType,
+      countryCode
+    );
   }
 
   static validateBirthdate(birthdate: string) {
@@ -93,6 +102,7 @@ export class ProfileValidator {
     this.validateFullname(profile.fullname);
     this.validateDocumentNumber(
       profile.documentNumber,
+      profile.documentNumberType,
       profile.address.countryCode
     );
     this.validateBirthdate(profile.birthdate);

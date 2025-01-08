@@ -3,6 +3,7 @@ export type Profile = {
   accountId?: string;
   fullname: string;
   documentNumber: string;
+  documentNumberType: string;
   birthdate: string;
   bio: string;
   gender: string;
@@ -37,4 +38,9 @@ export enum Gender {
 
 export enum CountryCode {
   BRAZIL = "BR",
+}
+
+export enum BrDocumentNumberType {
+  CPF = "CPF",
+  CNPJ = "CNPJ",
 }

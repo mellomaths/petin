@@ -1,16 +1,13 @@
-FROM node:22
-
+FROM node:22-alpine as builder
 WORKDIR /app
-
-COPY package.json yarn.lock ./
-RUN yarn install --pure-lockfile
-
+COPY package*.json yarn.lock ./
 COPY . .
+RUN yarn install && \
+    yarn run build
 
-RUN yarn run build
-
-ENV PORT=3000
-
-EXPOSE 3000
-
+FROM node:22-alpine as runner
+WORKDIR /app
+COPY package*.json yarn.lock ./
+COPY --from=builder /app/dist ./dist
+RUN yarn install --frozen-lockfile
 CMD ["yarn", "start"]

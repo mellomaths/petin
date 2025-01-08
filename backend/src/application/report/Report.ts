@@ -25,3 +25,11 @@ export enum ReportStatus {
   REJECTED = "REJECTED", // Nothing happens
   ACCEPTED = "ACCEPTED", // A case is opened and the user is notified, the account can be suspended
 }
+
+export enum ReportEventType {
+  ReportCreated = "ReportCreated",
+}
+
+export enum ReportEventQueue {
+  Report = "Report",
+}

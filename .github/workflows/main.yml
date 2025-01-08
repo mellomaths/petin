@@ -8,7 +8,7 @@ on:
       - stage
 
 jobs:
-  tests:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,25 +19,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+      
+      - name: Sleep for 30 seconds
+        run: sleep 30s
+        shell: bash
 
-      - name: Start docker containers
-        run: docker compose --profile ci up -d
+      - name: Backend - Up
+        run: docker compose -f ./backend/docker-compose.yml --profile ci up -d
 
       - name: Backend - Run tests
         env:
           NODE_ENV: test
+          API_HOST: localhost
           API_PORT: 3100
         working-directory: ./backend
         run: |
           yarn install
           yarn build
           yarn test
-
-      - name: Post PR Comment
-        run: npx github-actions-ctrf ctrf-report.json --pr-comment
-        if: always()
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Publish Test Summary Results
-        run: npx github-actions-ctrf ctrf/ctrf-report.json
