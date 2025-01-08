@@ -1,5 +1,6 @@
 import { Inject } from "../../../infra/di/DependencyInjection";
 import { ApplicationException } from "../../../infra/exception/ApplicationException";
+import { CreateNewId } from "../../id/usecase/CreateNewId";
 import { Profile } from "../Profile";
 import { Authenticate } from "./Authenticate";
 import { CheckDocumentNumber } from "./CheckDocumentNumber";
@@ -17,6 +18,9 @@ export class CreateProfile {
 
   @Inject("CheckZipCode")
   checkZipCode: CheckZipCode;
+
+  @Inject("CreateNewId")
+  createNewId: CreateNewId;
 
   async execute(
     token: string,
@@ -56,12 +60,12 @@ export class CreateProfile {
         "Invalid zip code"
       );
     }
-    profile.id = crypto.randomUUID();
+    profile.id = await this.createNewId.execute();
     profile.accountId = account.id!;
     profile.createdAt = new Date().toISOString();
     profile.updatedAt = new Date().toISOString();
     profile.address.profileId = profile.id;
-    profile.address.id = crypto.randomUUID();
+    profile.address.id = await this.createNewId.execute();
     profile.address.createdAt = new Date().toISOString();
     profile.address.updatedAt = new Date().toISOString();
     await this.profilesRepository.create(profile);
