@@ -2,6 +2,8 @@ import { faker } from "@faker-js/faker";
 import { Reason, Report } from "../../../src/application/report/Report";
 import { CreateReport } from "../../../src/application/report/usecase/CreateReport";
 import { mockAuthenticate } from "../../helpers/Mock";
+import { UUIDv7Strategy } from "../../../src/application/id/strategy/UUIDv7Strategy";
+import { CreateNewId } from "../../../src/application/id/usecase/CreateNewId";
 
 describe("CreateReport", () => {
   let service: CreateReport;
@@ -24,6 +26,7 @@ describe("CreateReport", () => {
       close: jest.fn(),
       healthCheck: jest.fn(),
     };
+    service.createNewId = new CreateNewId(new UUIDv7Strategy());
   });
 
   it("should create a report", async () => {

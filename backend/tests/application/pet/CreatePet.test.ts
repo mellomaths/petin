@@ -1,3 +1,5 @@
+import { UUIDv7Strategy } from "../../../src/application/id/strategy/UUIDv7Strategy";
+import { CreateNewId } from "../../../src/application/id/usecase/CreateNewId";
 import { Pet } from "../../../src/application/pet/Pet";
 import { CreatePet } from "../../../src/application/pet/usecase/CreatePet";
 import { ApplicationException } from "../../../src/infra/exception/ApplicationException";
@@ -26,6 +28,7 @@ describe("Create Pet", () => {
     service.profilesRepository = {
       getByAccountId: jest.fn(),
     };
+    service.createNewId = new CreateNewId(new UUIDv7Strategy());
   });
 
   afterEach(() => {

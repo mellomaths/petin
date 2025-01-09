@@ -1,5 +1,7 @@
 import { Profile } from "../../../src/application/account/Profile";
 import { CreateProfile } from "../../../src/application/account/usecase/CreateProfile";
+import { UUIDv7Strategy } from "../../../src/application/id/strategy/UUIDv7Strategy";
+import { CreateNewId } from "../../../src/application/id/usecase/CreateNewId";
 import { ApplicationException } from "../../../src/infra/exception/ApplicationException";
 import { mockAuthenticate } from "../../helpers/Mock";
 
@@ -26,6 +28,7 @@ describe("CreateProfile", () => {
       },
       execute: jest.fn().mockResolvedValue({ valid: true }),
     };
+    service.createNewId = new CreateNewId(new UUIDv7Strategy());
     profile = {
       accountId: "12345678",
       fullname: "John Doe",

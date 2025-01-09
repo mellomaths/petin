@@ -12,6 +12,7 @@ import { Pet } from "../../pet/Pet";
 import { ReportValidator } from "../validator/ReportValidator";
 import { MessageBroker } from "../../../infra/queue/MessageBroker";
 import { Event } from "../../event/Event";
+import { CreateNewId } from "../../id/usecase/CreateNewId";
 
 export class CreateReport {
   @Inject("Authenticate")
@@ -28,6 +29,9 @@ export class CreateReport {
 
   @Inject("MessageBroker")
   messageBroker: MessageBroker;
+
+  @Inject("CreateNewId")
+  createNewId: CreateNewId;
 
   async execute(token: string, report: Report): Promise<{ reportId: string }> {
     ReportValidator.validate(report);
@@ -51,14 +55,14 @@ export class CreateReport {
       );
     }
     report.createdByAccountId = createdByAccount.id!;
-    report.id = crypto.randomUUID();
+    report.id = await this.createNewId.execute();
     report.status = ReportStatus.PENDING.toString();
     report.createdAt = new Date().toISOString();
     report.updatedAt = new Date().toISOString();
     await this.reportsRepository.save(report);
 
     const event: Event<ReportEventType, ReportEventQueue, Report> = {
-      id: crypto.randomUUID(),
+      id: await this.createNewId.execute(),
       type: ReportEventType.ReportCreated,
       queue: ReportEventQueue.Report,
       timestamp: Date.now(),
