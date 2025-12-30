@@ -1,5 +1,6 @@
 import { Inject } from "../../../infra/di/DependencyInjection";
 import { ApplicationException } from "../../../infra/exception/ApplicationException";
+import { CreateNewId } from "../../id/usecase/CreateNewId";
 import { Account } from "../Account";
 import { AccountValidator } from "../validator/AccountValidator";
 
@@ -9,6 +10,9 @@ export class Signup {
 
   @Inject("PasswordHasher")
   passwordHasher: SignupPasswordHasher;
+
+  @Inject("CreateNewId")
+  createNewId: CreateNewId;
 
   async execute(account: Account): Promise<{ accountId: string }> {
     AccountValidator.validate(account);
@@ -22,7 +26,7 @@ export class Signup {
         "Account already exists"
       );
     }
-    account.id = crypto.randomUUID();
+    account.id = await this.createNewId.execute();
     account.createdAt = new Date().toISOString();
     account.updatedAt = new Date().toISOString();
     const hashedPassword = await this.passwordHasher.hash(account.password);
