@@ -2,6 +2,7 @@ import { Inject } from "../../../infra/di/DependencyInjection";
 import { ApplicationException } from "../../../infra/exception/ApplicationException";
 import { Profile } from "../../account/Profile";
 import { Authenticate } from "../../account/usecase/Authenticate";
+import { CreateNewId } from "../../id/usecase/CreateNewId";
 import { Pet } from "../Pet";
 import { PetValidator } from "../validator/PetValidator";
 
@@ -14,6 +15,9 @@ export class CreatePet {
 
   @Inject("Authenticate")
   authenticate: Authenticate;
+
+  @Inject("CreateNewId")
+  createNewId: CreateNewId;
 
   async execute(token: string, pet: Pet): Promise<{ petId: string }> {
     const account = await this.authenticate.execute(token);
@@ -29,7 +33,7 @@ export class CreatePet {
     }
 
     PetValidator.validate(pet);
-    pet.id = crypto.randomUUID();
+    pet.id = await this.createNewId.execute();
     pet.createdAt = new Date().toISOString();
     pet.updatedAt = new Date().toISOString();
     pet.birthday = new Date(pet.birthday).toISOString();

@@ -7,6 +7,8 @@ import { Login } from "./application/account/usecase/Login";
 import { SetPreferences } from "./application/account/usecase/SetPreferences";
 import { Signup } from "./application/account/usecase/Signup";
 import { HealthCheck } from "./application/health/usecase/HealthCheck";
+import { UUIDv7Strategy } from "./application/id/strategy/UUIDv7Strategy";
+import { CreateNewId } from "./application/id/usecase/CreateNewId";
 import { CreatePet } from "./application/pet/usecase/CreatePet";
 import { ListPets } from "./application/pet/usecase/ListPets";
 import { CreateReport } from "./application/report/usecase/CreateReport";
@@ -53,6 +55,10 @@ Registry.getInstance().provide(
 Registry.getInstance().provide(
   "ReportsRepository",
   new PostgresReportsRepository()
+);
+Registry.getInstance().provide(
+  "CreateNewId",
+  new CreateNewId(new UUIDv7Strategy())
 );
 Registry.getInstance().provide("PasswordHasher", new BCryptAdapter());
 Registry.getInstance().provide("TokenGenerator", new JwtGenerator());

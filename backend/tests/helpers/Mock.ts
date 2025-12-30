@@ -1,3 +1,5 @@
+import { IdStrategy } from "../../src/application/id/strategy/IdStrategy";
+
 export function mockAuthenticate() {
   return {
     accountsRepository: {

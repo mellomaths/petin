@@ -1,5 +1,6 @@
 import { SetPreferences } from "../../../src/application/account/usecase/SetPreferences";
-import { ApplicationException } from "../../../src/infra/exception/ApplicationException";
+import { UUIDv7Strategy } from "../../../src/application/id/strategy/UUIDv7Strategy";
+import { CreateNewId } from "../../../src/application/id/usecase/CreateNewId";
 
 describe("SetPreferences", () => {
   let service: SetPreferences;
@@ -20,6 +21,7 @@ describe("SetPreferences", () => {
       deleteAll: jest.fn(),
       save: jest.fn(),
     };
+    service.createNewId = new CreateNewId(new UUIDv7Strategy());
   });
 
   it("should set preferences", async () => {
