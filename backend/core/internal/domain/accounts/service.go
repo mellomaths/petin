@@ -9,6 +9,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	repo "github.com/mellomaths/petin/backend/core/internal/adapters/postgresql/sqlc"
 	"go.uber.org/zap"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var (
@@ -17,6 +18,8 @@ var (
 
 type Service interface {
 	CreateAccount(ctx context.Context, params CreateAccountParams) (CreateAccountResponse, error)
+	HashPassword(password string) (string, error)
+	VerifyPassword(password, hash string) bool
 }
 
 type svc struct {
@@ -46,11 +49,16 @@ func (s *svc) CreateAccount(ctx context.Context, params CreateAccountParams) (Cr
 		zap.L().Error("failed to get account by email", zap.Error(err))
 		return CreateAccountResponse{}, errors.New("failed to get account by email")
 	}
-	// TODO: Hash password
+	// Hash password
+	hashedPassword, err := s.HashPassword(params.Password)
+	if err != nil {
+		zap.L().Error("failed to hash password", zap.Error(err))
+		return CreateAccountResponse{}, errors.New("failed to hash password")
+	}
 	account, err = s.repo.CreateAccount(ctx, repo.CreateAccountParams{
 		ExternalID: externalID,
 		Email:      params.Email,
-		Password:   params.Password,
+		Password:   hashedPassword,
 		Status:     string(AccountStatusPending),
 	})
 	if err != nil {
@@ -63,4 +71,18 @@ func (s *svc) CreateAccount(ctx context.Context, params CreateAccountParams) (Cr
 		CreatedAt:  account.CreatedAt.Time,
 		UpdatedAt:  account.UpdatedAt.Time,
 	}, nil
+}
+
+func (s *svc) HashPassword(password string) (string, error) {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		zap.L().Error("failed to hash password", zap.Error(err))
+		return "", err
+	}
+	return string(hashedPassword), nil
+}
+
+func (s *svc) VerifyPassword(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }
