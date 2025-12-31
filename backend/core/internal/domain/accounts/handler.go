@@ -1,6 +1,7 @@
 package accounts
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -29,6 +30,10 @@ func (h *handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 		if validationErrors, ok := err.(validator.ValidationErrors); ok {
 			errors := api.FormatValidationErrors(validationErrors)
 			api.NewJsonErrorResponse(w, http.StatusBadRequest, string(schemas.ErrorCodeInvalidBody), "invalid account", errors)
+			return
+		}
+		if errors.Is(err, ErrAccountAlreadyExists) {
+			api.NewJsonErrorResponse(w, http.StatusConflict, string(schemas.ErrorCodeConflict), "email already in use", nil)
 			return
 		}
 		zap.L().Error("failed to create account", zap.Error(err))

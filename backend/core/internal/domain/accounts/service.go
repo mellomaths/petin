@@ -6,8 +6,13 @@ import (
 
 	"github.com/bwmarrin/snowflake"
 	validator "github.com/go-playground/validator/v10"
+	"github.com/jackc/pgx/v5"
 	repo "github.com/mellomaths/petin/backend/core/internal/adapters/postgresql/sqlc"
 	"go.uber.org/zap"
+)
+
+var (
+	ErrAccountAlreadyExists = errors.New("account already exists")
 )
 
 type Service interface {
@@ -31,8 +36,18 @@ func (s *svc) CreateAccount(ctx context.Context, params CreateAccountParams) (Cr
 		zap.L().Info("invalid request body", zap.Error(err))
 		return CreateAccountResponse{}, err
 	}
+	// Check if account already exists
+	account, err := s.repo.GetAccountByEmail(ctx, params.Email)
+	if err == nil {
+		zap.L().Info("account already exists", zap.String("account_external_id", account.ExternalID))
+		return CreateAccountResponse{}, ErrAccountAlreadyExists
+	}
+	if err != pgx.ErrNoRows {
+		zap.L().Error("failed to get account by email", zap.Error(err))
+		return CreateAccountResponse{}, errors.New("failed to get account by email")
+	}
 	// TODO: Hash password
-	account, err := s.repo.CreateAccount(ctx, repo.CreateAccountParams{
+	account, err = s.repo.CreateAccount(ctx, repo.CreateAccountParams{
 		ExternalID: externalID,
 		Email:      params.Email,
 		Password:   params.Password,
