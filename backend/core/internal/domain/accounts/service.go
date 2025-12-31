@@ -36,7 +36,7 @@ func (s *svc) CreateAccount(ctx context.Context, params CreateAccountParams) (Cr
 		ExternalID: externalID,
 		Email:      params.Email,
 		Password:   params.Password,
-		Status:     string(AccountStatusActive),
+		Status:     string(AccountStatusPending),
 	})
 	if err != nil {
 		zap.L().Error("failed to create account", zap.Error(err))
