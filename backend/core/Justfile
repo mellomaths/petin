@@ -1,0 +1,25 @@
+
+
+run:
+    go run cmd/*.go
+
+build:
+    go build -o petin-backend-core ./cmd
+
+exec:
+    ./petin-backend-core
+
+tests:
+    go test ./cmd/... ./internal/...
+
+sqlc:
+    sqlc generate
+
+pg-migration-up:
+    cd internal/adapters/postgresql/migrations && goose postgres postgres://postgres:postgres@192.168.1.100:5432/petin up
+
+pg-migration-down:
+    cd internal/adapters/postgresql/migrations && goose postgres postgres://postgres:postgres@192.168.1.100:5432/petin down
+
+create-migration NAME:
+    goose -s create {{NAME}} sql

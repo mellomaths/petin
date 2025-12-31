@@ -1,0 +1,39 @@
+package accounts
+
+import (
+	"net/http"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/mellomaths/petin/backend/core/internal/api"
+	"github.com/mellomaths/petin/backend/core/internal/api/schemas"
+	"go.uber.org/zap"
+)
+
+type handler struct {
+	accountsSvc Service
+}
+
+func NewHandler(accountsSvc Service) *handler {
+	return &handler{accountsSvc: accountsSvc}
+}
+
+func (h *handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
+	var params CreateAccountParams
+	if err := api.DecodeJsonBody(r, &params); err != nil {
+		zap.L().Info("failed to decode json body", zap.Error(err))
+		api.NewJsonErrorResponse(w, http.StatusBadRequest, string(schemas.ErrorCodeInvalidBody), "invalid account", nil)
+		return
+	}
+	account, err := h.accountsSvc.CreateAccount(r.Context(), params)
+	if err != nil {
+		if validationErrors, ok := err.(validator.ValidationErrors); ok {
+			errors := api.FormatValidationErrors(validationErrors)
+			api.NewJsonErrorResponse(w, http.StatusBadRequest, string(schemas.ErrorCodeInvalidBody), "invalid account", errors)
+			return
+		}
+		zap.L().Error("failed to create account", zap.Error(err))
+		api.NewJsonErrorResponse(w, http.StatusInternalServerError, string(schemas.ErrorCodeInternalServerError), "internal server error", nil)
+		return
+	}
+	api.NewJsonResponse(w, http.StatusCreated, account)
+}
