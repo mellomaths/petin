@@ -7,6 +7,8 @@ package repo
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createAccount = `-- name: CreateAccount :one
@@ -36,6 +38,108 @@ func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (P
 		&i.Email,
 		&i.Password,
 		&i.Status,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const createAddress = `-- name: CreateAddress :one
+INSERT INTO petin.address (external_id, address_line, street_number, city, state, country_code, zip_code, latitude, longitude)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+RETURNING id, external_id, address_line, street_number, city, state, country_code, zip_code, latitude, longitude, created_at, updated_at
+`
+
+type CreateAddressParams struct {
+	ExternalID   string  `json:"external_id"`
+	AddressLine  string  `json:"address_line"`
+	StreetNumber string  `json:"street_number"`
+	City         string  `json:"city"`
+	State        string  `json:"state"`
+	CountryCode  string  `json:"country_code"`
+	ZipCode      string  `json:"zip_code"`
+	Latitude     float64 `json:"latitude"`
+	Longitude    float64 `json:"longitude"`
+}
+
+func (q *Queries) CreateAddress(ctx context.Context, arg CreateAddressParams) (PetinAddress, error) {
+	row := q.db.QueryRow(ctx, createAddress,
+		arg.ExternalID,
+		arg.AddressLine,
+		arg.StreetNumber,
+		arg.City,
+		arg.State,
+		arg.CountryCode,
+		arg.ZipCode,
+		arg.Latitude,
+		arg.Longitude,
+	)
+	var i PetinAddress
+	err := row.Scan(
+		&i.ID,
+		&i.ExternalID,
+		&i.AddressLine,
+		&i.StreetNumber,
+		&i.City,
+		&i.State,
+		&i.CountryCode,
+		&i.ZipCode,
+		&i.Latitude,
+		&i.Longitude,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const createProfile = `-- name: CreateProfile :one
+INSERT INTO petin.profile (external_id, account_id, fullname, document_number, document_type, birthdate, bio, gender, phone_number, address_id, avatar)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+RETURNING id, external_id, account_id, fullname, document_number, document_type, birthdate, bio, gender, phone_number, address_id, avatar, created_at, updated_at
+`
+
+type CreateProfileParams struct {
+	ExternalID     string      `json:"external_id"`
+	AccountID      int64       `json:"account_id"`
+	Fullname       string      `json:"fullname"`
+	DocumentNumber string      `json:"document_number"`
+	DocumentType   string      `json:"document_type"`
+	Birthdate      pgtype.Date `json:"birthdate"`
+	Bio            string      `json:"bio"`
+	Gender         string      `json:"gender"`
+	PhoneNumber    string      `json:"phone_number"`
+	AddressID      int64       `json:"address_id"`
+	Avatar         pgtype.Text `json:"avatar"`
+}
+
+func (q *Queries) CreateProfile(ctx context.Context, arg CreateProfileParams) (PetinProfile, error) {
+	row := q.db.QueryRow(ctx, createProfile,
+		arg.ExternalID,
+		arg.AccountID,
+		arg.Fullname,
+		arg.DocumentNumber,
+		arg.DocumentType,
+		arg.Birthdate,
+		arg.Bio,
+		arg.Gender,
+		arg.PhoneNumber,
+		arg.AddressID,
+		arg.Avatar,
+	)
+	var i PetinProfile
+	err := row.Scan(
+		&i.ID,
+		&i.ExternalID,
+		&i.AccountID,
+		&i.Fullname,
+		&i.DocumentNumber,
+		&i.DocumentType,
+		&i.Birthdate,
+		&i.Bio,
+		&i.Gender,
+		&i.PhoneNumber,
+		&i.AddressID,
+		&i.Avatar,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -76,6 +180,93 @@ func (q *Queries) GetAccountByEmail(ctx context.Context, email string) (PetinAcc
 		&i.Status,
 		&i.CreatedAt,
 		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const getProfileByAccountExternalID = `-- name: GetProfileByAccountExternalID :one
+SELECT 
+    p.id, p.external_id, p.account_id, p.fullname, p.document_number, p.document_type, p.birthdate, p.bio, p.gender, p.phone_number, p.address_id, p.avatar, p.created_at, p.updated_at,
+    ad.address_line,
+    ad.street_number,
+    ad.city,
+    ad.state,
+    ad.country_code,
+    ad.zip_code,
+    ad.latitude,
+    ad.longitude,
+    a.external_id as account_external_id,
+    a.email as account_email,
+    a.status as account_status,
+    a.created_at as account_created_at,
+    a.updated_at as account_updated_at
+FROM petin.profile p
+INNER JOIN petin.account a ON p.account_id = a.id
+INNER JOIN petin.address ad ON p.address_id = ad.id
+WHERE a.external_id = $1
+`
+
+type GetProfileByAccountExternalIDRow struct {
+	ID                int64            `json:"id"`
+	ExternalID        string           `json:"external_id"`
+	AccountID         int64            `json:"account_id"`
+	Fullname          string           `json:"fullname"`
+	DocumentNumber    string           `json:"document_number"`
+	DocumentType      string           `json:"document_type"`
+	Birthdate         pgtype.Date      `json:"birthdate"`
+	Bio               string           `json:"bio"`
+	Gender            string           `json:"gender"`
+	PhoneNumber       string           `json:"phone_number"`
+	AddressID         int64            `json:"address_id"`
+	Avatar            pgtype.Text      `json:"avatar"`
+	CreatedAt         pgtype.Timestamp `json:"created_at"`
+	UpdatedAt         pgtype.Timestamp `json:"updated_at"`
+	AddressLine       string           `json:"address_line"`
+	StreetNumber      string           `json:"street_number"`
+	City              string           `json:"city"`
+	State             string           `json:"state"`
+	CountryCode       string           `json:"country_code"`
+	ZipCode           string           `json:"zip_code"`
+	Latitude          float64          `json:"latitude"`
+	Longitude         float64          `json:"longitude"`
+	AccountExternalID string           `json:"account_external_id"`
+	AccountEmail      string           `json:"account_email"`
+	AccountStatus     string           `json:"account_status"`
+	AccountCreatedAt  pgtype.Timestamp `json:"account_created_at"`
+	AccountUpdatedAt  pgtype.Timestamp `json:"account_updated_at"`
+}
+
+func (q *Queries) GetProfileByAccountExternalID(ctx context.Context, externalID string) (GetProfileByAccountExternalIDRow, error) {
+	row := q.db.QueryRow(ctx, getProfileByAccountExternalID, externalID)
+	var i GetProfileByAccountExternalIDRow
+	err := row.Scan(
+		&i.ID,
+		&i.ExternalID,
+		&i.AccountID,
+		&i.Fullname,
+		&i.DocumentNumber,
+		&i.DocumentType,
+		&i.Birthdate,
+		&i.Bio,
+		&i.Gender,
+		&i.PhoneNumber,
+		&i.AddressID,
+		&i.Avatar,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.AddressLine,
+		&i.StreetNumber,
+		&i.City,
+		&i.State,
+		&i.CountryCode,
+		&i.ZipCode,
+		&i.Latitude,
+		&i.Longitude,
+		&i.AccountExternalID,
+		&i.AccountEmail,
+		&i.AccountStatus,
+		&i.AccountCreatedAt,
+		&i.AccountUpdatedAt,
 	)
 	return i, err
 }

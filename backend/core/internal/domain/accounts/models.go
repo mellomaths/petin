@@ -14,6 +14,7 @@ const (
 
 type AccountResponse struct {
 	ExternalID string        `json:"external_id"`
+	Email      string        `json:"email"`
 	Status     AccountStatus `json:"status"`
 	CreatedAt  time.Time     `json:"created_at"`
 	UpdatedAt  time.Time     `json:"updated_at"`

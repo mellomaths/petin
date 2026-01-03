@@ -13,6 +13,7 @@ import (
 	"github.com/mellomaths/petin/backend/core/internal/api/schemas"
 	"github.com/mellomaths/petin/backend/core/internal/config"
 	"github.com/mellomaths/petin/backend/core/internal/domain/accounts"
+	"github.com/mellomaths/petin/backend/core/internal/domain/profiles"
 	"go.uber.org/zap"
 )
 
@@ -53,10 +54,14 @@ func (a *RESTAPIServer) Mount() http.Handler {
 
 	accountsSvc := accounts.NewService(repo.New(a.db), a.snowNode)
 	accountsHandler := accounts.NewHandler(accountsSvc)
+	profilesSvc := profiles.NewService(repo.New(a.db), a.db, a.snowNode)
+	profilesHandler := profiles.NewHandler(profilesSvc)
 	r.Route("/accounts", func(r chi.Router) {
 		r.Post("/", accountsHandler.CreateAccount)
 		r.Get("/{externalId}", accountsHandler.GetAccount)
 		r.Patch("/{externalId}/status", accountsHandler.UpdateAccountStatus)
+		r.Post("/{externalId}/profiles", profilesHandler.CreateProfile)
+		r.Get("/{externalId}/profiles", profilesHandler.GetProfile)
 	})
 	return r
 }

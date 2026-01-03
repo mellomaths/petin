@@ -70,6 +70,7 @@ func (s *svc) CreateAccount(ctx context.Context, params CreateAccountParams) (Ac
 	}
 	return AccountResponse{
 		ExternalID: account.ExternalID,
+		Email:      account.Email,
 		Status:     AccountStatus(account.Status),
 		CreatedAt:  account.CreatedAt.Time,
 		UpdatedAt:  account.UpdatedAt.Time,
@@ -102,6 +103,7 @@ func (s *svc) GetAccount(ctx context.Context, externalId string) (AccountRespons
 	}
 	return AccountResponse{
 		ExternalID: account.ExternalID,
+		Email:      account.Email,
 		Status:     AccountStatus(account.Status),
 		CreatedAt:  account.CreatedAt.Time,
 		UpdatedAt:  account.UpdatedAt.Time,
@@ -128,6 +130,7 @@ func (s *svc) UpdateAccountStatus(ctx context.Context, externalId string, params
 	}
 	return AccountResponse{
 		ExternalID: account.ExternalID,
+		Email:      account.Email,
 		Status:     AccountStatus(account.Status),
 		CreatedAt:  account.CreatedAt.Time,
 		UpdatedAt:  account.UpdatedAt.Time,

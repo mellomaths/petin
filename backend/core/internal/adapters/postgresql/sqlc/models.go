@@ -27,8 +27,8 @@ type PetinAddress struct {
 	State        string           `json:"state"`
 	CountryCode  string           `json:"country_code"`
 	ZipCode      string           `json:"zip_code"`
-	Latitude     pgtype.Numeric   `json:"latitude"`
-	Longitude    pgtype.Numeric   `json:"longitude"`
+	Latitude     float64          `json:"latitude"`
+	Longitude    float64          `json:"longitude"`
 	CreatedAt    pgtype.Timestamp `json:"created_at"`
 	UpdatedAt    pgtype.Timestamp `json:"updated_at"`
 }

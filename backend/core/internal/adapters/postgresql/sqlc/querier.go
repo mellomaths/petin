@@ -10,8 +10,11 @@ import (
 
 type Querier interface {
 	CreateAccount(ctx context.Context, arg CreateAccountParams) (PetinAccount, error)
+	CreateAddress(ctx context.Context, arg CreateAddressParams) (PetinAddress, error)
+	CreateProfile(ctx context.Context, arg CreateProfileParams) (PetinProfile, error)
 	GetAccount(ctx context.Context, externalID string) (PetinAccount, error)
 	GetAccountByEmail(ctx context.Context, email string) (PetinAccount, error)
+	GetProfileByAccountExternalID(ctx context.Context, externalID string) (GetProfileByAccountExternalIDRow, error)
 	UpdateAccountStatus(ctx context.Context, arg UpdateAccountStatusParams) (PetinAccount, error)
 }
 
