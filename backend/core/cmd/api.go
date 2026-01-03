@@ -11,9 +11,9 @@ import (
 	repo "github.com/mellomaths/petin/backend/core/internal/adapters/postgresql/sqlc"
 	"github.com/mellomaths/petin/backend/core/internal/api"
 	"github.com/mellomaths/petin/backend/core/internal/api/schemas"
-	"github.com/mellomaths/petin/backend/core/internal/config"
 	"github.com/mellomaths/petin/backend/core/internal/domain/accounts"
 	"github.com/mellomaths/petin/backend/core/internal/domain/profiles"
+	"github.com/mellomaths/petin/backend/core/internal/infra/config"
 	"go.uber.org/zap"
 )
 

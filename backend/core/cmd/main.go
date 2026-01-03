@@ -6,13 +6,14 @@ import (
 
 	"github.com/bwmarrin/snowflake"
 	"github.com/jackc/pgx/v5"
-	"github.com/mellomaths/petin/backend/core/internal/config"
+	"github.com/mellomaths/petin/backend/core/internal/infra/config"
+	"github.com/mellomaths/petin/backend/core/internal/infra/logging"
 	"go.uber.org/zap"
 )
 
 func init() {
 	cfg := config.InitConfig()
-	initLogger(&cfg)
+	logging.InitLogger(&cfg)
 }
 
 func main() {
