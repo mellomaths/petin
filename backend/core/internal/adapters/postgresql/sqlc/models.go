@@ -32,3 +32,20 @@ type PetinAddress struct {
 	CreatedAt    pgtype.Timestamp `json:"created_at"`
 	UpdatedAt    pgtype.Timestamp `json:"updated_at"`
 }
+
+type PetinProfile struct {
+	ID             int64            `json:"id"`
+	ExternalID     string           `json:"external_id"`
+	AccountID      int64            `json:"account_id"`
+	Fullname       string           `json:"fullname"`
+	DocumentNumber string           `json:"document_number"`
+	DocumentType   string           `json:"document_type"`
+	Birthdate      pgtype.Date      `json:"birthdate"`
+	Bio            string           `json:"bio"`
+	Gender         string           `json:"gender"`
+	PhoneNumber    string           `json:"phone_number"`
+	AddressID      int64            `json:"address_id"`
+	Avatar         pgtype.Text      `json:"avatar"`
+	CreatedAt      pgtype.Timestamp `json:"created_at"`
+	UpdatedAt      pgtype.Timestamp `json:"updated_at"`
+}

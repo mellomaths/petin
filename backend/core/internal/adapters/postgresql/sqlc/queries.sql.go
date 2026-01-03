@@ -81,7 +81,7 @@ func (q *Queries) GetAccountByEmail(ctx context.Context, email string) (PetinAcc
 }
 
 const updateAccountStatus = `-- name: UpdateAccountStatus :one
-UPDATE petin.account SET status = $2 WHERE external_id = $1 RETURNING id, external_id, email, password, status, created_at, updated_at
+UPDATE petin.account SET status = $2, updated_at = NOW() WHERE external_id = $1 RETURNING id, external_id, email, password, status, created_at, updated_at
 `
 
 type UpdateAccountStatusParams struct {

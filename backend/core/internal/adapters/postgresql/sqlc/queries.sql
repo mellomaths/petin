@@ -10,4 +10,4 @@ SELECT * FROM petin.account WHERE external_id = $1;
 SELECT * FROM petin.account WHERE email = $1;
 
 -- name: UpdateAccountStatus :one
-UPDATE petin.account SET status = $2 WHERE external_id = $1 RETURNING *;
+UPDATE petin.account SET status = $2, updated_at = NOW() WHERE external_id = $1 RETURNING *;
