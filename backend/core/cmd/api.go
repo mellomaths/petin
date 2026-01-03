@@ -55,6 +55,7 @@ func (a *RESTAPIServer) Mount() http.Handler {
 	accountsHandler := accounts.NewHandler(accountsSvc)
 	r.Route("/accounts", func(r chi.Router) {
 		r.Post("/", accountsHandler.CreateAccount)
+		r.Get("/{externalId}", accountsHandler.GetAccountByExternalId)
 	})
 	return r
 }

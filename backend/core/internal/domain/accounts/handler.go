@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
 	"github.com/mellomaths/petin/backend/core/internal/api"
 	"github.com/mellomaths/petin/backend/core/internal/api/schemas"
@@ -41,4 +42,15 @@ func (h *handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	api.NewJsonResponse(w, http.StatusCreated, account)
+}
+
+func (h *handler) GetAccountByExternalId(w http.ResponseWriter, r *http.Request) {
+	externalId := chi.URLParam(r, "externalId")
+	account, err := h.accountsSvc.GetAccountByExternalId(r.Context(), externalId)
+	if err != nil {
+		zap.L().Error("failed to get account by external id", zap.Error(err))
+		api.NewJsonErrorResponse(w, http.StatusInternalServerError, string(schemas.ErrorCodeInternalServerError), "internal server error", nil)
+		return
+	}
+	api.NewJsonResponse(w, http.StatusOK, account)
 }

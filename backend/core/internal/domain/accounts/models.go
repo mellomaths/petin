@@ -17,7 +17,7 @@ const (
 	AccountStatusArchived  AccountStatus = "ARCHIVED"
 )
 
-type CreateAccountResponse struct {
+type AccountResponse struct {
 	ExternalID string        `json:"external_id"`
 	Status     AccountStatus `json:"status"`
 	CreatedAt  time.Time     `json:"created_at"`
