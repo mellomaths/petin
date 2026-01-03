@@ -59,15 +59,26 @@ func (h *handler) GetAccount(w http.ResponseWriter, r *http.Request) {
 	api.NewJsonResponse(w, http.StatusOK, account)
 }
 
-func (h *handler) ActivateAccount(w http.ResponseWriter, r *http.Request) {
+func (h *handler) UpdateAccountStatus(w http.ResponseWriter, r *http.Request) {
 	externalId := chi.URLParam(r, "externalId")
-	account, err := h.accountsSvc.ActivateAccount(r.Context(), externalId)
+	var params UpdateAccountStatusParams
+	if err := api.DecodeJsonBody(r, &params); err != nil {
+		zap.L().Info("failed to decode json body", zap.Error(err))
+		api.NewJsonErrorResponse(w, http.StatusBadRequest, string(schemas.ErrorCodeInvalidBody), "invalid account", nil)
+		return
+	}
+	account, err := h.accountsSvc.UpdateAccountStatus(r.Context(), externalId, params)
 	if err != nil {
+		if validationErrors, ok := err.(validator.ValidationErrors); ok {
+			errors := api.FormatValidationErrors(validationErrors)
+			api.NewJsonErrorResponse(w, http.StatusBadRequest, string(schemas.ErrorCodeInvalidBody), "invalid status", errors)
+			return
+		}
 		if errors.Is(err, ErrAccountNotFound) {
 			api.NewJsonErrorResponse(w, http.StatusNotFound, string(schemas.ErrorCodeNotFound), "account not found", nil)
 			return
 		}
-		zap.L().Error("failed to activate account", zap.Error(err))
+		zap.L().Error("failed to update account status", zap.Error(err))
 		api.NewJsonErrorResponse(w, http.StatusInternalServerError, string(schemas.ErrorCodeInternalServerError), "internal server error", nil)
 		return
 	}

@@ -56,7 +56,7 @@ func (a *RESTAPIServer) Mount() http.Handler {
 	r.Route("/accounts", func(r chi.Router) {
 		r.Post("/", accountsHandler.CreateAccount)
 		r.Get("/{externalId}", accountsHandler.GetAccount)
-		r.Post("/{externalId}/activate", accountsHandler.ActivateAccount)
+		r.Patch("/{externalId}/status", accountsHandler.UpdateAccountStatus)
 	})
 	return r
 }

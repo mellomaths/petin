@@ -22,7 +22,7 @@ type Service interface {
 	HashPassword(password string) (string, error)
 	VerifyPassword(password, hash string) bool
 	GetAccount(ctx context.Context, externalId string) (AccountResponse, error)
-	ActivateAccount(ctx context.Context, externalId string) (AccountResponse, error)
+	UpdateAccountStatus(ctx context.Context, externalId string, params UpdateAccountStatusParams) (AccountResponse, error)
 }
 
 type svc struct {
@@ -108,18 +108,23 @@ func (s *svc) GetAccount(ctx context.Context, externalId string) (AccountRespons
 	}, nil
 }
 
-func (s *svc) ActivateAccount(ctx context.Context, externalId string) (AccountResponse, error) {
+func (s *svc) UpdateAccountStatus(ctx context.Context, externalId string, params UpdateAccountStatusParams) (AccountResponse, error) {
+	validate := validator.New(validator.WithRequiredStructEnabled())
+	if err := validate.Struct(params); err != nil {
+		zap.L().Info("invalid request body", zap.Error(err))
+		return AccountResponse{}, err
+	}
 	account, err := s.repo.UpdateAccountStatus(ctx, repo.UpdateAccountStatusParams{
 		ExternalID: externalId,
-		Status:     string(AccountStatusActive),
+		Status:     string(params.Status),
 	})
 	if err != nil {
 		if err == pgx.ErrNoRows {
 			zap.L().Info("account not found", zap.String("account_external_id", externalId))
 			return AccountResponse{}, ErrAccountNotFound
 		}
-		zap.L().Error("failed to activate account", zap.Error(err))
-		return AccountResponse{}, errors.New("failed to activate account")
+		zap.L().Error("failed to update account status", zap.Error(err))
+		return AccountResponse{}, errors.New("failed to update account status")
 	}
 	return AccountResponse{
 		ExternalID: account.ExternalID,
