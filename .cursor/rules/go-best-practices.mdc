@@ -1,4 +1,5 @@
 ---
+description: This rule provides comprehensive best practices and coding standards for Go development, focusing on modern Go, microservices architecture, Domain-Driven Design, and Ports and Adapters pattern.
 globs: backend/core/**/*.go,*.go
 alwaysApply: false
 ---
