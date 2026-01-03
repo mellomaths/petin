@@ -17,3 +17,18 @@ type PetinAccount struct {
 	CreatedAt  pgtype.Timestamp `json:"created_at"`
 	UpdatedAt  pgtype.Timestamp `json:"updated_at"`
 }
+
+type PetinAddress struct {
+	ID           int64            `json:"id"`
+	ExternalID   string           `json:"external_id"`
+	AddressLine  string           `json:"address_line"`
+	StreetNumber string           `json:"street_number"`
+	City         string           `json:"city"`
+	State        string           `json:"state"`
+	CountryCode  string           `json:"country_code"`
+	ZipCode      string           `json:"zip_code"`
+	Latitude     pgtype.Numeric   `json:"latitude"`
+	Longitude    pgtype.Numeric   `json:"longitude"`
+	CreatedAt    pgtype.Timestamp `json:"created_at"`
+	UpdatedAt    pgtype.Timestamp `json:"updated_at"`
+}

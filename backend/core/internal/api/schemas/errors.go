@@ -12,4 +12,5 @@ const (
 	ErrorCodeInvalidBody         ErrorCode = "INVALID_BODY"
 	ErrorCodeInternalServerError ErrorCode = "INTERNAL_SERVER_ERROR"
 	ErrorCodeConflict            ErrorCode = "RESOURCE_CONFLICT"
+	ErrorCodeNotFound            ErrorCode = "RESOURCE_NOT_FOUND"
 )

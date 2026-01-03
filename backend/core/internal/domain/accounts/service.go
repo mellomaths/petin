@@ -14,13 +14,15 @@ import (
 
 var (
 	ErrAccountAlreadyExists = errors.New("account already exists")
+	ErrAccountNotFound      = errors.New("account not found")
 )
 
 type Service interface {
 	CreateAccount(ctx context.Context, params CreateAccountParams) (AccountResponse, error)
 	HashPassword(password string) (string, error)
 	VerifyPassword(password, hash string) bool
-	GetAccountByExternalId(ctx context.Context, externalId string) (AccountResponse, error)
+	GetAccount(ctx context.Context, externalId string) (AccountResponse, error)
+	ActivateAccount(ctx context.Context, externalId string) (AccountResponse, error)
 }
 
 type svc struct {
@@ -88,11 +90,36 @@ func (s *svc) VerifyPassword(password, hash string) bool {
 	return err == nil
 }
 
-func (s *svc) GetAccountByExternalId(ctx context.Context, externalId string) (AccountResponse, error) {
-	account, err := s.repo.GetAccountByExternalId(ctx, externalId)
+func (s *svc) GetAccount(ctx context.Context, externalId string) (AccountResponse, error) {
+	account, err := s.repo.GetAccount(ctx, externalId)
 	if err != nil {
+		if err == pgx.ErrNoRows {
+			zap.L().Info("account not found", zap.String("account_external_id", externalId))
+			return AccountResponse{}, ErrAccountNotFound
+		}
 		zap.L().Error("failed to get account by external id", zap.Error(err))
 		return AccountResponse{}, errors.New("failed to get account by external id")
+	}
+	return AccountResponse{
+		ExternalID: account.ExternalID,
+		Status:     AccountStatus(account.Status),
+		CreatedAt:  account.CreatedAt.Time,
+		UpdatedAt:  account.UpdatedAt.Time,
+	}, nil
+}
+
+func (s *svc) ActivateAccount(ctx context.Context, externalId string) (AccountResponse, error) {
+	account, err := s.repo.UpdateAccountStatus(ctx, repo.UpdateAccountStatusParams{
+		ExternalID: externalId,
+		Status:     string(AccountStatusActive),
+	})
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			zap.L().Info("account not found", zap.String("account_external_id", externalId))
+			return AccountResponse{}, ErrAccountNotFound
+		}
+		zap.L().Error("failed to activate account", zap.Error(err))
+		return AccountResponse{}, errors.New("failed to activate account")
 	}
 	return AccountResponse{
 		ExternalID: account.ExternalID,

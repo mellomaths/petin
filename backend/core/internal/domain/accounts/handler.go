@@ -44,11 +44,30 @@ func (h *handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 	api.NewJsonResponse(w, http.StatusCreated, account)
 }
 
-func (h *handler) GetAccountByExternalId(w http.ResponseWriter, r *http.Request) {
+func (h *handler) GetAccount(w http.ResponseWriter, r *http.Request) {
 	externalId := chi.URLParam(r, "externalId")
-	account, err := h.accountsSvc.GetAccountByExternalId(r.Context(), externalId)
+	account, err := h.accountsSvc.GetAccount(r.Context(), externalId)
 	if err != nil {
+		if errors.Is(err, ErrAccountNotFound) {
+			api.NewJsonErrorResponse(w, http.StatusNotFound, string(schemas.ErrorCodeNotFound), "account not found", nil)
+			return
+		}
 		zap.L().Error("failed to get account by external id", zap.Error(err))
+		api.NewJsonErrorResponse(w, http.StatusInternalServerError, string(schemas.ErrorCodeInternalServerError), "internal server error", nil)
+		return
+	}
+	api.NewJsonResponse(w, http.StatusOK, account)
+}
+
+func (h *handler) ActivateAccount(w http.ResponseWriter, r *http.Request) {
+	externalId := chi.URLParam(r, "externalId")
+	account, err := h.accountsSvc.ActivateAccount(r.Context(), externalId)
+	if err != nil {
+		if errors.Is(err, ErrAccountNotFound) {
+			api.NewJsonErrorResponse(w, http.StatusNotFound, string(schemas.ErrorCodeNotFound), "account not found", nil)
+			return
+		}
+		zap.L().Error("failed to activate account", zap.Error(err))
 		api.NewJsonErrorResponse(w, http.StatusInternalServerError, string(schemas.ErrorCodeInternalServerError), "internal server error", nil)
 		return
 	}

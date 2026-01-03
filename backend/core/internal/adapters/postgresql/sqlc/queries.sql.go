@@ -42,13 +42,23 @@ func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (P
 	return i, err
 }
 
-const deleteAccount = `-- name: DeleteAccount :exec
-DELETE FROM petin.account WHERE id = $1
+const getAccount = `-- name: GetAccount :one
+SELECT id, external_id, email, password, status, created_at, updated_at FROM petin.account WHERE external_id = $1
 `
 
-func (q *Queries) DeleteAccount(ctx context.Context, id int64) error {
-	_, err := q.db.Exec(ctx, deleteAccount, id)
-	return err
+func (q *Queries) GetAccount(ctx context.Context, externalID string) (PetinAccount, error) {
+	row := q.db.QueryRow(ctx, getAccount, externalID)
+	var i PetinAccount
+	err := row.Scan(
+		&i.ID,
+		&i.ExternalID,
+		&i.Email,
+		&i.Password,
+		&i.Status,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
 }
 
 const getAccountByEmail = `-- name: GetAccountByEmail :one
@@ -70,43 +80,17 @@ func (q *Queries) GetAccountByEmail(ctx context.Context, email string) (PetinAcc
 	return i, err
 }
 
-const getAccountByExternalId = `-- name: GetAccountByExternalId :one
-SELECT id, external_id, email, password, status, created_at, updated_at FROM petin.account WHERE external_id = $1
+const updateAccountStatus = `-- name: UpdateAccountStatus :one
+UPDATE petin.account SET status = $2 WHERE external_id = $1 RETURNING id, external_id, email, password, status, created_at, updated_at
 `
 
-func (q *Queries) GetAccountByExternalId(ctx context.Context, externalID string) (PetinAccount, error) {
-	row := q.db.QueryRow(ctx, getAccountByExternalId, externalID)
-	var i PetinAccount
-	err := row.Scan(
-		&i.ID,
-		&i.ExternalID,
-		&i.Email,
-		&i.Password,
-		&i.Status,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-	)
-	return i, err
+type UpdateAccountStatusParams struct {
+	ExternalID string `json:"external_id"`
+	Status     string `json:"status"`
 }
 
-const updateAccount = `-- name: UpdateAccount :one
-UPDATE petin.account SET email = $2, password = $3, status = $4 WHERE id = $1 RETURNING id, external_id, email, password, status, created_at, updated_at
-`
-
-type UpdateAccountParams struct {
-	ID       int64  `json:"id"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Status   string `json:"status"`
-}
-
-func (q *Queries) UpdateAccount(ctx context.Context, arg UpdateAccountParams) (PetinAccount, error) {
-	row := q.db.QueryRow(ctx, updateAccount,
-		arg.ID,
-		arg.Email,
-		arg.Password,
-		arg.Status,
-	)
+func (q *Queries) UpdateAccountStatus(ctx context.Context, arg UpdateAccountStatusParams) (PetinAccount, error) {
+	row := q.db.QueryRow(ctx, updateAccountStatus, arg.ExternalID, arg.Status)
 	var i PetinAccount
 	err := row.Scan(
 		&i.ID,
