@@ -28,3 +28,7 @@ type CreateAccountParams struct {
 type UpdateAccountStatusParams struct {
 	Status AccountStatus `json:"status" validate:"required,oneof=ACTIVE INACTIVE PENDING SUSPENDED ARCHIVED"`
 }
+
+type VerifyEmailParams struct {
+	VerificationToken string `json:"verification_token" validate:"required"`
+}

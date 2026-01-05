@@ -1,0 +1,50 @@
+{
+  "app": {
+    "title": "Petin",
+    "tagline": "Find Your Perfect Pet, Right From the Heart"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Find Your Perfect Pet, Right From the Heart",
+    "description": "Join Petin and help fight against pet abandonment. Connect with pet owners and find your new best friend through our adoption platform.",
+    "download": "Download App",
+    "learnMore": "Learn More"
+  },
+  "features": {
+    "title": "Why Choose Petin?",
+    "subtitle": "Everything you need to find and adopt your perfect pet companion",
+    "discovery": {
+      "title": "Easy Pet Discovery",
+      "description": "Browse nearby pets available for adoption with our intuitive search and filter system."
+    },
+    "communication": {
+      "title": "Direct Communication",
+      "description": "Chat directly with pet owners to learn more about your potential new friend."
+    },
+    "location": {
+      "title": "Location-Based",
+      "description": "Find pets in your area and schedule meetups at convenient locations."
+    },
+    "adoption": {
+      "title": "Adoption Focused",
+      "description": "Our platform is dedicated to adoption only - no selling, just finding loving homes."
+    }
+  },
+  "download": {
+    "title": "Get Started Today",
+    "description": "Download the Petin app and start your journey to finding your perfect pet companion"
+  },
+  "footer": {
+    "description": "Find Your Perfect Pet, Right From the Heart",
+    "links": "Links",
+    "follow": "Follow Us",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "copyright": "© 2024 Petin. All rights reserved."
+  }
+}
+

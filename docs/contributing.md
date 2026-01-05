@@ -2,8 +2,8 @@
 
 ## Requirements
 
-* **Backend:** Node.js, Express. Database is Postgres.
-* **Frontend:** Node.js, Vue.js.
+* **Backend:** Go, PostgreSQL.
+* **Frontend:** Angular.
 * **Mobile:** TBD.
 
 ## Run Locally

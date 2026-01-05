@@ -1,0 +1,54 @@
+<header class="header">
+  <div class="header__container">
+    <a routerLink="/" class="header__logo">
+      <span class="header__logo-icon">🐾</span>
+      <span class="header__logo-text">Petin</span>
+    </a>
+
+    <nav class="header__nav" [class.open]="isMenuOpen">
+      <a routerLink="/" class="header__nav-link" (click)="closeMenu()">{{ 'nav.home' | translate }}</a>
+      <a routerLink="/about" class="header__nav-link" (click)="closeMenu()">{{ 'nav.about' | translate }}</a>
+      <a routerLink="/contact" class="header__nav-link" (click)="closeMenu()">{{ 'nav.contact' | translate }}</a>
+      <div class="header__language-dropdown">
+        <button 
+          class="header__language-btn" 
+          type="button"
+          (click)="toggleLanguageDropdown()"
+          [attr.aria-expanded]="isLanguageDropdownOpen"
+          aria-label="Select language"
+        >
+          <span class="header__language-flag">{{ languageInfo().flag }}</span>
+          <span class="header__language-text">{{ languageInfo().name }}</span>
+          <span class="header__language-arrow" [class.open]="isLanguageDropdownOpen">▼</span>
+        </button>
+        @if (isLanguageDropdownOpen) {
+          <div class="header__language-menu">
+            @for (lang of allLanguages; track lang.code) {
+              <button
+                class="header__language-option"
+                [class.active]="currentLanguage() === lang.code"
+                type="button"
+                (click)="selectLanguage(lang.code)"
+              >
+                <span class="header__language-option-flag">{{ lang.flag }}</span>
+                <span class="header__language-option-name">{{ lang.name }}</span>
+              </button>
+            }
+          </div>
+        }
+      </div>
+    </nav>
+
+    <button
+      class="header__menu-toggle"
+      type="button"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="isMenuOpen"
+      aria-label="Toggle menu"
+    >
+      <span [class.open]="isMenuOpen"></span>
+      <span [class.open]="isMenuOpen"></span>
+      <span [class.open]="isMenuOpen"></span>
+    </button>
+  </div>
+</header>

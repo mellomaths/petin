@@ -1,0 +1,50 @@
+{
+  "app": {
+    "title": "Petin",
+    "tagline": "Encontre Seu Pet Perfeito, Direto do Coração"
+  },
+  "nav": {
+    "home": "Início",
+    "about": "Sobre",
+    "contact": "Contato"
+  },
+  "hero": {
+    "title": "Encontre Seu Pet Perfeito, Direto do Coração",
+    "description": "Junte-se ao Petin e ajude a combater o abandono de animais. Conecte-se com donos de pets e encontre seu novo melhor amigo através da nossa plataforma de adoção.",
+    "download": "Baixar App",
+    "learnMore": "Saiba Mais"
+  },
+  "features": {
+    "title": "Por Que Escolher o Petin?",
+    "subtitle": "Tudo que você precisa para encontrar e adotar seu companheiro pet perfeito",
+    "discovery": {
+      "title": "Descoberta Fácil de Pets",
+      "description": "Navegue por pets próximos disponíveis para adoção com nosso sistema intuitivo de busca e filtros."
+    },
+    "communication": {
+      "title": "Comunicação Direta",
+      "description": "Converse diretamente com donos de pets para saber mais sobre seu potencial novo amigo."
+    },
+    "location": {
+      "title": "Baseado em Localização",
+      "description": "Encontre pets na sua região e agende encontros em locais convenientes."
+    },
+    "adoption": {
+      "title": "Focado em Adoção",
+      "description": "Nossa plataforma é dedicada apenas à adoção - sem venda, apenas encontrando lares amorosos."
+    }
+  },
+  "download": {
+    "title": "Comece Hoje",
+    "description": "Baixe o app Petin e comece sua jornada para encontrar seu companheiro pet perfeito"
+  },
+  "footer": {
+    "description": "Encontre Seu Pet Perfeito, Direto do Coração",
+    "links": "Links",
+    "follow": "Siga-nos",
+    "privacy": "Política de Privacidade",
+    "terms": "Termos de Serviço",
+    "copyright": "© 2024 Petin. Todos os direitos reservados."
+  }
+}
+

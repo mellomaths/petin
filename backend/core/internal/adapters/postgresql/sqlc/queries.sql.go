@@ -11,6 +11,56 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const confirmHandover = `-- name: ConfirmHandover :one
+UPDATE petin.handover 
+SET owner_confirmed = $2, adopter_confirmed = $3, status = $4, completed_at = $5, updated_at = NOW()
+WHERE external_id = $1
+RETURNING id, external_id, conversation_id, pet_id, owner_profile_id, adopter_profile_id, scheduled_date, location_name, location_address, latitude, longitude, location_address_id, location_change_requested, location_change_requested_by, location_change_proposal, owner_confirmed, adopter_confirmed, status, completed_at, created_at, updated_at
+`
+
+type ConfirmHandoverParams struct {
+	ExternalID       string           `json:"external_id"`
+	OwnerConfirmed   bool             `json:"owner_confirmed"`
+	AdopterConfirmed bool             `json:"adopter_confirmed"`
+	Status           string           `json:"status"`
+	CompletedAt      pgtype.Timestamp `json:"completed_at"`
+}
+
+func (q *Queries) ConfirmHandover(ctx context.Context, arg ConfirmHandoverParams) (PetinHandover, error) {
+	row := q.db.QueryRow(ctx, confirmHandover,
+		arg.ExternalID,
+		arg.OwnerConfirmed,
+		arg.AdopterConfirmed,
+		arg.Status,
+		arg.CompletedAt,
+	)
+	var i PetinHandover
+	err := row.Scan(
+		&i.ID,
+		&i.ExternalID,
+		&i.ConversationID,
+		&i.PetID,
+		&i.OwnerProfileID,
+		&i.AdopterProfileID,
+		&i.ScheduledDate,
+		&i.LocationName,
+		&i.LocationAddress,
+		&i.Latitude,
+		&i.Longitude,
+		&i.LocationAddressID,
+		&i.LocationChangeRequested,
+		&i.LocationChangeRequestedBy,
+		&i.LocationChangeProposal,
+		&i.OwnerConfirmed,
+		&i.AdopterConfirmed,
+		&i.Status,
+		&i.CompletedAt,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const createAccount = `-- name: CreateAccount :one
 INSERT INTO petin.account (external_id, email, password, status)
 VALUES ($1, $2, $3, $4)
@@ -92,6 +142,190 @@ func (q *Queries) CreateAddress(ctx context.Context, arg CreateAddressParams) (P
 	return i, err
 }
 
+const createConversation = `-- name: CreateConversation :one
+INSERT INTO petin.conversation (external_id, pet_id, adopter_profile_id, owner_profile_id)
+VALUES ($1, $2, $3, $4)
+RETURNING id, external_id, pet_id, adopter_profile_id, owner_profile_id, created_at
+`
+
+type CreateConversationParams struct {
+	ExternalID       string `json:"external_id"`
+	PetID            int64  `json:"pet_id"`
+	AdopterProfileID int64  `json:"adopter_profile_id"`
+	OwnerProfileID   int64  `json:"owner_profile_id"`
+}
+
+func (q *Queries) CreateConversation(ctx context.Context, arg CreateConversationParams) (PetinConversation, error) {
+	row := q.db.QueryRow(ctx, createConversation,
+		arg.ExternalID,
+		arg.PetID,
+		arg.AdopterProfileID,
+		arg.OwnerProfileID,
+	)
+	var i PetinConversation
+	err := row.Scan(
+		&i.ID,
+		&i.ExternalID,
+		&i.PetID,
+		&i.AdopterProfileID,
+		&i.OwnerProfileID,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const createHandover = `-- name: CreateHandover :one
+INSERT INTO petin.handover (external_id, conversation_id, pet_id, owner_profile_id, adopter_profile_id, scheduled_date, location_name, location_address, latitude, longitude, location_address_id, status)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+RETURNING id, external_id, conversation_id, pet_id, owner_profile_id, adopter_profile_id, scheduled_date, location_name, location_address, latitude, longitude, location_address_id, location_change_requested, location_change_requested_by, location_change_proposal, owner_confirmed, adopter_confirmed, status, completed_at, created_at, updated_at
+`
+
+type CreateHandoverParams struct {
+	ExternalID        string           `json:"external_id"`
+	ConversationID    int64            `json:"conversation_id"`
+	PetID             int64            `json:"pet_id"`
+	OwnerProfileID    int64            `json:"owner_profile_id"`
+	AdopterProfileID  int64            `json:"adopter_profile_id"`
+	ScheduledDate     pgtype.Timestamp `json:"scheduled_date"`
+	LocationName      pgtype.Text      `json:"location_name"`
+	LocationAddress   pgtype.Text      `json:"location_address"`
+	Latitude          pgtype.Float8    `json:"latitude"`
+	Longitude         pgtype.Float8    `json:"longitude"`
+	LocationAddressID pgtype.Int8      `json:"location_address_id"`
+	Status            string           `json:"status"`
+}
+
+func (q *Queries) CreateHandover(ctx context.Context, arg CreateHandoverParams) (PetinHandover, error) {
+	row := q.db.QueryRow(ctx, createHandover,
+		arg.ExternalID,
+		arg.ConversationID,
+		arg.PetID,
+		arg.OwnerProfileID,
+		arg.AdopterProfileID,
+		arg.ScheduledDate,
+		arg.LocationName,
+		arg.LocationAddress,
+		arg.Latitude,
+		arg.Longitude,
+		arg.LocationAddressID,
+		arg.Status,
+	)
+	var i PetinHandover
+	err := row.Scan(
+		&i.ID,
+		&i.ExternalID,
+		&i.ConversationID,
+		&i.PetID,
+		&i.OwnerProfileID,
+		&i.AdopterProfileID,
+		&i.ScheduledDate,
+		&i.LocationName,
+		&i.LocationAddress,
+		&i.Latitude,
+		&i.Longitude,
+		&i.LocationAddressID,
+		&i.LocationChangeRequested,
+		&i.LocationChangeRequestedBy,
+		&i.LocationChangeProposal,
+		&i.OwnerConfirmed,
+		&i.AdopterConfirmed,
+		&i.Status,
+		&i.CompletedAt,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const createMessage = `-- name: CreateMessage :one
+INSERT INTO petin.message (external_id, conversation_id, sender_profile_id, content)
+VALUES ($1, $2, $3, $4)
+RETURNING id, external_id, conversation_id, sender_profile_id, content, created_at
+`
+
+type CreateMessageParams struct {
+	ExternalID      string `json:"external_id"`
+	ConversationID  int64  `json:"conversation_id"`
+	SenderProfileID int64  `json:"sender_profile_id"`
+	Content         string `json:"content"`
+}
+
+func (q *Queries) CreateMessage(ctx context.Context, arg CreateMessageParams) (PetinMessage, error) {
+	row := q.db.QueryRow(ctx, createMessage,
+		arg.ExternalID,
+		arg.ConversationID,
+		arg.SenderProfileID,
+		arg.Content,
+	)
+	var i PetinMessage
+	err := row.Scan(
+		&i.ID,
+		&i.ExternalID,
+		&i.ConversationID,
+		&i.SenderProfileID,
+		&i.Content,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const createPet = `-- name: CreatePet :one
+INSERT INTO petin.pet (external_id, profile_id, name, species, breed, age, gender, size, description, photos, is_available_for_adoption, current_owner_profile_id)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+RETURNING id, external_id, profile_id, name, species, breed, age, gender, size, description, photos, is_available_for_adoption, current_owner_profile_id, created_at, updated_at
+`
+
+type CreatePetParams struct {
+	ExternalID             string      `json:"external_id"`
+	ProfileID              int64       `json:"profile_id"`
+	Name                   string      `json:"name"`
+	Species                string      `json:"species"`
+	Breed                  pgtype.Text `json:"breed"`
+	Age                    pgtype.Int4 `json:"age"`
+	Gender                 pgtype.Text `json:"gender"`
+	Size                   pgtype.Text `json:"size"`
+	Description            pgtype.Text `json:"description"`
+	Photos                 []string    `json:"photos"`
+	IsAvailableForAdoption bool        `json:"is_available_for_adoption"`
+	CurrentOwnerProfileID  pgtype.Int8 `json:"current_owner_profile_id"`
+}
+
+func (q *Queries) CreatePet(ctx context.Context, arg CreatePetParams) (PetinPet, error) {
+	row := q.db.QueryRow(ctx, createPet,
+		arg.ExternalID,
+		arg.ProfileID,
+		arg.Name,
+		arg.Species,
+		arg.Breed,
+		arg.Age,
+		arg.Gender,
+		arg.Size,
+		arg.Description,
+		arg.Photos,
+		arg.IsAvailableForAdoption,
+		arg.CurrentOwnerProfileID,
+	)
+	var i PetinPet
+	err := row.Scan(
+		&i.ID,
+		&i.ExternalID,
+		&i.ProfileID,
+		&i.Name,
+		&i.Species,
+		&i.Breed,
+		&i.Age,
+		&i.Gender,
+		&i.Size,
+		&i.Description,
+		&i.Photos,
+		&i.IsAvailableForAdoption,
+		&i.CurrentOwnerProfileID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const createProfile = `-- name: CreateProfile :one
 INSERT INTO petin.profile (external_id, account_id, fullname, document_number, document_type, birthdate, bio, gender, phone_number, address_id, avatar)
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
@@ -146,6 +380,44 @@ func (q *Queries) CreateProfile(ctx context.Context, arg CreateProfileParams) (P
 	return i, err
 }
 
+const createReport = `-- name: CreateReport :one
+INSERT INTO petin.report (external_id, reporter_profile_id, reported_profile_id, reason, description, status)
+VALUES ($1, $2, $3, $4, $5, $6)
+RETURNING id, external_id, reporter_profile_id, reported_profile_id, reason, description, status, created_at
+`
+
+type CreateReportParams struct {
+	ExternalID        string `json:"external_id"`
+	ReporterProfileID int64  `json:"reporter_profile_id"`
+	ReportedProfileID int64  `json:"reported_profile_id"`
+	Reason            string `json:"reason"`
+	Description       string `json:"description"`
+	Status            string `json:"status"`
+}
+
+func (q *Queries) CreateReport(ctx context.Context, arg CreateReportParams) (PetinReport, error) {
+	row := q.db.QueryRow(ctx, createReport,
+		arg.ExternalID,
+		arg.ReporterProfileID,
+		arg.ReportedProfileID,
+		arg.Reason,
+		arg.Description,
+		arg.Status,
+	)
+	var i PetinReport
+	err := row.Scan(
+		&i.ID,
+		&i.ExternalID,
+		&i.ReporterProfileID,
+		&i.ReportedProfileID,
+		&i.Reason,
+		&i.Description,
+		&i.Status,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const getAccount = `-- name: GetAccount :one
 SELECT id, external_id, email, password, status, created_at, updated_at FROM petin.account WHERE external_id = $1
 `
@@ -182,6 +454,372 @@ func (q *Queries) GetAccountByEmail(ctx context.Context, email string) (PetinAcc
 		&i.UpdatedAt,
 	)
 	return i, err
+}
+
+const getAvailablePetsNearby = `-- name: GetAvailablePetsNearby :many
+SELECT 
+    p.id, p.external_id, p.profile_id, p.name, p.species, p.breed, p.age, p.gender, p.size, p.description, p.photos, p.is_available_for_adoption, p.current_owner_profile_id, p.created_at, p.updated_at,
+    pr.external_id as profile_external_id,
+    pr.fullname as owner_name,
+    pr.avatar as owner_avatar,
+    ad.latitude as owner_latitude,
+    ad.longitude as owner_longitude,
+    SQRT(POWER(ad.latitude - $1, 2) + POWER(ad.longitude - $2, 2)) as distance
+FROM petin.pet p
+INNER JOIN petin.profile pr ON p.profile_id = pr.id
+INNER JOIN petin.address ad ON pr.address_id = ad.id
+WHERE p.is_available_for_adoption = true
+ORDER BY distance
+LIMIT $3
+`
+
+type GetAvailablePetsNearbyParams struct {
+	Latitude  float64 `json:"latitude"`
+	Longitude float64 `json:"longitude"`
+	Limit     int32   `json:"limit"`
+}
+
+type GetAvailablePetsNearbyRow struct {
+	ID                     int64            `json:"id"`
+	ExternalID             string           `json:"external_id"`
+	ProfileID              int64            `json:"profile_id"`
+	Name                   string           `json:"name"`
+	Species                string           `json:"species"`
+	Breed                  pgtype.Text      `json:"breed"`
+	Age                    pgtype.Int4      `json:"age"`
+	Gender                 pgtype.Text      `json:"gender"`
+	Size                   pgtype.Text      `json:"size"`
+	Description            pgtype.Text      `json:"description"`
+	Photos                 []string         `json:"photos"`
+	IsAvailableForAdoption bool             `json:"is_available_for_adoption"`
+	CurrentOwnerProfileID  pgtype.Int8      `json:"current_owner_profile_id"`
+	CreatedAt              pgtype.Timestamp `json:"created_at"`
+	UpdatedAt              pgtype.Timestamp `json:"updated_at"`
+	ProfileExternalID      string           `json:"profile_external_id"`
+	OwnerName              string           `json:"owner_name"`
+	OwnerAvatar            pgtype.Text      `json:"owner_avatar"`
+	OwnerLatitude          float64          `json:"owner_latitude"`
+	OwnerLongitude         float64          `json:"owner_longitude"`
+	Distance               float64          `json:"distance"`
+}
+
+func (q *Queries) GetAvailablePetsNearby(ctx context.Context, arg GetAvailablePetsNearbyParams) ([]GetAvailablePetsNearbyRow, error) {
+	rows, err := q.db.Query(ctx, getAvailablePetsNearby, arg.Latitude, arg.Longitude, arg.Limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetAvailablePetsNearbyRow
+	for rows.Next() {
+		var i GetAvailablePetsNearbyRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.ExternalID,
+			&i.ProfileID,
+			&i.Name,
+			&i.Species,
+			&i.Breed,
+			&i.Age,
+			&i.Gender,
+			&i.Size,
+			&i.Description,
+			&i.Photos,
+			&i.IsAvailableForAdoption,
+			&i.CurrentOwnerProfileID,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.ProfileExternalID,
+			&i.OwnerName,
+			&i.OwnerAvatar,
+			&i.OwnerLatitude,
+			&i.OwnerLongitude,
+			&i.Distance,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getConversation = `-- name: GetConversation :one
+SELECT id, external_id, pet_id, adopter_profile_id, owner_profile_id, created_at FROM petin.conversation WHERE external_id = $1
+`
+
+func (q *Queries) GetConversation(ctx context.Context, externalID string) (PetinConversation, error) {
+	row := q.db.QueryRow(ctx, getConversation, externalID)
+	var i PetinConversation
+	err := row.Scan(
+		&i.ID,
+		&i.ExternalID,
+		&i.PetID,
+		&i.AdopterProfileID,
+		&i.OwnerProfileID,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const getConversationByID = `-- name: GetConversationByID :one
+SELECT id, external_id, pet_id, adopter_profile_id, owner_profile_id, created_at FROM petin.conversation WHERE id = $1
+`
+
+func (q *Queries) GetConversationByID(ctx context.Context, id int64) (PetinConversation, error) {
+	row := q.db.QueryRow(ctx, getConversationByID, id)
+	var i PetinConversation
+	err := row.Scan(
+		&i.ID,
+		&i.ExternalID,
+		&i.PetID,
+		&i.AdopterProfileID,
+		&i.OwnerProfileID,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const getConversationsByProfileID = `-- name: GetConversationsByProfileID :many
+SELECT id, external_id, pet_id, adopter_profile_id, owner_profile_id, created_at FROM petin.conversation 
+WHERE adopter_profile_id = $1 OR owner_profile_id = $1
+ORDER BY created_at DESC
+`
+
+func (q *Queries) GetConversationsByProfileID(ctx context.Context, adopterProfileID int64) ([]PetinConversation, error) {
+	rows, err := q.db.Query(ctx, getConversationsByProfileID, adopterProfileID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []PetinConversation
+	for rows.Next() {
+		var i PetinConversation
+		if err := rows.Scan(
+			&i.ID,
+			&i.ExternalID,
+			&i.PetID,
+			&i.AdopterProfileID,
+			&i.OwnerProfileID,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getHandover = `-- name: GetHandover :one
+SELECT id, external_id, conversation_id, pet_id, owner_profile_id, adopter_profile_id, scheduled_date, location_name, location_address, latitude, longitude, location_address_id, location_change_requested, location_change_requested_by, location_change_proposal, owner_confirmed, adopter_confirmed, status, completed_at, created_at, updated_at FROM petin.handover WHERE external_id = $1
+`
+
+func (q *Queries) GetHandover(ctx context.Context, externalID string) (PetinHandover, error) {
+	row := q.db.QueryRow(ctx, getHandover, externalID)
+	var i PetinHandover
+	err := row.Scan(
+		&i.ID,
+		&i.ExternalID,
+		&i.ConversationID,
+		&i.PetID,
+		&i.OwnerProfileID,
+		&i.AdopterProfileID,
+		&i.ScheduledDate,
+		&i.LocationName,
+		&i.LocationAddress,
+		&i.Latitude,
+		&i.Longitude,
+		&i.LocationAddressID,
+		&i.LocationChangeRequested,
+		&i.LocationChangeRequestedBy,
+		&i.LocationChangeProposal,
+		&i.OwnerConfirmed,
+		&i.AdopterConfirmed,
+		&i.Status,
+		&i.CompletedAt,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const getHandoversByProfileID = `-- name: GetHandoversByProfileID :many
+SELECT id, external_id, conversation_id, pet_id, owner_profile_id, adopter_profile_id, scheduled_date, location_name, location_address, latitude, longitude, location_address_id, location_change_requested, location_change_requested_by, location_change_proposal, owner_confirmed, adopter_confirmed, status, completed_at, created_at, updated_at FROM petin.handover 
+WHERE owner_profile_id = $1 OR adopter_profile_id = $1
+ORDER BY created_at DESC
+`
+
+func (q *Queries) GetHandoversByProfileID(ctx context.Context, ownerProfileID int64) ([]PetinHandover, error) {
+	rows, err := q.db.Query(ctx, getHandoversByProfileID, ownerProfileID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []PetinHandover
+	for rows.Next() {
+		var i PetinHandover
+		if err := rows.Scan(
+			&i.ID,
+			&i.ExternalID,
+			&i.ConversationID,
+			&i.PetID,
+			&i.OwnerProfileID,
+			&i.AdopterProfileID,
+			&i.ScheduledDate,
+			&i.LocationName,
+			&i.LocationAddress,
+			&i.Latitude,
+			&i.Longitude,
+			&i.LocationAddressID,
+			&i.LocationChangeRequested,
+			&i.LocationChangeRequestedBy,
+			&i.LocationChangeProposal,
+			&i.OwnerConfirmed,
+			&i.AdopterConfirmed,
+			&i.Status,
+			&i.CompletedAt,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getMessagesByConversationID = `-- name: GetMessagesByConversationID :many
+SELECT id, external_id, conversation_id, sender_profile_id, content, created_at FROM petin.message 
+WHERE conversation_id = $1
+ORDER BY created_at ASC
+`
+
+func (q *Queries) GetMessagesByConversationID(ctx context.Context, conversationID int64) ([]PetinMessage, error) {
+	rows, err := q.db.Query(ctx, getMessagesByConversationID, conversationID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []PetinMessage
+	for rows.Next() {
+		var i PetinMessage
+		if err := rows.Scan(
+			&i.ID,
+			&i.ExternalID,
+			&i.ConversationID,
+			&i.SenderProfileID,
+			&i.Content,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getPet = `-- name: GetPet :one
+SELECT id, external_id, profile_id, name, species, breed, age, gender, size, description, photos, is_available_for_adoption, current_owner_profile_id, created_at, updated_at FROM petin.pet WHERE external_id = $1
+`
+
+func (q *Queries) GetPet(ctx context.Context, externalID string) (PetinPet, error) {
+	row := q.db.QueryRow(ctx, getPet, externalID)
+	var i PetinPet
+	err := row.Scan(
+		&i.ID,
+		&i.ExternalID,
+		&i.ProfileID,
+		&i.Name,
+		&i.Species,
+		&i.Breed,
+		&i.Age,
+		&i.Gender,
+		&i.Size,
+		&i.Description,
+		&i.Photos,
+		&i.IsAvailableForAdoption,
+		&i.CurrentOwnerProfileID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const getPetByID = `-- name: GetPetByID :one
+SELECT id, external_id, profile_id, name, species, breed, age, gender, size, description, photos, is_available_for_adoption, current_owner_profile_id, created_at, updated_at FROM petin.pet WHERE id = $1
+`
+
+func (q *Queries) GetPetByID(ctx context.Context, id int64) (PetinPet, error) {
+	row := q.db.QueryRow(ctx, getPetByID, id)
+	var i PetinPet
+	err := row.Scan(
+		&i.ID,
+		&i.ExternalID,
+		&i.ProfileID,
+		&i.Name,
+		&i.Species,
+		&i.Breed,
+		&i.Age,
+		&i.Gender,
+		&i.Size,
+		&i.Description,
+		&i.Photos,
+		&i.IsAvailableForAdoption,
+		&i.CurrentOwnerProfileID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const getPetsByProfileID = `-- name: GetPetsByProfileID :many
+SELECT id, external_id, profile_id, name, species, breed, age, gender, size, description, photos, is_available_for_adoption, current_owner_profile_id, created_at, updated_at FROM petin.pet WHERE profile_id = $1 ORDER BY created_at DESC
+`
+
+func (q *Queries) GetPetsByProfileID(ctx context.Context, profileID int64) ([]PetinPet, error) {
+	rows, err := q.db.Query(ctx, getPetsByProfileID, profileID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []PetinPet
+	for rows.Next() {
+		var i PetinPet
+		if err := rows.Scan(
+			&i.ID,
+			&i.ExternalID,
+			&i.ProfileID,
+			&i.Name,
+			&i.Species,
+			&i.Breed,
+			&i.Age,
+			&i.Gender,
+			&i.Size,
+			&i.Description,
+			&i.Photos,
+			&i.IsAvailableForAdoption,
+			&i.CurrentOwnerProfileID,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const getProfileByAccountExternalID = `-- name: GetProfileByAccountExternalID :one
@@ -271,6 +909,26 @@ func (q *Queries) GetProfileByAccountExternalID(ctx context.Context, externalID 
 	return i, err
 }
 
+const getReport = `-- name: GetReport :one
+SELECT id, external_id, reporter_profile_id, reported_profile_id, reason, description, status, created_at FROM petin.report WHERE external_id = $1
+`
+
+func (q *Queries) GetReport(ctx context.Context, externalID string) (PetinReport, error) {
+	row := q.db.QueryRow(ctx, getReport, externalID)
+	var i PetinReport
+	err := row.Scan(
+		&i.ID,
+		&i.ExternalID,
+		&i.ReporterProfileID,
+		&i.ReportedProfileID,
+		&i.Reason,
+		&i.Description,
+		&i.Status,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const updateAccountStatus = `-- name: UpdateAccountStatus :one
 UPDATE petin.account SET status = $2, updated_at = NOW() WHERE external_id = $1 RETURNING id, external_id, email, password, status, created_at, updated_at
 `
@@ -289,6 +947,228 @@ func (q *Queries) UpdateAccountStatus(ctx context.Context, arg UpdateAccountStat
 		&i.Email,
 		&i.Password,
 		&i.Status,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const updateHandoverLocation = `-- name: UpdateHandoverLocation :one
+UPDATE petin.handover 
+SET location_name = $2, location_address = $3, latitude = $4, longitude = $5, location_address_id = $6, location_change_requested = $7, location_change_requested_by = $8, location_change_proposal = $9, updated_at = NOW()
+WHERE external_id = $1
+RETURNING id, external_id, conversation_id, pet_id, owner_profile_id, adopter_profile_id, scheduled_date, location_name, location_address, latitude, longitude, location_address_id, location_change_requested, location_change_requested_by, location_change_proposal, owner_confirmed, adopter_confirmed, status, completed_at, created_at, updated_at
+`
+
+type UpdateHandoverLocationParams struct {
+	ExternalID                string        `json:"external_id"`
+	LocationName              pgtype.Text   `json:"location_name"`
+	LocationAddress           pgtype.Text   `json:"location_address"`
+	Latitude                  pgtype.Float8 `json:"latitude"`
+	Longitude                 pgtype.Float8 `json:"longitude"`
+	LocationAddressID         pgtype.Int8   `json:"location_address_id"`
+	LocationChangeRequested   bool          `json:"location_change_requested"`
+	LocationChangeRequestedBy pgtype.Int8   `json:"location_change_requested_by"`
+	LocationChangeProposal    pgtype.Text   `json:"location_change_proposal"`
+}
+
+func (q *Queries) UpdateHandoverLocation(ctx context.Context, arg UpdateHandoverLocationParams) (PetinHandover, error) {
+	row := q.db.QueryRow(ctx, updateHandoverLocation,
+		arg.ExternalID,
+		arg.LocationName,
+		arg.LocationAddress,
+		arg.Latitude,
+		arg.Longitude,
+		arg.LocationAddressID,
+		arg.LocationChangeRequested,
+		arg.LocationChangeRequestedBy,
+		arg.LocationChangeProposal,
+	)
+	var i PetinHandover
+	err := row.Scan(
+		&i.ID,
+		&i.ExternalID,
+		&i.ConversationID,
+		&i.PetID,
+		&i.OwnerProfileID,
+		&i.AdopterProfileID,
+		&i.ScheduledDate,
+		&i.LocationName,
+		&i.LocationAddress,
+		&i.Latitude,
+		&i.Longitude,
+		&i.LocationAddressID,
+		&i.LocationChangeRequested,
+		&i.LocationChangeRequestedBy,
+		&i.LocationChangeProposal,
+		&i.OwnerConfirmed,
+		&i.AdopterConfirmed,
+		&i.Status,
+		&i.CompletedAt,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const updateHandoverScheduledDate = `-- name: UpdateHandoverScheduledDate :one
+UPDATE petin.handover 
+SET scheduled_date = $2, status = $3, updated_at = NOW()
+WHERE external_id = $1
+RETURNING id, external_id, conversation_id, pet_id, owner_profile_id, adopter_profile_id, scheduled_date, location_name, location_address, latitude, longitude, location_address_id, location_change_requested, location_change_requested_by, location_change_proposal, owner_confirmed, adopter_confirmed, status, completed_at, created_at, updated_at
+`
+
+type UpdateHandoverScheduledDateParams struct {
+	ExternalID    string           `json:"external_id"`
+	ScheduledDate pgtype.Timestamp `json:"scheduled_date"`
+	Status        string           `json:"status"`
+}
+
+func (q *Queries) UpdateHandoverScheduledDate(ctx context.Context, arg UpdateHandoverScheduledDateParams) (PetinHandover, error) {
+	row := q.db.QueryRow(ctx, updateHandoverScheduledDate, arg.ExternalID, arg.ScheduledDate, arg.Status)
+	var i PetinHandover
+	err := row.Scan(
+		&i.ID,
+		&i.ExternalID,
+		&i.ConversationID,
+		&i.PetID,
+		&i.OwnerProfileID,
+		&i.AdopterProfileID,
+		&i.ScheduledDate,
+		&i.LocationName,
+		&i.LocationAddress,
+		&i.Latitude,
+		&i.Longitude,
+		&i.LocationAddressID,
+		&i.LocationChangeRequested,
+		&i.LocationChangeRequestedBy,
+		&i.LocationChangeProposal,
+		&i.OwnerConfirmed,
+		&i.AdopterConfirmed,
+		&i.Status,
+		&i.CompletedAt,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const updatePet = `-- name: UpdatePet :one
+UPDATE petin.pet 
+SET name = $2, species = $3, breed = $4, age = $5, gender = $6, size = $7, description = $8, photos = $9, updated_at = NOW()
+WHERE external_id = $1
+RETURNING id, external_id, profile_id, name, species, breed, age, gender, size, description, photos, is_available_for_adoption, current_owner_profile_id, created_at, updated_at
+`
+
+type UpdatePetParams struct {
+	ExternalID  string      `json:"external_id"`
+	Name        string      `json:"name"`
+	Species     string      `json:"species"`
+	Breed       pgtype.Text `json:"breed"`
+	Age         pgtype.Int4 `json:"age"`
+	Gender      pgtype.Text `json:"gender"`
+	Size        pgtype.Text `json:"size"`
+	Description pgtype.Text `json:"description"`
+	Photos      []string    `json:"photos"`
+}
+
+func (q *Queries) UpdatePet(ctx context.Context, arg UpdatePetParams) (PetinPet, error) {
+	row := q.db.QueryRow(ctx, updatePet,
+		arg.ExternalID,
+		arg.Name,
+		arg.Species,
+		arg.Breed,
+		arg.Age,
+		arg.Gender,
+		arg.Size,
+		arg.Description,
+		arg.Photos,
+	)
+	var i PetinPet
+	err := row.Scan(
+		&i.ID,
+		&i.ExternalID,
+		&i.ProfileID,
+		&i.Name,
+		&i.Species,
+		&i.Breed,
+		&i.Age,
+		&i.Gender,
+		&i.Size,
+		&i.Description,
+		&i.Photos,
+		&i.IsAvailableForAdoption,
+		&i.CurrentOwnerProfileID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const updatePetAvailability = `-- name: UpdatePetAvailability :one
+UPDATE petin.pet 
+SET is_available_for_adoption = $2, updated_at = NOW()
+WHERE external_id = $1
+RETURNING id, external_id, profile_id, name, species, breed, age, gender, size, description, photos, is_available_for_adoption, current_owner_profile_id, created_at, updated_at
+`
+
+type UpdatePetAvailabilityParams struct {
+	ExternalID             string `json:"external_id"`
+	IsAvailableForAdoption bool   `json:"is_available_for_adoption"`
+}
+
+func (q *Queries) UpdatePetAvailability(ctx context.Context, arg UpdatePetAvailabilityParams) (PetinPet, error) {
+	row := q.db.QueryRow(ctx, updatePetAvailability, arg.ExternalID, arg.IsAvailableForAdoption)
+	var i PetinPet
+	err := row.Scan(
+		&i.ID,
+		&i.ExternalID,
+		&i.ProfileID,
+		&i.Name,
+		&i.Species,
+		&i.Breed,
+		&i.Age,
+		&i.Gender,
+		&i.Size,
+		&i.Description,
+		&i.Photos,
+		&i.IsAvailableForAdoption,
+		&i.CurrentOwnerProfileID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const updatePetCurrentOwner = `-- name: UpdatePetCurrentOwner :one
+UPDATE petin.pet 
+SET current_owner_profile_id = $2, updated_at = NOW()
+WHERE external_id = $1
+RETURNING id, external_id, profile_id, name, species, breed, age, gender, size, description, photos, is_available_for_adoption, current_owner_profile_id, created_at, updated_at
+`
+
+type UpdatePetCurrentOwnerParams struct {
+	ExternalID            string      `json:"external_id"`
+	CurrentOwnerProfileID pgtype.Int8 `json:"current_owner_profile_id"`
+}
+
+func (q *Queries) UpdatePetCurrentOwner(ctx context.Context, arg UpdatePetCurrentOwnerParams) (PetinPet, error) {
+	row := q.db.QueryRow(ctx, updatePetCurrentOwner, arg.ExternalID, arg.CurrentOwnerProfileID)
+	var i PetinPet
+	err := row.Scan(
+		&i.ID,
+		&i.ExternalID,
+		&i.ProfileID,
+		&i.Name,
+		&i.Species,
+		&i.Breed,
+		&i.Age,
+		&i.Gender,
+		&i.Size,
+		&i.Description,
+		&i.Photos,
+		&i.IsAvailableForAdoption,
+		&i.CurrentOwnerProfileID,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)

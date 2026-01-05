@@ -1,0 +1,23 @@
+.contact {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.contact__main {
+  flex: 1;
+  padding: var(--spacing-xxl) 0;
+}
+
+.contact__container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+  .contact__container {
+    padding: 0 var(--spacing-lg);
+  }
+}

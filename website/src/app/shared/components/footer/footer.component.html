@@ -1,0 +1,36 @@
+<footer class="footer">
+  <div class="footer__container">
+    <div class="footer__content">
+      <div class="footer__section">
+        <h3 class="footer__title">Petin</h3>
+        <p class="footer__description">
+          {{ 'footer.description' | translate }}
+        </p>
+      </div>
+
+      <div class="footer__section">
+        <h4 class="footer__heading">{{ 'footer.links' | translate }}</h4>
+        <ul class="footer__links">
+          <li><a routerLink="/about">{{ 'nav.about' | translate }}</a></li>
+          <li><a routerLink="/contact">{{ 'nav.contact' | translate }}</a></li>
+          <li><a href="#">{{ 'footer.privacy' | translate }}</a></li>
+          <li><a href="#">{{ 'footer.terms' | translate }}</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__section">
+        <h4 class="footer__heading">{{ 'footer.follow' | translate }}</h4>
+        <div class="footer__social">
+          <a href="#" aria-label="Facebook">Facebook</a>
+          <a href="#" aria-label="Instagram">Instagram</a>
+          <a href="#" aria-label="Twitter">Twitter</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p>{{ 'footer.copyright' | translate }}</p>
+    </div>
+  </div>
+</footer>
+

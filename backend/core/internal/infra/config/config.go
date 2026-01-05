@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/joho/godotenv"
 )
@@ -14,6 +15,12 @@ type Config struct {
 	ServiceName     string
 	Db              DbConfig
 	SnowflakeIdNode int64
+	JWT             JWTConfig
+}
+
+type JWTConfig struct {
+	Secret string
+	Expiry int // in hours
 }
 
 type DbConfig struct {
@@ -29,7 +36,13 @@ func InitConfig() Config {
 	}
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = ":3333"
+		port = "0.0.0.0:3333" // Bind to all interfaces for emulator access
+	} else if len(port) > 0 && port[0] == ':' {
+		// If port starts with ':', prepend 0.0.0.0 to bind to all interfaces
+		port = "0.0.0.0" + port
+	} else if port != "" && !strings.Contains(port, ":") {
+		// If port is just a number, add 0.0.0.0:
+		port = "0.0.0.0:" + port
 	}
 	environment := os.Getenv("ENVIRONMENT")
 	if environment == "" {
@@ -47,6 +60,18 @@ func InitConfig() Config {
 	if err != nil {
 		log.Fatal("error parsing environment variable SNOWFLAKE_ID_NODE", err)
 	}
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		log.Fatal("error loading environment variable JWT_SECRET")
+	}
+	jwtExpiry := os.Getenv("JWT_EXPIRY_HOURS")
+	if jwtExpiry == "" {
+		jwtExpiry = "24"
+	}
+	jwtExpiryInt, err := strconv.Atoi(jwtExpiry)
+	if err != nil {
+		log.Fatal("error parsing environment variable JWT_EXPIRY_HOURS", err)
+	}
 	return Config{
 		Port:            port,
 		Environment:     environment,
@@ -54,6 +79,10 @@ func InitConfig() Config {
 		SnowflakeIdNode: snowflakeIdNodeInt,
 		Db: DbConfig{
 			URL: databaseURL,
+		},
+		JWT: JWTConfig{
+			Secret: jwtSecret,
+			Expiry: jwtExpiryInt,
 		},
 	}
 }

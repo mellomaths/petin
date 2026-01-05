@@ -1,0 +1,17 @@
+<section id="features" class="features">
+  <div class="features__container">
+    <h2 class="features__title">{{ 'features.title' | translate }}</h2>
+    <p class="features__subtitle">
+      {{ 'features.subtitle' | translate }}
+    </p>
+    <div class="features__grid">
+      @for (feature of features; track feature.titleKey) {
+        <div class="features__card">
+          <div class="features__icon">{{ feature.icon }}</div>
+          <h3 class="features__card-title">{{ feature.titleKey | translate }}</h3>
+          <p class="features__card-description">{{ feature.descriptionKey | translate }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>

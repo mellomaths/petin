@@ -33,6 +33,66 @@ type PetinAddress struct {
 	UpdatedAt    pgtype.Timestamp `json:"updated_at"`
 }
 
+type PetinConversation struct {
+	ID               int64            `json:"id"`
+	ExternalID       string           `json:"external_id"`
+	PetID            int64            `json:"pet_id"`
+	AdopterProfileID int64            `json:"adopter_profile_id"`
+	OwnerProfileID   int64            `json:"owner_profile_id"`
+	CreatedAt        pgtype.Timestamp `json:"created_at"`
+}
+
+type PetinHandover struct {
+	ID                        int64            `json:"id"`
+	ExternalID                string           `json:"external_id"`
+	ConversationID            int64            `json:"conversation_id"`
+	PetID                     int64            `json:"pet_id"`
+	OwnerProfileID            int64            `json:"owner_profile_id"`
+	AdopterProfileID          int64            `json:"adopter_profile_id"`
+	ScheduledDate             pgtype.Timestamp `json:"scheduled_date"`
+	LocationName              pgtype.Text      `json:"location_name"`
+	LocationAddress           pgtype.Text      `json:"location_address"`
+	Latitude                  pgtype.Float8    `json:"latitude"`
+	Longitude                 pgtype.Float8    `json:"longitude"`
+	LocationAddressID         pgtype.Int8      `json:"location_address_id"`
+	LocationChangeRequested   bool             `json:"location_change_requested"`
+	LocationChangeRequestedBy pgtype.Int8      `json:"location_change_requested_by"`
+	LocationChangeProposal    pgtype.Text      `json:"location_change_proposal"`
+	OwnerConfirmed            bool             `json:"owner_confirmed"`
+	AdopterConfirmed          bool             `json:"adopter_confirmed"`
+	Status                    string           `json:"status"`
+	CompletedAt               pgtype.Timestamp `json:"completed_at"`
+	CreatedAt                 pgtype.Timestamp `json:"created_at"`
+	UpdatedAt                 pgtype.Timestamp `json:"updated_at"`
+}
+
+type PetinMessage struct {
+	ID              int64            `json:"id"`
+	ExternalID      string           `json:"external_id"`
+	ConversationID  int64            `json:"conversation_id"`
+	SenderProfileID int64            `json:"sender_profile_id"`
+	Content         string           `json:"content"`
+	CreatedAt       pgtype.Timestamp `json:"created_at"`
+}
+
+type PetinPet struct {
+	ID                     int64            `json:"id"`
+	ExternalID             string           `json:"external_id"`
+	ProfileID              int64            `json:"profile_id"`
+	Name                   string           `json:"name"`
+	Species                string           `json:"species"`
+	Breed                  pgtype.Text      `json:"breed"`
+	Age                    pgtype.Int4      `json:"age"`
+	Gender                 pgtype.Text      `json:"gender"`
+	Size                   pgtype.Text      `json:"size"`
+	Description            pgtype.Text      `json:"description"`
+	Photos                 []string         `json:"photos"`
+	IsAvailableForAdoption bool             `json:"is_available_for_adoption"`
+	CurrentOwnerProfileID  pgtype.Int8      `json:"current_owner_profile_id"`
+	CreatedAt              pgtype.Timestamp `json:"created_at"`
+	UpdatedAt              pgtype.Timestamp `json:"updated_at"`
+}
+
 type PetinProfile struct {
 	ID             int64            `json:"id"`
 	ExternalID     string           `json:"external_id"`
@@ -48,4 +108,15 @@ type PetinProfile struct {
 	Avatar         pgtype.Text      `json:"avatar"`
 	CreatedAt      pgtype.Timestamp `json:"created_at"`
 	UpdatedAt      pgtype.Timestamp `json:"updated_at"`
+}
+
+type PetinReport struct {
+	ID                int64            `json:"id"`
+	ExternalID        string           `json:"external_id"`
+	ReporterProfileID int64            `json:"reporter_profile_id"`
+	ReportedProfileID int64            `json:"reported_profile_id"`
+	Reason            string           `json:"reason"`
+	Description       string           `json:"description"`
+	Status            string           `json:"status"`
+	CreatedAt         pgtype.Timestamp `json:"created_at"`
 }

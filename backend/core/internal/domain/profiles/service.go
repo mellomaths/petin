@@ -1,14 +1,18 @@
+// Package profiles provides user profile management operations.
+// It handles profile creation and retrieval, including address information.
 package profiles
 
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/bwmarrin/snowflake"
 	"github.com/go-playground/validator/v10"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 	repo "github.com/mellomaths/petin/backend/core/internal/adapters/postgresql/sqlc"
+	"github.com/mellomaths/petin/backend/core/internal/api"
 	"github.com/mellomaths/petin/backend/core/internal/domain/accounts"
 	"go.uber.org/zap"
 )
@@ -28,19 +32,30 @@ type svc struct {
 	repo     *repo.Queries
 	db       *pgx.Conn
 	snowNode *snowflake.Node
+	validate *validator.Validate
 }
 
+// NewService creates a new profiles service with the provided dependencies.
 func NewService(repo *repo.Queries, db *pgx.Conn, snowNode *snowflake.Node) Service {
-	return &svc{repo: repo, db: db, snowNode: snowNode}
+	return &svc{
+		repo:     repo,
+		db:       db,
+		snowNode: snowNode,
+		validate: validator.New(validator.WithRequiredStructEnabled()),
+	}
 }
 
+// GetProfile retrieves a profile by account external ID.
+// Returns ErrProfileNotFound if the profile does not exist.
 func (s *svc) GetProfile(ctx context.Context, accountExternalId string) (ProfileResponse, error) {
+	logger := api.LogWithRequestIDFromContext(ctx)
 	profile, err := s.repo.GetProfileByAccountExternalID(ctx, accountExternalId)
 	if err != nil {
 		if err == pgx.ErrNoRows {
 			return ProfileResponse{}, ErrProfileNotFound
 		}
-		return ProfileResponse{}, err
+		logger.Error("failed to get profile", zap.Error(err), zap.String("account_external_id", accountExternalId))
+		return ProfileResponse{}, fmt.Errorf("failed to get profile: %w", err)
 	}
 	return ProfileResponse{
 		ExternalID: profile.ExternalID,
@@ -72,11 +87,14 @@ func (s *svc) GetProfile(ctx context.Context, accountExternalId string) (Profile
 	}, nil
 }
 
+// CreateProfile creates a new profile for an account.
+// The account must be active. Returns ErrAccountNotActive if the account is not active,
+// or ErrProfileAlreadyExists if a profile already exists for the account.
 func (s *svc) CreateProfile(ctx context.Context, accountExternalId string, params CreateProfileParams) (ProfileResponse, error) {
+	logger := api.LogWithRequestIDFromContext(ctx)
 	// Validate request body
-	validate := validator.New(validator.WithRequiredStructEnabled())
-	if err := validate.Struct(params); err != nil {
-		zap.L().Info("invalid request body", zap.Error(err))
+	if err := s.validate.Struct(params); err != nil {
+		logger.Debug("invalid request body", zap.Error(err))
 		return ProfileResponse{}, err
 	}
 	externalID := s.snowNode.Generate().String()
@@ -85,7 +103,7 @@ func (s *svc) CreateProfile(ctx context.Context, accountExternalId string, param
 		if err == pgx.ErrNoRows {
 			return ProfileResponse{}, accounts.ErrAccountNotFound
 		}
-		return ProfileResponse{}, err
+		return ProfileResponse{}, fmt.Errorf("failed to get account: %w", err)
 	}
 	if account.Status != string(accounts.AccountStatusActive) {
 		return ProfileResponse{}, ErrAccountNotActive
@@ -96,7 +114,7 @@ func (s *svc) CreateProfile(ctx context.Context, accountExternalId string, param
 	}
 	tx, err := s.db.Begin(ctx)
 	if err != nil {
-		return ProfileResponse{}, err
+		return ProfileResponse{}, fmt.Errorf("failed to begin transaction: %w", err)
 	}
 	defer tx.Rollback(ctx)
 	qtx := s.repo.WithTx(tx)
@@ -112,7 +130,7 @@ func (s *svc) CreateProfile(ctx context.Context, accountExternalId string, param
 		Longitude:    params.Address.Longitude,
 	})
 	if err != nil {
-		return ProfileResponse{}, err
+		return ProfileResponse{}, fmt.Errorf("failed to create address: %w", err)
 	}
 	profile, err := qtx.CreateProfile(ctx, repo.CreateProfileParams{
 		ExternalID:     externalID,
@@ -128,9 +146,11 @@ func (s *svc) CreateProfile(ctx context.Context, accountExternalId string, param
 		Avatar:         pgtype.Text{String: params.Avatar, Valid: true},
 	})
 	if err != nil {
-		return ProfileResponse{}, err
+		return ProfileResponse{}, fmt.Errorf("failed to create profile: %w", err)
 	}
-	tx.Commit(ctx)
+	if err := tx.Commit(ctx); err != nil {
+		return ProfileResponse{}, fmt.Errorf("failed to commit transaction: %w", err)
+	}
 	return ProfileResponse{
 		ExternalID: profile.ExternalID,
 		Account: accounts.AccountResponse{

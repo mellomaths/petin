@@ -1,0 +1,16 @@
+{
+  "@@locale": "en",
+  "appTitle": "Petin",
+  "@appTitle": {
+    "description": "Application title"
+  },
+  "welcome": "Welcome to Petin",
+  "@welcome": {
+    "description": "Welcome message"
+  },
+  "findYourPerfectPet": "Find Your Perfect Pet, Right From the Heart",
+  "@findYourPerfectPet": {
+    "description": "Main slogan"
+  }
+}
+

@@ -1,0 +1,50 @@
+{
+  "app": {
+    "title": "Petin",
+    "tagline": "Encuentra Tu Mascota Perfecta, Directo del Corazón"
+  },
+  "nav": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "contact": "Contacto"
+  },
+  "hero": {
+    "title": "Encuentra Tu Mascota Perfecta, Directo del Corazón",
+    "description": "Únete a Petin y ayuda a luchar contra el abandono de mascotas. Conéctate con dueños de mascotas y encuentra tu nuevo mejor amigo a través de nuestra plataforma de adopción.",
+    "download": "Descargar App",
+    "learnMore": "Saber Más"
+  },
+  "features": {
+    "title": "¿Por Qué Elegir Petin?",
+    "subtitle": "Todo lo que necesitas para encontrar y adoptar tu compañero mascota perfecto",
+    "discovery": {
+      "title": "Descubrimiento Fácil de Mascotas",
+      "description": "Navega por mascotas cercanas disponibles para adopción con nuestro sistema intuitivo de búsqueda y filtros."
+    },
+    "communication": {
+      "title": "Comunicación Directa",
+      "description": "Chatea directamente con dueños de mascotas para saber más sobre tu potencial nuevo amigo."
+    },
+    "location": {
+      "title": "Basado en Ubicación",
+      "description": "Encuentra mascotas en tu área y programa encuentros en ubicaciones convenientes."
+    },
+    "adoption": {
+      "title": "Enfocado en Adopción",
+      "description": "Nuestra plataforma está dedicada solo a la adopción - sin venta, solo encontrando hogares amorosos."
+    }
+  },
+  "download": {
+    "title": "Comienza Hoy",
+    "description": "Descarga la app Petin y comienza tu viaje para encontrar tu compañero mascota perfecto"
+  },
+  "footer": {
+    "description": "Encuentra Tu Mascota Perfecta, Directo del Corazón",
+    "links": "Enlaces",
+    "follow": "Síguenos",
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Servicio",
+    "copyright": "© 2024 Petin. Todos los derechos reservados."
+  }
+}
+

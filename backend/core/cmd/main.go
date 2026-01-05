@@ -11,14 +11,10 @@ import (
 	"go.uber.org/zap"
 )
 
-func init() {
-	cfg := config.InitConfig()
-	logging.InitLogger(&cfg)
-}
-
 func main() {
 	ctx := context.Background()
 	cfg := config.InitConfig()
+	logging.InitLogger(&cfg)
 	zap.L().Info("connecting to postgres database")
 	dbConn, err := pgx.Connect(ctx, cfg.Db.URL)
 	if err != nil {
